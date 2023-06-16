@@ -14,7 +14,7 @@ fcn_line_transect_sf <- function(lineTransect) {
     })
   
   lineTransectSf <- st_sfc(lineTransectSpatial)
-  st_crs(lineTransectSf) <- 7856
+  st_crs(lineTransectSf) <- 7856 ## Set to GDA2020
   df <- st_sf(cbind(lineTransect,lineTransectSf))
   return(df)
 }

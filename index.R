@@ -24,12 +24,23 @@ if (sum(duplicated(lineTransect$SiteID)) > 0) {
   stop(sprintf("%i duplicate SiteID", sum(duplicated(lineTransect$SiteID))))
 }
 
-lineTransectSf <- fcn_line_transect_sf(lineTransect)
-mapview(lineTransectSf)
+transect_table <- sf::st_read(paths$koala_survey_data, layer = "KoalaSurveyLineTransects") %>%
+  rename(SiteNumber=site, TransectNumber=transect, SurveyNumber=survey)
+
+if (year < 2020) {
+  # Left-join to the database because the End_Easting and End_Northings are not available
+  lineTransectSf <- right_join(transect_table, lineTransect, by = c('SiteNumber', 'TransectNumber', 'SurveyNumber'))
+} else {
+  lineTransectSf <- fcn_line_transect_sf(lineTransect)
+}
+mapview(lineTransectSf, color= 'red') + mapview(lineTransectSpatial)
 
 ## Get perpendicular distances
-query <- read_file(paste0("queries/", year, "/perpendicular-distances.sql"))
-solObservations <- sqlQuery(channel, query)
+query <- read_file(paste0("queries/", year, "/perp-distances.sql"))
+perpDistTable <- sqlQuery(channel, query)
+sightings_table <- sf::st_read(paths$seq_koala_survey_database, layer = "sightings_table")
+perpDists <- left_join(perpDistTable, sightings_table, by = c('TransectID', 'SightingNo')) %>%
+  select(TransectID, SightingNo, PerpDist, NumKoalas)
 
 if (length(unique(solObservations$SightingID)) != nrow(solObservations)) {
   error("Sighting ID does not uniquely identify koala observations")

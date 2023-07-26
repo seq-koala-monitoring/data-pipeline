@@ -1,0 +1,28 @@
+---
+title: "index"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{index}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SEQKoalaDataPipeline)
+```
+
+Generate a fishnet of the study area
+```{r}
+fcn_set_home_dir("C:\\Users\\uqfcho\\Documents\\working_data")
+fcn_set_grid_size(5000)
+fcn_new_grid()
+fishnet <- fcn_get_grid()
+plot(fishnet)
+```

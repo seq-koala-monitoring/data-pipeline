@@ -1,0 +1,15 @@
+Package: SEQKoalaDataPipeline
+Title: South East Queensland Koala Monitoring Data Pipeline
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Frankie", "Cho", , "f.cho@uq.edu.au", role = c("aut", "cre")),
+    person("Jonathan", "Rhodes", , "j.rhodes@uq.edu.au", role = c("aut")))
+Description: Data processing pipeline for koala monitoring data analysis project at South East Queensland.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

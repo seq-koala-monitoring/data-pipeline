@@ -9,8 +9,9 @@ fcn_line_transect_sf <- function(lineTransect, colnames =
                                    list(Start_Eastings = "Start_Eastings",
                                         Start_Northings = "Start_Northings",
                                         End_Eastings = "End_Eastings",
-                                        End_Northings = "End_Northings"),
-                                 crs = 7856) {
+                                        End_Northings = "End_Northings")) {
+
+  state <- fcn_get_state()
 
   # Check if all columns exist in lineTransect dataframe
   lapply(colnames, function(name) {
@@ -20,18 +21,27 @@ fcn_line_transect_sf <- function(lineTransect, colnames =
   })
 
   # Convert to spatial object
+  start_eastings = lineTransect[,colnames$Start_Eastings, drop = T]
+  start_northings = lineTransect[,colnames$Start_Northings, drop = T]
+  end_eastings = lineTransect[,colnames$End_Eastings, drop = T]
+  end_northings = lineTransect[,colnames$End_Northings, drop = T]
+
+  coord_list <- list(Start_Eastings = start_eastings,
+                     Start_Northings = start_northings,
+                     End_Eastings= end_eastings,
+                     End_Northings = end_northings
+  )
+
   lineTransectSpatial <- purrr::pmap(
-    list(Start_Eastings = lineTransect[Start_Eastings],
-         Start_Northings = lineTransect[Start_Northings],
-         End_Eastings= lineTransect[End_Eastings],
-         End_Northings =lineTransect[End_Northings]
-    ), function(Start_Eastings, Start_Northings, End_Eastings, End_Northings) {
-      sf::st_linestring(matrix(c(Start_Eastings, Start_Northings, End_Eastings, End_Northings), 2, 2, byrow = T))
+    coord_list,
+    function(Start_Eastings, Start_Northings, End_Eastings, End_Northings) {
+      mat <- matrix(c(Start_Eastings, Start_Northings, End_Eastings, End_Northings), 2, 2, byrow = T)
+      sf::st_linestring(mat)
     })
 
   # Convert to feature class collection
   lineTransectSf <- sf::st_sfc(lineTransectSpatial)
-  sf::st_crs(lineTransectSf) <- crs
+  sf::st_crs(lineTransectSf) <- state$crs
   df <- sf::st_sf(cbind(lineTransect,lineTransectSf))
   return(df)
 }

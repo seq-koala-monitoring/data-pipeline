@@ -1,11 +1,14 @@
 ## Parameters file ------------
 # Specifies the file location
 
+home_dir = "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\data_pipeline_inputs"
+
 # 1. Databases -----------
 # a) 1996 - 2015 database (accdb)
-db_path_1996 = "M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data\SEQkoalaData.accdb"
+db_path_1996 = "SEQkoalaData.accdb"
 
-# b) 
+# b) 2015-2019 database (accdb)
+db_path_2015 = ""
 
 # c) 2020-current monitoring database (accdb)
 db_path_2020=r"{M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data\KoalaSurveyData2020_cur.accdb}"

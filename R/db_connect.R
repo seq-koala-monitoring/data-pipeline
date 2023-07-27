@@ -12,8 +12,11 @@ fcn_db_connect <- function(db_path) {
 #' @export
 fcn_db_connect_table <- function(year) {
   state <- fcn_get_state()
-  year_str <- as.numeric(year)
+  year_str <- as.character(year)
   full_db_path <- file.path(state$home_dir, state$db_path[year_str])
+  if (!file.exists(full_db_path)) {
+    stop(paste("Database in file path", full_db_path, "does not exist"))
+  }
   conn <- fcn_db_connect(full_db_path)
   return(conn)
 }

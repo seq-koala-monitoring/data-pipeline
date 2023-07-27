@@ -16,16 +16,24 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(SEQKoalaDataPipeline)
+library(dplyr)
 ```
 
 Generate a fishnet of the study area
 ```{r}
-fcn_set_home_dir("~/Documents/Github/data-pipeline/working_data")
-fcn_set_grid_size(5000)
-fcn_new_grid()
-fishnet <- fcn_get_grid()
-plot(fishnet)
+fcn_set_home_dir("M:\\Users/uqfcho/Documents/seq-koala-monitoring/working_data")
+fcn_set_grid_size(2500) # in meters
+fcn_new_grid() # Grid stored in local R package environment
+fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
+
+Calculate the proportion of the line within each grid (linear referencing approach)
 ```{r}
-fcn_db_connect_table(2020)
+table_sf_2020 <- fcn_line_transect_sf_2020()
+event_table <- fcn_event_table(fishnet, table_sf_2020)
+event_table[,c('TransectID', 'GridID', 'lpercent')]
+```
+Display map of South East Queensland with fishnet grid and line transects
+```{r}
+mapview::mapview(fishnet, alpha.regions = 0) + mapview::mapview(table_sf_2020)
 ```

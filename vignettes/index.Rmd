@@ -20,9 +20,12 @@ library(SEQKoalaDataPipeline)
 
 Generate a fishnet of the study area
 ```{r}
-fcn_set_home_dir("C:\\Users\\uqfcho\\Documents\\working_data")
+fcn_set_home_dir("~/Documents/Github/data-pipeline/working_data")
 fcn_set_grid_size(5000)
 fcn_new_grid()
 fishnet <- fcn_get_grid()
 plot(fishnet)
+```
+```{r}
+fcn_db_connect_table(2020)
 ```

@@ -4,3 +4,5 @@
 .Ruserdata
 .env
 inst/doc
+working_data/
+.DS_Store

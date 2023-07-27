@@ -41,7 +41,7 @@ fcn_set_home_dir <- function(dir) {
 fcn_get_study_area <- function() {
   state <- fcn_get_state()
   study_area_args <- the$study_area
-  study_area_args$dsn <- paste0(state$home_dir, '\\', study_area_args$dsn)
+  study_area_args$dsn <- file.path(state$home_dir, study_area_args$dsn)
   study_area <- do.call(sf::st_read, study_area_args)
   study_area_transformed <- sf::st_transform(study_area, state$crs)
   return(study_area_transformed)
@@ -54,7 +54,7 @@ fcn_get_db_path <- function() {
   home_dir <- state$home_dir
   full_path <- lapply(the$db_path, function(x) {
     if (x == "") return(NULL)
-    paste0(home_dir, '\\', x)
+    file.path(home_dir, x)
   })
   return(full_path)
 }

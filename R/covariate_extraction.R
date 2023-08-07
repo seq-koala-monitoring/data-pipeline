@@ -39,7 +39,14 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   return(df)
 }
 
-
-
-
+#' Load covariate layer to SpatRaster by name
+#' @param cov name of covariate (string)
+fcn_covariate_raster <- function(covariate = "htele") {
+  raster_path <- fcn_get_raster_path()
+  covariate_df <- fcn_covariate_layer_df() %>%
+    filter(name == covariate)
+  covariate_files <- lapply(covariate_df$filename, function(x) file.path(raster_path, x))
+  #covariate_raster <- lapply(covariate_files, terra::rast)
+  covariate_files
+}
 

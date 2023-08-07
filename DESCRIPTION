@@ -14,7 +14,9 @@ Imports:
     RODBC,
     dplyr,
     readr,
-    units
+    units,
+    purrr,
+    magrittr
 Suggests: 
     knitr,
     rmarkdown,

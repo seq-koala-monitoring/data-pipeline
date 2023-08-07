@@ -21,8 +21,8 @@ library(dplyr)
 
 Generate a fishnet of the study area
 ```{r}
-fcn_set_home_dir("M:\\Users/uqfcho/Documents/seq-koala-monitoring/working_data")
-fcn_set_grid_size(2500) # in meters
+fcn_set_home_dir("C:/Users/uqfcho/Documents/seq-koala-monitoring/working_data")
+fcn_set_grid_size(5000) # in meters
 fcn_new_grid() # Grid stored in local R package environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
@@ -30,10 +30,26 @@ fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 Calculate the proportion of the line within each grid (linear referencing approach)
 ```{r}
 table_sf_2020 <- fcn_line_transect_sf_2020()
+table_start_point_2020 <- fcn_transect_start_points_2020()
 event_table <- fcn_event_table(fishnet, table_sf_2020)
 event_table[,c('TransectID', 'GridID', 'lpercent')]
 ```
 Display map of South East Queensland with fishnet grid and line transects
 ```{r}
 mapview::mapview(fishnet, alpha.regions = 0) + mapview::mapview(table_sf_2020)
+```
+
+Rasterise fishnet
+```{r}
+library(dplyr)
+fishnet_raster <- stars::st_rasterize(fishnet)
+fishnet_spatRaster <- as(fishnet_raster, 'SpatRaster')
+names(fishnet_spatRaster) <- "GridID"
+extract_table <- terra::extract(fishnet_spatRaster, dplyr::select(table_sf_2020, "TransectID"), fun=table)
+extract_table %>%
+  cbind(dplyr::select(sf::st_drop_geometry(table_sf_2020), 'TransectID'))
+```
+```{r}
+#event_table <- fcn_event_table_raster(fishnet_spatRaster, table_sf_2020)
+fcn_list_covariate_layers()
 ```

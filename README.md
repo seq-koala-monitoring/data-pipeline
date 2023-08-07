@@ -1,6 +1,6 @@
 # Data Processing Pipeline for SEQ Koala Monitoring Data Analysis project
 
-Reads an ACCESS database directly with R script, and then creates the following tables as inputs to a Bayesian state-space model. The user will need to specify the parameters in the parameters.R file.
+An R package with functionality that consumes ACCESS databases of koala monitoring data and outputs tables that are direct inputs to a Bayesian state-space model.
 
 ## Line Transects (2 tables)
  

@@ -5,19 +5,24 @@ the$home_dir <- getwd()
 
 the$db_path <- list(
   `1996` = 'SEQkoalaData.accdb',
-  `2015` = "",
+  `2015` = NULL,
   `2020` = 'KoalaSurveyData2020_cur.accdb'
 )
 
 the$gdb_path <- list(
   seq_koala_survey_database="koala_survey_data_ver2_0.gdb",
-  koala_survey_data="KoalaSurveyData.gdb"
+  koala_survey_data="KoalaSurveyData.gdb",
+  covariates="final_covariates.gdb"
 )
 
-# Grid size in meters
+# Grid size in meters (default: 1000 meters)
 the$grid_size <- 1000
 
 the$study_area <- list(dsn = "basedata.gdb", layer = "seqrp_study_area_2017_mga56")
+
+the$raster_path <- list(
+  covariates = "final_covariates_raster"
+)
 
 # Standardized projection system (GDA2020 / MGA zone 56 as default)
 the$crs <- 7856
@@ -33,6 +38,7 @@ fcn_get_state <- function(elem = NULL) {
 fcn_set_home_dir <- function(dir) {
   old <- the$home_dir
   the$home_dir <- dir
+  fcn_check_paths(dir, "Home directory", TRUE)
   invisible(old)
 }
 
@@ -41,7 +47,9 @@ fcn_set_home_dir <- function(dir) {
 fcn_get_study_area <- function() {
   state <- fcn_get_state()
   study_area_args <- the$study_area
-  study_area_args$dsn <- file.path(state$home_dir, study_area_args$dsn)
+  dsn_path <- file.path(state$home_dir, study_area_args$dsn)
+  fcn_check_paths(dsn_path, "Study area file", TRUE) # Halt execution if study area file is not found
+  study_area_args$dsn <- dsn_path
   study_area <- do.call(sf::st_read, study_area_args)
   study_area_transformed <- sf::st_transform(study_area, state$crs)
   return(study_area_transformed)
@@ -52,11 +60,35 @@ fcn_get_study_area <- function() {
 fcn_get_db_path <- function() {
   state <- fcn_get_state()
   home_dir <- state$home_dir
-  full_path <- lapply(the$db_path, function(x) {
-    if (x == "") return(NULL)
-    file.path(home_dir, x)
+  full_path <- purrr::imap(the$db_path, function(x, idx) {
+    if (is.null(x) || identical(x, "")) return(NULL)
+    path <- file.path(home_dir, x)
+    fcn_check_paths(path, paste("Database", idx))
+    path
   })
   return(full_path)
+}
+
+#' Set database paths
+#' @export
+fcn_set_db_path <- function(db_path, obj = NULL) {
+  if (!is.null(obj)) {
+    state <- fcn_get_state()
+    db_path_name <- db_path
+    # Only set property for that key
+    db_path <- state$db_path
+    db_path[obj] <- db_path_name
+  }
+
+  purrr::imap(db_path, function(x, idx) {
+    if (is.null(x) || identical(x, "")) return(NULL)
+    path <- file.path(home_dir, x)
+    fcn_check_paths(path, paste("Database", idx), stop_exec = T)
+  })
+
+  old <- the$db_path
+  the$db_path <- db_path
+  invisible(old)
 }
 
 #' Set Coordinate Reference System
@@ -84,5 +116,60 @@ fcn_get_grid <- function() {
 fcn_set_grid_size <- function(grid_size) {
   old <- the$grid_size
   the$grid_size <- grid_size
+  if (grid_size < 1000) {
+    warning("Grid size is smaller than 1000 meters. Grid creation may take a while.")
+  }
+  if (grid_size > 50000) {
+    warning("Grid size is larger than 50000 meters, which will generate less than 20 grids. Prediction resolution may be too low.")
+  }
   invisible(old)
+}
+
+#' Get GDB object path
+#' @export
+fcn_get_gdb_path <- function() {
+  state <- fcn_get_state()
+  home_dir <- state$home_dir
+  full_path <- purrr::imap(the$gdb_path, function(x, idx) {
+    if (is.null(x) || identical(x, "")) return(NULL)
+    path <- file.path(home_dir, x)
+    fcn_check_paths(path, paste("Database", idx))
+    return(path)
+  })
+  return(full_path)
+}
+
+#' Set GDB paths
+#' @export
+fcn_set_gdb_path <- function(db_path, obj = NULL) {
+  if (!is.null(obj)) {
+    state <- fcn_get_state()
+    db_path_name <- db_path
+    # Only set property for that key
+    db_path <- state$gdb_path
+    db_path[obj] <- db_path_name
+  }
+
+  purrr::imap(db_path, function(x, idx) {
+    if (is.null(x) || identical(x, "")) return(NULL)
+    path <- file.path(home_dir, x)
+    fcn_check_paths(path, paste("Geodatabase", idx), stop_exec = T)
+  })
+
+  old <- the$db_path
+  the$db_path <- db_path
+  invisible(old)
+}
+
+#' Get raster directories
+fcn_get_raster_path <- function() {
+  state <- fcn_get_state()
+  home_dir <- state$home_dir
+  full_path <- purrr::imap(the$raster_path, function(x, idx) {
+    if (is.null(x) || identical(x, "")) return(NULL)
+    path <- file.path(home_dir, x)
+    fcn_check_paths(path, paste("Database", idx))
+    path
+  })
+  return(full_path)
 }

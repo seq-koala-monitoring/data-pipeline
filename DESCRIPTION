@@ -16,7 +16,8 @@ Imports:
     readr,
     units,
     purrr,
-    magrittr
+    magrittr,
+    stars
 Suggests: 
     knitr,
     rmarkdown,

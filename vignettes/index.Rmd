@@ -22,7 +22,10 @@ library(dplyr)
 Generate a fishnet of the study area
 ```{r}
 fcn_set_home_dir("C:/Users/uqfcho/Documents/seq-koala-monitoring/working_data")
-fcn_set_grid_size(5000) # in meters
+```
+
+```{r}
+fcn_set_grid_size(10000) # in meters
 fcn_new_grid() # Grid stored in local R package environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
@@ -41,19 +44,15 @@ mapview::mapview(fishnet, alpha.regions = 0) + mapview::mapview(table_sf_2020)
 
 Rasterise fishnet
 ```{r}
-library(dplyr)
-fishnet_raster <- stars::st_rasterize(fishnet)
-fishnet_spatRaster <- as(fishnet_raster, 'SpatRaster')
-names(fishnet_spatRaster) <- "GridID"
-extract_table <- terra::extract(fishnet_spatRaster, dplyr::select(table_sf_2020, "TransectID"), fun=table)
-extract_table %>%
-  cbind(dplyr::select(sf::st_drop_geometry(table_sf_2020), 'TransectID'))
-```
-```{r}
-extract_table <- fcn_line_sample_extract_raster(fishnet_spatRaster, table_sf_2020)
-event_table <- fcn_route_table_raster(fishnet_spatRaster, table_sf_2020)
+fishnet_raster <- fcn_get_grid_raster()
+extract_table <- fcn_line_sample_extract_raster(fishnet_raster, table_sf_2020)
+event_table <- fcn_route_table_raster(fishnet_raster, table_sf_2020)
 fcn_list_covariate_layers()
 ```
 ```{r}
 
+```
+
+```{r}
+cov <- fcn_covariate_raster_load("htele")
 ```

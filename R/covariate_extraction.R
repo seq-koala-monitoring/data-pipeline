@@ -41,12 +41,33 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 
 #' Load covariate layer to SpatRaster by name
 #' @param cov name of covariate (string)
-fcn_covariate_raster <- function(covariate = "htele") {
-  raster_path <- fcn_get_raster_path()
+fcn_covariate_raster_load <- function(covariate = "htele") {
+  raster_path <- fcn_get_raster_path()$covariates
   covariate_df <- fcn_covariate_layer_df() %>%
     filter(name == covariate)
-  covariate_files <- lapply(covariate_df$filename, function(x) file.path(raster_path, x))
-  #covariate_raster <- lapply(covariate_files, terra::rast)
+  covariate_files <- purrr::map_chr(covariate_df$filename, function(x) file.path(raster_path, x))
+  covariate_names <- ifelse(length(covariate_files)<=1, covariate, covariate_df$date)
+  #covariate_raster <- fcn_covariate_read_raster(covariate_files, covariate_names)
   covariate_files
 }
 
+fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T) {
+  covariate_raster <- stars::read_stars(covariate_files)
+  if (!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names))) {
+    names(covariate_raster) <- covariate_names
+  }
+  if (project) {
+    covariate_raster <- fcn_project_raster(covariate_raster)
+  }
+  covariate_raster
+}
+
+#' Project raster layer to CRS as specified in the environment
+#' @param raster a `SpatRaster` object to be projected
+fcn_project_raster <- function(raster) {
+  state <- fcn_get_state()
+  crs <- state$crs
+  sf::sf_proj_network(TRUE)
+  projected_raster <- sf::st_transform(raster, crs)
+  return(projected_raster)
+}

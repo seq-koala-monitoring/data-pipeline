@@ -1,5 +1,5 @@
 #' Linear referencing / dynamic segmentation functions
-#'
+#' Provides functions to perform linear referencing and dynamic segmentation of line transects.
 
 #' @param feature_class SF object of the grid
 #' @param line_transect SF object of the line transect
@@ -27,7 +27,8 @@ fcn_line_sample_extract_raster <- function(input_raster, line_transect, n = 50) 
   reference_points <- reference_points %>%
     group_by(TransectID) %>%
     mutate(distance_from_start = Tlength * sample_seq[row_number()])
-  extract_table <- cbind(reference_points, terra::extract(input_raster,reference_points))
+  extract_points <- stars::st_extract(input_raster,reference_points)
+  extract_table <- cbind(reference_points, extract_points)
 }
 
 #' Convert covariate sample points to route layer (start and end of covariate value)

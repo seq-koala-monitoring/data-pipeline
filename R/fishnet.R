@@ -22,3 +22,15 @@ fcn_new_grid <- function() {
   fcn_set_grid(fishnet)
   return(fishnet)
 }
+
+#' Get rasterized fishnet
+#' @export
+fcn_get_grid_raster <- function() {
+  grid <- fcn_get_grid()
+  if (is.null(grid)) {
+    warning("Fishnet grid not found in environment. Generating new grid.")
+    grid <- fcn_new_grid()
+  }
+  grid %>%
+    stars::st_rasterize()
+}

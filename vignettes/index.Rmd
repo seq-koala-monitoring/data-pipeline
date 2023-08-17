@@ -3,9 +3,36 @@ title: "index"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{index}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
+This vignette describes the usage of the toolbox provided by the custom
+R package `SEQKoalaDataPipeline` that reads from ACCESS databases of
+koala monitoring data, spatial files of monitoring transects, and
+rasterised data of covariates, and produces outputs for the spatial data
+model.
+
+The functions in the toolbox perform several functions useful for
+producing data outputs for the statistical models and other
+functionalities. Features include but are not limited to the following:
+1. Establish connections to ACCESS through ODBC 2. Generate grids
+"fishnets" at any given spatial resolution around the study area and
+generates unique IDs for each grid cell 3. Produce spatial feature
+classes (sf) of line transects based on start and end coordinate columns
+in dataframes 4. Linear referencing: calculate the proportion of, and
+distance of that segment from the origin, of a linear transect lying
+within a grid cell 5. Linear referencing: calculate the proportion of,
+and distance of segments from the origin, of a linear transect from
+raster covariate layers 6. Dynamic segmentation: return the coordinates
+of koala sightings based on distance from transect origin (WIP) 7.
+Dynamic segmentation: return the covariate information of each koala
+sighting based on linear referencing route tables (WIP)
+
+WIP: work-in-progress
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -14,45 +41,144 @@ knitr::opts_chunk$set(
 )
 ```
 
+Load packages for the analysis
+
 ```{r setup}
 library(SEQKoalaDataPipeline)
 library(dplyr)
+library(ggplot2)
 ```
 
-Generate a fishnet of the study area
-```{r}
-fcn_set_home_dir("C:/Users/uqfcho/Documents/seq-koala-monitoring/working_data")
-```
+# Initial setup
+
+The package relies on a data directory (home_dir) that stores the
+datasets used for the analysis. The first step involves setting the path
+on the computer to a directory with the following files:
+
+-   `basedata.gdb`: a ArcGIS geodatabase with the study area in it
+    (`seqrp_study_area_2017_mga56`)
+
+-    `final_covariates.gdb`: a ArcGIS geodatabase of the covariate
+    raster layers
+
+-    `final_covariates_raster`: a directory containing GeoTIFF files of
+    the covariates from `final_covariates.gdb` because R does not read
+    raster files from ArcGIS GDB
+
+-    `koala_survey_data_ver2_0.gdb`: a geodatabase containing the koala
+    survey data
+
+-    `KoalaSurveyData2020_cur.accdb`: an ACCESS database containing data
+    from 2020 onwards
+
+-    `SEQkoalaData.accdb`: an ACCESS database containing data from
+    1996-2015
+
+This directory can be stored on anywhere on the computer.
 
 ```{r}
-fcn_set_grid_size(10000) # in meters
-fcn_new_grid() # Grid stored in local R package environment
+fcn_set_home_dir("M:/Users/uqfcho/Documents/seq-koala-monitoring/working_data")
+```
+
+# Generate fishnet grid
+
+Grids for the analysis can be generated on the fly by specifying the
+grid size. After generating the grid by calling `fcn_set_grid_size`, the
+grid feature class is stored in the local environment. Functions that
+require this newly generated grid will be able to retrieve the grid
+directly from the local environment.
+
+Here we plot the grid to see how it covers the study area
+
+```{r}
+fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
+study_area <- fcn_get_study_area() # Retrieve study area
+ggplot() +
+  geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
+  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+  theme_minimal()
 ```
 
-Calculate the proportion of the line within each grid
+The `GridID` column in the fishnet feature class uniquely identifies
+each grid cell in the fishnet and is specific the to the `grid_size`,
+with the following format:
+
+"Grid side width (in meters)"\_"Grid Number"
+
+# Get line transect (2020 onwards) data
+
+The line transect feature class table can be extracted from the ACCESS
+database directly through one function. Behind this function call, R
+does the following steps:
+
+1.  Establishes the ODBC connection with the ACCESS database
+2.  Executes SQL queries to pull data from that database
+3.  Reads the columns with start and end northings and eastings
+4.  Generates a spatial representation for each transect based on those
+    columns
+
 ```{r}
 table_sf_2020 <- fcn_line_transect_sf_2020()
-table_start_point_2020 <- fcn_transect_start_points_2020()
+```
+
+We can draw a simple plot to show the line transects for any particular
+region with ggplot. Here we plot the line transects and the
+
+```{r}
+ggplot() +
+  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+  geom_sf(data = table_sf_2020, color = '#D55E00') +
+  coord_sf(xlim = c(514678.70, 518800.96), ylim = c(6942751.07, 6946460.30)) +
+  theme_minimal()
+```
+
+# Linear referencing / dynamic segmentation
+
+The linear referencing/ dynamic segmentation approach is used to relate
+the line transects with the grid information and covariate layers. While
+it can be used to derive outputs for the statistical model, the tables
+generated by linear referencing itself could serve other purposes.
+
+The toolbox for linear referencing in this package allows the user to
+generate a "Route Event Layer" (also referred to as "Route Event Tables"
+or "Route Table") that are the fundamental way which routes (i.e.
+Transects) are represented in linear referencing.
+
+In the linear referencing terminology, each transect is represented as a
+"route". Each record in the "Route Event Layer" that stores the distance
+from the start of a transect of where an "Event" occurred. An event can
+be an intersection with a grid cell, or certain values within the
+covariate layer. Using the `fcn_route_table` call, we can create a
+"Route Event Layer" that records each "Event" and has a TransectID that
+relates each event back to the transect concerned.
+
+The function call creates a few new columns that records the attributes
+of the event:
+
+1.  FMEAS: the "From Measure", which is the distance from the start
+    point of the transect where the event starts
+2.  TMEAS: the "To Measure", which is the distance from the start point
+    of the transect where the event ends
+3.  Variable Name (e.g. GridID): the value of the event, in this case,
+    the GridID of the grid cell this "Event" is describing
+4.  Tlength: transect length
+5.  lpercent: the percentage (proportion) of the transect that is
+    covered by this event
+
+```{r}
 route_table <- fcn_route_table(fishnet, table_sf_2020)
-route_table[,c('TransectID', 'GridID', 'lpercent')]
-```
-Display map of South East Queensland with fishnet grid and line transects
-```{r}
-mapview::mapview(fishnet, alpha.regions = 0) + mapview::mapview(table_sf_2020)
+head(route_table[,c('TransectID', 'GridID', 'FMEAS', 'TMEAS', "Tlength", "lpercent")])
 ```
 
-Rasterise fishnet
 ```{r}
-fishnet_raster <- fcn_get_grid_raster()
-extract_table <- fcn_line_sample_extract_raster(fishnet_raster, table_sf_2020)
-event_table <- fcn_route_table_raster(fishnet_raster, table_sf_2020)
-fcn_list_covariate_layers()
+route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
 ```
-```{r}
 
-```
+Likewise, the capabilities of linear referencing can be applied to
+extract covariate information from Raster files.
 
 ```{r}
 cov <- fcn_covariate_raster_load("htele")
+cov_route_table <- fcn_route_table_raster(cov, table_sf_2020)
 ```

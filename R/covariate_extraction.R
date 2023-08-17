@@ -47,12 +47,12 @@ fcn_covariate_raster_load <- function(covariate = "htele") {
     filter(name == covariate)
   covariate_files <- purrr::map_chr(covariate_df$filename, function(x) file.path(raster_path, x))
   covariate_names <- ifelse(length(covariate_files)<=1, covariate, covariate_df$date)
-  #covariate_raster <- fcn_covariate_read_raster(covariate_files, covariate_names)
-  covariate_files
+  covariate_raster <- fcn_covariate_read_raster(covariate_files, covariate_names)
+  covariate_raster
 }
 
 fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T) {
-  covariate_raster <- stars::read_stars(covariate_files)
+  covariate_raster <- terra::rast(covariate_files)
   if (!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names))) {
     names(covariate_raster) <- covariate_names
   }
@@ -68,6 +68,6 @@ fcn_project_raster <- function(raster) {
   state <- fcn_get_state()
   crs <- state$crs
   sf::sf_proj_network(TRUE)
-  projected_raster <- sf::st_transform(raster, crs)
+  projected_raster <- terra::project(raster, paste0("EPSG:", crs))
   return(projected_raster)
 }

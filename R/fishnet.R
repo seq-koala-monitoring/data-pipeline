@@ -8,9 +8,10 @@
 #' @export
 fcn_fishnet <- function(feature_class) {
   state <- fcn_get_state()
+  grid_size <- state$grid_size
   fishnet <- sf::st_make_grid(feature_class, cellsize = state$grid_size, crs = state$crs)
   fishnet_intersect <- sf::st_sf(fishnet[feature_class])
-  fishnet_intersect <- dplyr::mutate(fishnet_intersect, GridID = 1:nrow(fishnet_intersect))
+  fishnet_intersect <- dplyr::mutate(fishnet_intersect, GridID = paste(grid_size, 1:nrow(fishnet_intersect), sep = '_'))
   return(fishnet_intersect)
 }
 
@@ -31,6 +32,7 @@ fcn_get_grid_raster <- function() {
     warning("Fishnet grid not found in environment. Generating new grid.")
     grid <- fcn_new_grid()
   }
-  grid %>%
-    stars::st_rasterize()
+  base_layer <- fcn_covariate_raster_load()
+  grid_spatvector <- terra::vect(grid)
+  grid_raster <- terra::rasterize(grid_spatvector, base_layer, "GridID")
 }

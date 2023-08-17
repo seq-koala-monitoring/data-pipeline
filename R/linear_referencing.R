@@ -7,9 +7,39 @@
 fcn_route_table <- function(feature_class, line_transect) {
   line_transect$length = sf::st_length(line_transect$geom)
   ldnc = sf::st_intersection(line_transect, feature_class)
+  start_points <- ldnc[,c('Start_Eastings', 'Start_Northings')] %>%
+    sf::st_drop_geometry() %>%
+    fcn_df_to_sf()
+  ldnc_pts <- sf::st_coordinates(ldnc) %>%
+    as.data.frame() %>%
+    fcn_df_to_sf()
+
+  # Extract point a and b from ldnc segments
+  ldnc_pts_a <- ldnc_pts[seq(1,nrow(ldnc_pts),by=2),]
+  ldnc_pts_b <- ldnc_pts[seq(2,nrow(ldnc_pts),by=2),]
+
+  # Get distances for points A and B
+  dist_a <- sf::st_distance(start_points, ldnc_pts_a, by_element = T)
+  dist_b <- sf::st_distance(start_points, ldnc_pts_b, by_element = T)
+
+  # Calculate start and end points
+  ldnc$FMEAS <- units::drop_units(pmin(dist_a, dist_b))
+  ldnc$TMEAS <- units::drop_units(pmax(dist_a, dist_b))
+
+  # Return route table
   ldnc$lpercent = units::drop_units((sf::st_length(ldnc)/ldnc$length))
-  route_table <- sf::st_drop_geometry(ldnc)
+  route_table <- sf::st_drop_geometry(ldnc) %>%
+    dplyr::arrange(TransectID, FMEAS)
   return(route_table)
+}
+
+# Converts two-column dataframe (Easting and Northing) to SF points
+fcn_df_to_sf <- function(df) {
+  df_names <- colnames(df)
+  points <- df %>%
+    sf::st_as_sf(coords = df_names[1:2])
+  sf::st_crs(points) <- fcn_get_state()$crs
+  return(points)
 }
 
 #' Generate reference points and extract covariates
@@ -27,7 +57,8 @@ fcn_line_sample_extract_raster <- function(input_raster, line_transect, n = 50) 
   reference_points <- reference_points %>%
     group_by(TransectID) %>%
     mutate(distance_from_start = Tlength * sample_seq[row_number()])
-  extract_points <- stars::st_extract(input_raster,reference_points)
+  reference_points_vec <- terra::vect(reference_points)
+  extract_points <- terra::extract(input_raster, reference_points)
   extract_table <- cbind(reference_points, extract_points)
 }
 
@@ -41,7 +72,9 @@ fcn_sample_point_to_route <- function(extract_table) {
     filter(!dup) %>%
     mutate(distance_to_end = ifelse(dplyr::lead(TransectID) == TransectID, dplyr::lead(distance_from_start), Tlength)) %>%
     mutate(segment_length = distance_to_end - distance_from_start) %>%
-    dplyr::select(TransectID, Tlength, value, distance_from_start, distance_to_end, segment_length, geometry)
+    dplyr::select(TransectID, Tlength, value, distance_from_start, distance_to_end, segment_length, geometry) %>%
+    dplyr::mutate(lpercent = segment_length / Tlength) %>%
+    dplyr::rename(FMEAS = distance_from_start, TMEAS = distance_to_end)
 }
 
 #' Get Route Table (linear referencing) for a series of linear transects
@@ -52,4 +85,21 @@ fcn_route_table_raster <- function(input_raster, line_transect, n = 50) {
   extract_table <- fcn_line_sample_extract_raster(input_raster, line_transect, n)
   route_table <- fcn_sample_point_to_route(extract_table)
   return(route_table)
+}
+
+#' Route event layer to SF linestrings
+#' Converts Route event layer (from fcn_route_table) to lines
+#'
+fcn_locate_feature_from_route <- function(route_table, line_transects) {
+  line_transect_simple <- line_transects %>%
+    select(TransectID, geometry)
+  route_events <- dplyr::right_join(line_transect_simple, route_table, by = 'TransectID', relationship = "one-to-many")
+  route_events_trimmed <- mapply(fcn_line_trim, sf::st_geometry(route_events),
+                                 route_events[["FMEAS"]] / route_events[["Tlength"]],
+                                 route_events[["TMEAS"]] / route_events[["Tlength"]])
+  return(route_events_trimmed)
+}
+
+fcn_line_trim <- function(geom, start, end) {
+  return(sf::st_line_sample(geom, sample = c(start, end)))
 }

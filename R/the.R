@@ -50,6 +50,7 @@ fcn_get_study_area <- function() {
   dsn_path <- file.path(state$home_dir, study_area_args$dsn)
   fcn_check_paths(dsn_path, "Study area file", TRUE) # Halt execution if study area file is not found
   study_area_args$dsn <- dsn_path
+  study_area_args$quiet <- TRUE # silence the call
   study_area <- do.call(sf::st_read, study_area_args)
   study_area_transformed <- sf::st_transform(study_area, state$crs)
   return(study_area_transformed)
@@ -116,13 +117,16 @@ fcn_get_grid <- function() {
 fcn_set_grid_size <- function(grid_size) {
   old <- the$grid_size
   the$grid_size <- grid_size
+  invisible(old)
   if (grid_size < 1000) {
-    warning("Grid size is smaller than 1000 meters. Grid creation may take a while.")
+    warning("Grid size is smaller than 1000 meters. Grid creation may take a while. If continuing, use `fcn_new_grid()` to generate new grid.")
+    return()
   }
   if (grid_size > 50000) {
-    warning("Grid size is larger than 50000 meters, which will generate less than 20 grids. Prediction resolution may be too low.")
+    warning("Grid size is larger than 50000 meters, which will generate less than 20 grids. Prediction resolution may be too low. If continuing, use `fcn_new_grid()` to generate new grid.")
+    return()
   }
-  invisible(old)
+  fcn_new_grid()
 }
 
 #' Get GDB object path

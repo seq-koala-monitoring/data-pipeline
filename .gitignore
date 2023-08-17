@@ -6,3 +6,4 @@
 inst/doc
 working_data/
 .DS_Store
+Rprof.out

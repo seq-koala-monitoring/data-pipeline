@@ -101,12 +101,14 @@ fcn_set_crs <- function(crs) {
 }
 
 #' Overwrite grid when default fishnet is generated
+#' @export
 fcn_set_grid <- function(grid) {
   old <- the$grid
   the$grid <- grid
   invisible(old)
 }
 
+#' @export
 fcn_get_grid <- function() {
   the$grid
 }

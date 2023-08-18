@@ -17,7 +17,8 @@ Imports:
     units,
     purrr,
     magrittr,
-    stars
+    lubridate,
+    Matrix
 Suggests: 
     knitr,
     rmarkdown,

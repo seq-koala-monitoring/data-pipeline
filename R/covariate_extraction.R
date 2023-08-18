@@ -29,7 +29,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   df <- dplyr::bind_rows(list(constant = constant_covariates, temporal = temporal_covariates), .id = 'type') %>%
     mutate(name = substr(filename, 1, 5)) %>%
     mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
-    mutate(date = as.Date(paste0(date, "15"), "%Y%m%d"))
+    mutate(date = ifelse(is.na(date), NA, paste0("X", date)))
 
   if (!is.null(layer)) {
     df <- df %>%
@@ -40,20 +40,27 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 }
 
 #' Load covariate layer to SpatRaster by name
-#' @param cov name of covariate (string)
+#' @param covariate name of covariate (string)
+#' @export
 fcn_covariate_raster_load <- function(covariate = "htele") {
   raster_path <- fcn_get_raster_path()$covariates
   covariate_df <- fcn_covariate_layer_df() %>%
     filter(name == covariate)
   covariate_files <- purrr::map_chr(covariate_df$filename, function(x) file.path(raster_path, x))
-  covariate_names <- ifelse(length(covariate_files)<=1, covariate, covariate_df$date)
+  if (length(covariate_files)>1) {
+    covariate_names <- covariate_df$date
+  } else {
+    covariate_names <- covariate
+  }
+
   covariate_raster <- fcn_covariate_read_raster(covariate_files, covariate_names)
   covariate_raster
 }
 
+
 fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T) {
   covariate_raster <- terra::rast(covariate_files)
-  if (!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names))) {
+  if (all(!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names)))) {
     names(covariate_raster) <- covariate_names
   }
   if (project) {
@@ -70,4 +77,19 @@ fcn_project_raster <- function(raster) {
   sf::sf_proj_network(TRUE)
   projected_raster <- terra::project(raster, paste0("EPSG:", crs))
   return(projected_raster)
+}
+
+#' Get covariate value from a spatio-temporal raster
+#' @export
+fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear') {
+  # Date difference matrix between transect survey dates with route table layer dates
+  date_diff_mat <- fcn_date_diff_matrix(as.Date(route_table$Date), fcn_ym_to_date(col_names))
+  if (method == "bilinear") {
+    weights <- fcn_date_bilinear_interpolation_date(date_diff_mat)
+  } else {
+    weights <- fcn_date_weights_nearest_date(date_diff_mat)
+  }
+  event_matrix <- route_table[,col_names] %>% as.matrix()
+  route_table$value <- Matrix::rowSums(event_matrix * weights) %>% as.vector()
+  return(route_table)
 }

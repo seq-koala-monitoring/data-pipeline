@@ -38,24 +38,24 @@ does the following steps:
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
-#> Simple feature collection with 1800 features and 1 field
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
+#> Simple feature collection with 43472 features and 1 field
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464
+#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464
 #> Projected CRS: GDA2020 / MGA zone 56
 #> First 10 features:
 #>                          geometry  GridID
-#> 1  POLYGON ((378280 6862464, 3...  5000_1
-#> 2  POLYGON ((383280 6862464, 3...  5000_2
-#> 3  POLYGON ((388280 6862464, 3...  5000_3
-#> 4  POLYGON ((393280 6862464, 3...  5000_4
-#> 5  POLYGON ((398280 6862464, 4...  5000_5
-#> 6  POLYGON ((403280 6862464, 4...  5000_6
-#> 7  POLYGON ((408280 6862464, 4...  5000_7
-#> 8  POLYGON ((413280 6862464, 4...  5000_8
-#> 9  POLYGON ((418280 6862464, 4...  5000_9
-#> 10 POLYGON ((423280 6862464, 4... 5000_10
+#> 1  POLYGON ((378280 6862464, 3...  1000_1
+#> 2  POLYGON ((379280 6862464, 3...  1000_2
+#> 3  POLYGON ((380280 6862464, 3...  1000_3
+#> 4  POLYGON ((381280 6862464, 3...  1000_4
+#> 5  POLYGON ((382280 6862464, 3...  1000_5
+#> 6  POLYGON ((383280 6862464, 3...  1000_6
+#> 7  POLYGON ((384280 6862464, 3...  1000_7
+#> 8  POLYGON ((385280 6862464, 3...  1000_8
+#> 9  POLYGON ((386280 6862464, 3...  1000_9
+#> 10 POLYGON ((387280 6862464, 3... 1000_10
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
@@ -66,8 +66,6 @@ bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 bbox_sf <- sf::st_polygon(list(matrix(c(bbox$xlim[1], bbox$ylim[1], bbox$xlim[2], bbox$ylim[1], bbox$xlim[1], bbox$ylim[2], bbox$xlim[2], bbox$ylim[2],bbox$xlim[1], bbox$ylim[1]), ncol=2, byrow=T)))
 bbox_sf <- sf::st_sfc(bbox_sf)
 sf::st_crs(bbox_sf) <- fcn_get_state()$crs
-table_sf_2020_bbox <- table_sf_2020 %>%
-  dplyr::filter(sf::st_intersects(table_sf_2020, bbox_sf, sparse = FALSE)[,1])
 ```
 
 We can draw a simple plot to show the line transects for any particular
@@ -77,13 +75,10 @@ region with ggplot. Here we plot the line transects and the grid cells.
 ```r
 ggplot() +
   geom_sf(data = fishnet, color = 'gray50', fill = NA) +
-  geom_sf(data = table_sf_2020_bbox, color = '#D55E00') +
+  geom_sf(data = table_sf_2020, color = '#D55E00') +
   do.call(coord_sf, bbox) +
   theme_bw()+
   theme(panel.grid = element_blank())
 ```
 
-<div class="figure">
-<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" width="100%" />
-<p class="caption">plot of chunk unnamed-chunk-4</p>
-</div>
+![plot of chunk line_transect_plot](fig-line_transect_plot-1.png)

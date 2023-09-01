@@ -8,9 +8,12 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, fig.height = 4, dpi = 150,
+  fig.path = "fig-"
 )
 ```
 
@@ -58,7 +61,7 @@ of the event:
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 ```
@@ -82,7 +85,7 @@ Here, we see that the line transects are successfully segmented at the
 border of the grid cells, as colored by different ID numbers of the Grid
 where transects are colored by the last digit of the GridID:
 
-```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+```{r linear_referencing_transects}
 route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
 ggplot() +
   geom_sf(data = fishnet, color = 'gray50', fill = 'gray80') +

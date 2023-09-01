@@ -66,24 +66,24 @@ Here we plot the grid to see how it covers the study area
 
 
 ```r
-fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
-#> Simple feature collection with 1800 features and 1 field
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
+#> Simple feature collection with 43472 features and 1 field
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464
+#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464
 #> Projected CRS: GDA2020 / MGA zone 56
 #> First 10 features:
 #>                          geometry  GridID
-#> 1  POLYGON ((378280 6862464, 3...  5000_1
-#> 2  POLYGON ((383280 6862464, 3...  5000_2
-#> 3  POLYGON ((388280 6862464, 3...  5000_3
-#> 4  POLYGON ((393280 6862464, 3...  5000_4
-#> 5  POLYGON ((398280 6862464, 4...  5000_5
-#> 6  POLYGON ((403280 6862464, 4...  5000_6
-#> 7  POLYGON ((408280 6862464, 4...  5000_7
-#> 8  POLYGON ((413280 6862464, 4...  5000_8
-#> 9  POLYGON ((418280 6862464, 4...  5000_9
-#> 10 POLYGON ((423280 6862464, 4... 5000_10
+#> 1  POLYGON ((378280 6862464, 3...  1000_1
+#> 2  POLYGON ((379280 6862464, 3...  1000_2
+#> 3  POLYGON ((380280 6862464, 3...  1000_3
+#> 4  POLYGON ((381280 6862464, 3...  1000_4
+#> 5  POLYGON ((382280 6862464, 3...  1000_5
+#> 6  POLYGON ((383280 6862464, 3...  1000_6
+#> 7  POLYGON ((384280 6862464, 3...  1000_7
+#> 8  POLYGON ((385280 6862464, 3...  1000_8
+#> 9  POLYGON ((386280 6862464, 3...  1000_9
+#> 10 POLYGON ((387280 6862464, 3... 1000_10
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 study_area <- fcn_get_study_area() # Retrieve study area
 ggplot() +
@@ -93,7 +93,7 @@ ggplot() +
   theme(panel.grid = element_blank())
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+![plot of chunk grid_plot](fig-grid_plot-1.png)
 
 The `GridID` column in the fishnet feature class uniquely identifies
 each grid cell in the fishnet and is specific the to the `grid_size`,

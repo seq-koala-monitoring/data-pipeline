@@ -8,9 +8,12 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, fig.height = 4, dpi = 150,
+  fig.path = "fig-"
 )
 ```
 
@@ -27,7 +30,7 @@ Get data
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
@@ -54,7 +57,7 @@ cov_route_table
 ```
 
 
-```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+```{r htele_covariate}
 cov_route_features <- fcn_locate_feature_from_route(cov_route_table, table_sf_2020)
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
@@ -130,7 +133,7 @@ the route_table as an output. Here we preview the extracted,
 interpolated value next to the most recent layer of the spatio-temporal
 raster.
 
-```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+```{r hlwdy_plot}
 cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)

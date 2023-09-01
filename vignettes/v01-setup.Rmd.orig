@@ -8,9 +8,12 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, fig.height = 4, dpi = 150,
+  fig.path = "fig-"
 )
 ```
 
@@ -63,8 +66,8 @@ directly from the local environment.
 
 Here we plot the grid to see how it covers the study area
 
-```{r}
-fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
+```{r grid_plot}
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 study_area <- fcn_get_study_area() # Retrieve study area
 ggplot() +

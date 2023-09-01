@@ -1,5 +1,5 @@
 ---
-title: "v04-covariates"
+title: "4. Covariate extraction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{v04-covariates}

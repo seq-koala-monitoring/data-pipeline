@@ -1,5 +1,5 @@
 ---
-title: "linear-referencing-03"
+title: "3. Linear Referencing"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{linear-referencing-03}

@@ -1,5 +1,5 @@
 ---
-title: "get-data-02"
+title: "2. Get Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{get-data-02}

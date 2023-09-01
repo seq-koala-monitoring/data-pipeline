@@ -118,24 +118,24 @@ local environment. Functions that require this newly generated grid will
 be able to retrieve the grid directly from the local environment.</p>
 <p>Here we plot the grid to see how it covers the study area</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">5000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
-<span><span class="co">#&gt; Simple feature collection with 1800 features and 1 field</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
+<span><span class="co">#&gt; Simple feature collection with 43472 features and 1 field</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464</span></span>
 <span><span class="co">#&gt; Projected CRS: GDA2020 / MGA zone 56</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;                          geometry  GridID</span></span>
-<span><span class="co">#&gt; 1  POLYGON ((378280 6862464, 3...  5000_1</span></span>
-<span><span class="co">#&gt; 2  POLYGON ((383280 6862464, 3...  5000_2</span></span>
-<span><span class="co">#&gt; 3  POLYGON ((388280 6862464, 3...  5000_3</span></span>
-<span><span class="co">#&gt; 4  POLYGON ((393280 6862464, 3...  5000_4</span></span>
-<span><span class="co">#&gt; 5  POLYGON ((398280 6862464, 4...  5000_5</span></span>
-<span><span class="co">#&gt; 6  POLYGON ((403280 6862464, 4...  5000_6</span></span>
-<span><span class="co">#&gt; 7  POLYGON ((408280 6862464, 4...  5000_7</span></span>
-<span><span class="co">#&gt; 8  POLYGON ((413280 6862464, 4...  5000_8</span></span>
-<span><span class="co">#&gt; 9  POLYGON ((418280 6862464, 4...  5000_9</span></span>
-<span><span class="co">#&gt; 10 POLYGON ((423280 6862464, 4... 5000_10</span></span>
+<span><span class="co">#&gt; 1  POLYGON ((378280 6862464, 3...  1000_1</span></span>
+<span><span class="co">#&gt; 2  POLYGON ((379280 6862464, 3...  1000_2</span></span>
+<span><span class="co">#&gt; 3  POLYGON ((380280 6862464, 3...  1000_3</span></span>
+<span><span class="co">#&gt; 4  POLYGON ((381280 6862464, 3...  1000_4</span></span>
+<span><span class="co">#&gt; 5  POLYGON ((382280 6862464, 3...  1000_5</span></span>
+<span><span class="co">#&gt; 6  POLYGON ((383280 6862464, 3...  1000_6</span></span>
+<span><span class="co">#&gt; 7  POLYGON ((384280 6862464, 3...  1000_7</span></span>
+<span><span class="co">#&gt; 8  POLYGON ((385280 6862464, 3...  1000_8</span></span>
+<span><span class="co">#&gt; 9  POLYGON ((386280 6862464, 3...  1000_9</span></span>
+<span><span class="co">#&gt; 10 POLYGON ((387280 6862464, 3... 1000_10</span></span>
 <span><span class="va">fishnet</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_grid</span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve grid from environment for plotting</span></span>
 <span><span class="va">study_area</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_get_study_area.html">fcn_get_study_area</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve study area</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -144,7 +144,7 @@ be able to retrieve the grid directly from the local environment.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figure/unnamed-chunk-3-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-3</p>
+<img src="fig-grid_plot-1.png" alt=""><p class="caption">plot of chunk grid_plot</p>
 </div>
 <p>The <code>GridID</code> column in the fishnet feature class uniquely
 identifies each grid cell in the fishnet and is specific the to the

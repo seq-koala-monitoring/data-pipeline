@@ -114,24 +114,24 @@ covered by this event</li>
 <code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
 <span><span class="va">table_sf_2020</span> <span class="op">&lt;-</span> <span class="fu">fcn_line_transect_sf_2020</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">5000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
-<span><span class="co">#&gt; Simple feature collection with 1800 features and 1 field</span></span>
+<span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
+<span><span class="co">#&gt; Simple feature collection with 43472 features and 1 field</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464</span></span>
 <span><span class="co">#&gt; Projected CRS: GDA2020 / MGA zone 56</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;                          geometry  GridID</span></span>
-<span><span class="co">#&gt; 1  POLYGON ((378280 6862464, 3...  5000_1</span></span>
-<span><span class="co">#&gt; 2  POLYGON ((383280 6862464, 3...  5000_2</span></span>
-<span><span class="co">#&gt; 3  POLYGON ((388280 6862464, 3...  5000_3</span></span>
-<span><span class="co">#&gt; 4  POLYGON ((393280 6862464, 3...  5000_4</span></span>
-<span><span class="co">#&gt; 5  POLYGON ((398280 6862464, 4...  5000_5</span></span>
-<span><span class="co">#&gt; 6  POLYGON ((403280 6862464, 4...  5000_6</span></span>
-<span><span class="co">#&gt; 7  POLYGON ((408280 6862464, 4...  5000_7</span></span>
-<span><span class="co">#&gt; 8  POLYGON ((413280 6862464, 4...  5000_8</span></span>
-<span><span class="co">#&gt; 9  POLYGON ((418280 6862464, 4...  5000_9</span></span>
-<span><span class="co">#&gt; 10 POLYGON ((423280 6862464, 4... 5000_10</span></span>
+<span><span class="co">#&gt; 1  POLYGON ((378280 6862464, 3...  1000_1</span></span>
+<span><span class="co">#&gt; 2  POLYGON ((379280 6862464, 3...  1000_2</span></span>
+<span><span class="co">#&gt; 3  POLYGON ((380280 6862464, 3...  1000_3</span></span>
+<span><span class="co">#&gt; 4  POLYGON ((381280 6862464, 3...  1000_4</span></span>
+<span><span class="co">#&gt; 5  POLYGON ((382280 6862464, 3...  1000_5</span></span>
+<span><span class="co">#&gt; 6  POLYGON ((383280 6862464, 3...  1000_6</span></span>
+<span><span class="co">#&gt; 7  POLYGON ((384280 6862464, 3...  1000_7</span></span>
+<span><span class="co">#&gt; 8  POLYGON ((385280 6862464, 3...  1000_8</span></span>
+<span><span class="co">#&gt; 9  POLYGON ((386280 6862464, 3...  1000_9</span></span>
+<span><span class="co">#&gt; 10 POLYGON ((387280 6862464, 3... 1000_10</span></span>
 <span><span class="va">fishnet</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_grid</span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve grid from environment for plotting</span></span>
 <span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">441430</span>, <span class="fl">449400</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6928706</span>, <span class="fl">6936814</span><span class="op">)</span>, expand <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -139,20 +139,13 @@ covered by this event</li>
 <span><span class="co">#&gt; Warning: attribute variables are assumed to be spatially constant</span></span>
 <span><span class="co">#&gt; throughout all geometries</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">route_table</span><span class="op">[</span><span class="va">route_table</span><span class="op">$</span><span class="va">lpercent</span> <span class="op">&lt;</span> <span class="fl">0.5</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TransectID'</span>, <span class="st">'GridID'</span>, <span class="st">'FMEAS'</span>, <span class="st">'TMEAS'</span>, <span class="st">"Tlength"</span>, <span class="st">"lpercent"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                     TransectID   GridID    FMEAS     TMEAS   Tlength</span></span>
-<span><span class="co">#&gt; 2059   1000.0_7.2_SOL.20200330 5000_451 327.9339 602.86400 602.86400</span></span>
-<span><span class="co">#&gt; 2140.1  1004.0_30_SOL.20200716  5000_92   0.0000  52.40427 807.06010</span></span>
-<span><span class="co">#&gt; 2178.1  1008.0_10_SOL.20220713 5000_350   0.0000  40.18318 350.37409</span></span>
-<span><span class="co">#&gt; 2180     1009.0_1_SOL.20220720 5000_201 104.9016 198.07069 198.07069</span></span>
-<span><span class="co">#&gt; 2182     1009.0_5_SOL.20220720 5000_201   0.0000  18.96872  55.44367</span></span>
-<span><span class="co">#&gt; 2198     1015.0_1_SOL.20220721 5000_277 722.4784 863.04113 863.04114</span></span>
-<span><span class="co">#&gt;         lpercent</span></span>
-<span><span class="co">#&gt; 2059   0.4560401</span></span>
-<span><span class="co">#&gt; 2140.1 0.0649323</span></span>
-<span><span class="co">#&gt; 2178.1 0.1146865</span></span>
-<span><span class="co">#&gt; 2180   0.4703833</span></span>
-<span><span class="co">#&gt; 2182   0.3421260</span></span>
-<span><span class="co">#&gt; 2198   0.1628692</span></span></code></pre></div>
+<span><span class="co">#&gt;             TransectID     GridID    FMEAS     TMEAS   Tlength  lpercent</span></span>
+<span><span class="co">#&gt; 1.1 1.0_0_SOL.20210810 1000_14746 300.0884  484.1095  484.1095 0.3801229</span></span>
+<span><span class="co">#&gt; 2.1 1.0_1_SOL.20210810 1000_14745 590.6152  705.2055  960.0208 0.1193623</span></span>
+<span><span class="co">#&gt; 2   1.0_1_SOL.20210810 1000_14569 705.2055  960.0208  960.0208 0.2654269</span></span>
+<span><span class="co">#&gt; 3   1.0_2_SOL.20210810 1000_14569   0.0000  442.9913 1306.0907 0.3391734</span></span>
+<span><span class="co">#&gt; 3.1 1.0_2_SOL.20210810 1000_14570 442.9913  765.5946 1306.0907 0.2469991</span></span>
+<span><span class="co">#&gt; 3.2 1.0_2_SOL.20210810 1000_14746 765.5946 1306.0907 1306.0907 0.4138274</span></span></code></pre></div>
 <p>The results of the event route layer can be viewed by using
 <code>fcn_locate_feature_from_route</code> which segments the line
 transects based on the route event layer. This operation segments the
@@ -177,9 +170,7 @@ Grid where transects are colored by the last digit of the GridID:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" width="100%"><p class="caption">
-plot of chunk unnamed-chunk-4
-</p>
+<img src="fig-linear_referencing_transects-1.png" alt=""><p class="caption">plot of chunk linear_referencing_transects</p>
 </div>
 </div>
   </main>

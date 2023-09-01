@@ -27,9 +27,9 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
   df <- dplyr::bind_rows(list(constant = constant_covariates, temporal = temporal_covariates), .id = 'type') %>%
-    mutate(name = substr(filename, 1, 5)) %>%
-    mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
-    mutate(date = ifelse(is.na(date), NA, paste0("X", date)))
+    dplyr::mutate(name = substr(filename, 1, 5)) %>%
+    dplyr::mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
+    dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date)))
 
   if (!is.null(layer)) {
     df <- df %>%
@@ -45,7 +45,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 fcn_covariate_raster_load <- function(covariate = "htele") {
   raster_path <- fcn_get_raster_path()$covariates
   covariate_df <- fcn_covariate_layer_df() %>%
-    filter(name == covariate)
+    dplyr::filter(name == covariate)
   covariate_files <- purrr::map_chr(covariate_df$filename, function(x) file.path(raster_path, x))
   if (length(covariate_files)>1) {
     covariate_names <- covariate_df$date

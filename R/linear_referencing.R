@@ -53,8 +53,8 @@ fcn_line_sample_extract_raster <- function(input_raster, line_transect, n = 50) 
   reference_points$Tlength <- rep(line_transect$Tlength, each = n)
   reference_points$Date <- rep(line_transect$Date, each = n)
   reference_points <- reference_points %>%
-    group_by(TransectID) %>%
-    mutate(distance_from_start = Tlength * sample_seq[row_number()])
+    dplyr::group_by(TransectID) %>%
+    dplyr::mutate(distance_from_start = Tlength * sample_seq[dplyr::row_number()])
   reference_points_vec <- terra::vect(reference_points)
   extract_points <- terra::extract(input_raster, reference_points)
   extract_table <- cbind(reference_points, extract_points)
@@ -67,13 +67,13 @@ fcn_sample_point_to_route <- function(extract_table, names) {
   ## Remove points with same information as the previous column
   # in the multivariate case, it concatenates
   route_table <- extract_table %>%
-    ungroup() %>%
+    dplyr::ungroup() %>%
     tidyr::unite("value", names, remove = FALSE) %>%
-    mutate(dup = value == dplyr::lag(value) & TransectID == dplyr::lag(TransectID)) %>%
-    filter(!dup) %>%
-    select(-value) %>%
-    mutate(distance_to_end = ifelse(dplyr::lead(TransectID) == TransectID, dplyr::lead(distance_from_start), Tlength)) %>%
-    mutate(segment_length = distance_to_end - distance_from_start) %>%
+    dplyr::mutate(dup = value == dplyr::lag(value) & TransectID == dplyr::lag(TransectID)) %>%
+    dplyr::filter(!dup) %>%
+    dplyr::select(-value) %>%
+    dplyr::mutate(distance_to_end = ifelse(dplyr::lead(TransectID) == TransectID, dplyr::lead(distance_from_start), Tlength)) %>%
+    dplyr::mutate(segment_length = distance_to_end - distance_from_start) %>%
     dplyr::select(TransectID, Date, Tlength, dplyr::all_of(names), distance_from_start, distance_to_end, segment_length, geometry) %>%
     dplyr::mutate(lpercent = segment_length / Tlength) %>%
     dplyr::rename(FMEAS = distance_from_start, TMEAS = distance_to_end)
@@ -98,7 +98,7 @@ fcn_route_table_raster <- function(input_raster, line_transect, n = 50) {
 fcn_locate_feature_from_route <- function(route_table, line_transects) {
   state <- fcn_get_state()
   line_transect_simple <- line_transects %>%
-    select(TransectID, geometry)
+    dplyr::select(TransectID, geometry)
   route_events <- dplyr::right_join(line_transect_simple, route_table, by = 'TransectID', relationship = "one-to-many")
   route_events_trimmed <- mapply(fcn_line_trim, sf::st_geometry(route_events),
                                  route_events[["FMEAS"]] / route_events[["Tlength"]],

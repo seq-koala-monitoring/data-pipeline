@@ -1,0 +1,341 @@
+---
+title: "introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{index}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+This vignette describes the usage of the toolbox provided by the custom
+R package `SEQKoalaDataPipeline` that reads from ACCESS databases of
+koala monitoring data, spatial files of monitoring transects, and
+rasterised data of covariates, and produces outputs for the spatial data
+model.
+
+The functions in the toolbox perform several functions useful for
+producing data outputs for the statistical models and other
+functionalities. Features include but are not limited to the following:
+
+1.  Establish connections to ACCESS through ODBC
+2.  Generate grids "fishnets" at any given spatial resolution around the
+    study area and generates unique IDs for each grid cell
+3.  Produce spatial feature classes (sf) of line transects based on
+    start and end coordinate columns in dataframes
+4.  Linear referencing: calculate the proportion of, and distance of
+    that segment from the origin, of a linear transect lying within a
+    grid cell
+5.  Linear referencing: calculate the proportion of, and distance of
+    segments from the origin, of a linear transect from raster covariate
+    layers
+6.  Dynamic segmentation: return the coordinates of koala sightings
+    based on distance from transect origin (work-in-progress)
+7.  Dynamic segmentation: return the covariate information of each koala
+    sighting based on linear referencing route tables (work-in-progress)
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Load packages for the analysis
+
+```{r setup}
+library(SEQKoalaDataPipeline)
+library(dplyr)
+library(ggplot2)
+library(tidyterra)
+library(patchwork)
+```
+
+# Initial setup
+
+The package relies on a data directory (home_dir) that stores the
+datasets used for the analysis. The first step involves setting the path
+on the computer to a directory with the following files:
+
+-   `basedata.gdb`: a ArcGIS geodatabase with the study area in it
+    (`seqrp_study_area_2017_mga56`)
+
+-   `final_covariates.gdb`: a ArcGIS geodatabase of the covariate raster
+    layers
+
+-   `final_covariates_raster`: a directory containing GeoTIFF files of
+    the covariates from `final_covariates.gdb` because R does not read
+    raster files from ArcGIS GDB
+
+-   `koala_survey_data_ver2_0.gdb`: a geodatabase containing the koala
+    survey data
+
+-   `KoalaSurveyData2020_cur.accdb`: an ACCESS database containing data
+    from 2020 onwards
+
+-   `SEQkoalaData.accdb`: an ACCESS database containing data from
+    1996-2015
+
+This directory can be stored on anywhere on the computer.
+
+```{r}
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+fcn_set_home_dir(data_dir)
+list.files(data_dir)
+```
+
+# Generate fishnet grid
+
+Grids for the analysis can be generated on the fly by specifying the
+grid size. After generating the grid by calling `fcn_set_grid_size`, the
+grid feature class is stored in the local environment. Functions that
+require this newly generated grid will be able to retrieve the grid
+directly from the local environment.
+
+Here we plot the grid to see how it covers the study area
+
+```{r cache = TRUE}
+fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
+fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
+study_area <- fcn_get_study_area() # Retrieve study area
+ggplot() +
+  geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
+  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+
+The `GridID` column in the fishnet feature class uniquely identifies
+each grid cell in the fishnet and is specific the to the `grid_size`,
+with the following format:
+
+"Grid side width (in meters)"\_"Grid Number"
+
+# Extract data from the database
+
+## Get transect (1996-2015) data
+
+Work in progress
+
+## Get line transect (2020 onwards) data
+
+The line transect feature class table can be extracted from the ACCESS
+database directly through one function. Behind this function call, R
+does the following steps:
+
+1.  Establishes the ODBC connection with the ACCESS database
+2.  Executes SQL queries to pull data from that database
+3.  Reads the columns with start and end northings and eastings
+4.  Generates a spatial representation for each transect based on those
+    columns
+
+```{r}
+table_sf_2020 <- fcn_line_transect_sf_2020()
+```
+
+We can draw a simple plot to show the line transects for any particular
+region with ggplot. Here we plot the line transects and the
+
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
+ggplot() +
+  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+  geom_sf(data = table_sf_2020, color = '#D55E00') +
+  do.call(coord_sf, bbox) +
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+
+## Linear referencing / dynamic segmentation
+
+The linear referencing/ dynamic segmentation approach is used to relate
+the line transects with the grid information and covariate layers. While
+it can be used to derive outputs for the statistical model, the tables
+generated by linear referencing itself could serve other purposes.
+
+The toolbox for linear referencing in this package allows the user to
+generate a "Route Event Layer" (also referred to as "Route Event Tables"
+or "Route Table") that are the fundamental way which routes (i.e.
+Transects) are represented in linear referencing.
+
+In the linear referencing terminology, each transect is represented as a
+"route". Each record in the "Route Event Layer" that stores the distance
+from the start of a transect of where an "Event" occurred. An event can
+be an intersection with a grid cell, or certain values within the
+covariate layer. Using the `fcn_route_table` call, we can create a
+"Route Event Layer" that records each "Event" and has a TransectID that
+relates each event back to the transect concerned.
+
+The function call creates a few new columns that records the attributes
+of the event:
+
+1.  FMEAS: the "From Measure", which is the distance from the start
+    point of the transect where the event starts
+2.  TMEAS: the "To Measure", which is the distance from the start point
+    of the transect where the event ends
+3.  Variable Name (e.g. GridID): the value of the event, in this case,
+    the GridID of the grid cell this "Event" is describing
+4.  Tlength: transect length
+5.  lpercent: the percentage (proportion) of the transect that is
+    covered by this event
+
+```{r}
+route_table <- fcn_route_table(fishnet, table_sf_2020)
+head(route_table[route_table$lpercent < 0.5,c('TransectID', 'GridID', 'FMEAS', 'TMEAS', "Tlength", "lpercent")])
+```
+
+The results of the event route layer can be viewed by using
+`fcn_locate_feature_from_route` which segments the line transects based
+on the route event layer. This operation segments the line transects
+many different small segments - it could be slow if the route event
+layer is large, especially if applied to high-resolution grid cells or
+route event layers of rasterized covariate layers (described below). In
+many cases, the route event layer table itself is a sufficient spatial
+representation of the linear referencing results, but only by doing this
+step can we inspect the results visually.
+
+Here, we see that the line transects are successfully segmented at the
+border of the grid cells, as colored by different ID numbers of the Grid
+where transects are colored by the last digit of the GridID:
+
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
+ggplot() +
+  geom_sf(data = fishnet, color = 'gray50', fill = 'gray80') +
+  geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID))), linewidth = 1) +
+  do.call(coord_sf, bbox) +
+  scale_color_brewer(palette = "Set3") +
+  labs(color = "") +
+  #guides(color = 'none')+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+
+# Covariate extraction
+
+## Atemporal rasters covariate extraction
+
+Likewise, the capabilities of linear referencing can be applied to
+extract covariate information from Raster files. The raster layer can be
+loaded using `fcn_covariate_raster_load`.
+
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+cov <- fcn_covariate_raster_load("htele")
+cov_route_table <- fcn_route_table_raster(cov, table_sf_2020)
+terra::plot(cov)
+```
+
+The results of the linear referencing (route event layer) can be
+inspected by using the same approach as above. Creation of the segments
+could take a while. As seen in the outputs, the values of the event
+layer (red) closely match that of the underlying raster layer (in blue).
+```{r}
+cov_route_table
+```
+
+
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+cov_route_features <- fcn_locate_feature_from_route(cov_route_table, table_sf_2020)
+ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
+cov_crop <- terra::crop(cov, ext)
+limits <- terra::minmax(cov_crop)
+rast_plot <- ggplot() +
+  geom_spatraster(data = cov_crop) +
+  do.call(coord_sf, bbox)+
+  labs(fill = "") +
+  ggtitle("htele: covariate raster") +
+  scale_fill_viridis_c(limits = c(limits[1], limits[2])) +
+  #guides(color = 'none')+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+transect_plot <- ggplot() +
+  geom_sf(data = cov_route_features, aes(color = htele), linewidth = 1) +
+  do.call(coord_sf, bbox)+
+  ggtitle("htele: extracted from transects") +
+  labs(color = "") +
+  scale_color_viridis_c(limits = c(limits[1], limits[2])) +
+  theme_bw()+
+  theme(panel.grid = element_blank())
+rast_plot + transect_plot + plot_layout(guides = 'collect')
+```
+
+## Spatio-temporal rasters
+
+Extraction of covariates from spatio-temporal raster files are also
+supported. The algorithm first extracts spatio-temporal rasters as a
+multi-layer SpatRaster in `terra` and creates the Event Route Layer from
+all spatio-temporal layers.
+
+```{r cache = TRUE}
+cov_sptemp <- fcn_covariate_raster_load("hlwdy")
+names(cov_sptemp)
+```
+
+The covariates are extracted as a multi-layer "SpatRaster" (from the
+`terra` package) where the names of the raster layers represents the
+dates of the raster layer. Where only the year and month of the raster
+layers are available, the dates of the raster layers are assumed to be
+taken on the 15th of the month. The date of the month is expected to
+have a relatively small effect on the covariate extracted.
+
+```{r }
+cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
+```
+
+The covariate value of the route event layer can be matched to the date
+of the survey. The covariate value representative of the date which the
+transect is surveyed can be interpolated by the following methods:
+
+-   bilinear: bilinear interpolation between the two closest dates of
+    the survey date, weighted by how close the survey is to the two
+    dates. If the survey date is earlier or later than all of the dates
+    of the covariate layers, then the earliest or latest covariate layer
+    is selected respectively
+
+-   nearest: the covariate layer closest to the survey date is used
+
+-   "lag1" / "lag2" / "lag3" (work in progress): lagged layers -- select
+    the first, second or third layer available earlier than the survey
+    date. If the lagged layer is not available, then select the earliest
+    layer available.
+
+```{r }
+route_table_date_matched <- fcn_covariate_match_date(cov_sptemp_route_table, names(cov_sptemp), method = 'bilinear')
+route_table_date_matched
+```
+
+The date matching algorithm creates / overwrites the "value" column in
+the route_table as an output. Here we preview the extracted,
+interpolated value next to the most recent layer of the spatio-temporal
+raster.
+
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
+cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
+ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
+cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
+limits <- terra::minmax(cov_sptemp_crop)
+rast_sptemp_plot <- ggplot() +
+  geom_spatraster(data = cov_sptemp_crop, aes(fill = X201907)) +
+  do.call(coord_sf, bbox)+
+  labs(fill = "") +
+  ggtitle("hlwdy: 2019/07 woody \nvegetation cover") +
+  scale_fill_viridis_c(limits = c(limits[1], limits[2])) +
+  #guides(color = 'none')+
+  theme_bw()+
+  theme(panel.grid = element_blank())
+transect_sptemp_plot <- ggplot() +
+  geom_sf(data = cov_sptemp_date_matched, aes(color = value), linewidth = 1) +
+  do.call(coord_sf, bbox)+
+  ggtitle("hlwdy: transects (bilinear)") +
+  labs(color = "") +
+  scale_color_viridis_c(limits = c(limits[1], limits[2])) +
+  theme_bw()+
+  theme(panel.grid = element_blank())
+rast_sptemp_plot + transect_sptemp_plot + plot_layout(guides = 'collect')
+```
+
+# Koala sightings (events) in linear referencing
+
+Work in progress

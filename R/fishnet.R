@@ -9,9 +9,11 @@
 fcn_fishnet <- function(feature_class) {
   state <- fcn_get_state()
   grid_size <- state$grid_size
-  fishnet <- sf::st_make_grid(feature_class, cellsize = state$grid_size, crs = state$crs)
-  fishnet_intersect <- sf::st_sf(fishnet[feature_class])
-  fishnet_intersect <- dplyr::mutate(fishnet_intersect, GridID = paste(grid_size, 1:nrow(fishnet_intersect), sep = '_'))
+  fishnet <- sf::st_make_grid(feature_class, cellsize = state$grid_size, crs = state$crs) %>%
+    sf::st_sf()
+  #fishnet <- sf::st_sf(fishnet[feature_class])
+  #fishnet_intersect <- dplyr::mutate(fishnet_intersect, GridID = paste(grid_size, 1:nrow(fishnet_intersect), sep = '_'))
+  fishnet_intersect <- dplyr::mutate(fishnet, GridID = paste(grid_size, 1:nrow(fishnet), sep = '_'))
   return(fishnet_intersect)
 }
 

@@ -22,6 +22,7 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    mapview
+    mapview,
+    tidyterra
 VignetteBuilder: knitr
 URL: https://seq-koala-monitoring.github.io/data-pipeline/

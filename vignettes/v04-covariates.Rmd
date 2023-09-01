@@ -131,7 +131,7 @@ interpolated value next to the most recent layer of the spatio-temporal
 raster.
 
 ```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
-cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020_bbox)
+cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
 limits <- terra::minmax(cov_sptemp_crop)

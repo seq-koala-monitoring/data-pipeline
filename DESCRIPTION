@@ -24,3 +24,4 @@ Suggests:
     rmarkdown,
     mapview
 VignetteBuilder: knitr
+URL: https://seq-koala-monitoring.github.io/data-pipeline/

@@ -1,0 +1,81 @@
+---
+title: "setup"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{setup}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SEQKoalaDataPipeline)
+library(ggplot2)
+```
+
+
+# Initial setup
+
+The package relies on a data directory (home_dir) that stores the
+datasets used for the analysis. The first step involves setting the path
+on the computer to a directory with the following files:
+
+-   `basedata.gdb`: a ArcGIS geodatabase with the study area in it
+    (`seqrp_study_area_2017_mga56`)
+
+-   `final_covariates.gdb`: a ArcGIS geodatabase of the covariate raster
+    layers
+
+-   `final_covariates_raster`: a directory containing GeoTIFF files of
+    the covariates from `final_covariates.gdb` because R does not read
+    raster files from ArcGIS GDB
+
+-   `koala_survey_data_ver2_0.gdb`: a geodatabase containing the koala
+    survey data
+
+-   `KoalaSurveyData2020_cur.accdb`: an ACCESS database containing data
+    from 2020 onwards
+
+-   `SEQkoalaData.accdb`: an ACCESS database containing data from
+    1996-2015
+
+This directory can be stored on anywhere on the computer.
+
+```{r}
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+fcn_set_home_dir(data_dir)
+list.files(data_dir)
+```
+
+# Generate fishnet grid
+
+Grids for the analysis can be generated on the fly by specifying the
+grid size. After generating the grid by calling `fcn_set_grid_size`, the
+grid feature class is stored in the local environment. Functions that
+require this newly generated grid will be able to retrieve the grid
+directly from the local environment.
+
+Here we plot the grid to see how it covers the study area
+
+```{r}
+fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
+fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
+study_area <- fcn_get_study_area() # Retrieve study area
+ggplot() +
+  geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
+  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+  theme_bw()+
+  theme(panel.grid = element_blank())
+```
+
+The `GridID` column in the fishnet feature class uniquely identifies
+each grid cell in the fishnet and is specific the to the `grid_size`,
+with the following format:
+
+"Grid side width (in meters)"\_"Grid Number"

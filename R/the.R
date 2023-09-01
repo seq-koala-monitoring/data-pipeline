@@ -120,8 +120,8 @@ fcn_set_grid_size <- function(grid_size) {
   old <- the$grid_size
   the$grid_size <- grid_size
   invisible(old)
-  if (grid_size < 1000) {
-    warning("Grid size is smaller than 1000 meters. Grid creation may take a while. If continuing, use `fcn_new_grid()` to generate new grid.")
+  if (grid_size < 100) {
+    warning("Grid size is smaller than 100 meters. Grid creation may take a while. If continuing, use `fcn_new_grid()` to generate new grid.")
     return()
   }
   if (grid_size > 50000) {

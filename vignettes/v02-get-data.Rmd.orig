@@ -7,10 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
-
-
-```r
+```{r setup}
 library(SEQKoalaDataPipeline)
 ```
 
@@ -33,35 +37,16 @@ does the following steps:
 4.  Generates a spatial representation for each transect based on those
     columns
 
-
-```r
+```{r}
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
-#> Simple feature collection with 1800 features and 1 field
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464
-#> Projected CRS: GDA2020 / MGA zone 56
-#> First 10 features:
-#>                          geometry  GridID
-#> 1  POLYGON ((378280 6862464, 3...  5000_1
-#> 2  POLYGON ((383280 6862464, 3...  5000_2
-#> 3  POLYGON ((388280 6862464, 3...  5000_3
-#> 4  POLYGON ((393280 6862464, 3...  5000_4
-#> 5  POLYGON ((398280 6862464, 4...  5000_5
-#> 6  POLYGON ((403280 6862464, 4...  5000_6
-#> 7  POLYGON ((408280 6862464, 4...  5000_7
-#> 8  POLYGON ((413280 6862464, 4...  5000_8
-#> 9  POLYGON ((418280 6862464, 4...  5000_9
-#> 10 POLYGON ((423280 6862464, 4... 5000_10
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
 Define the bounding box for plotting
-
-```r
+```{r}
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 bbox_sf <- sf::st_polygon(list(matrix(c(bbox$xlim[1], bbox$ylim[1], bbox$xlim[2], bbox$ylim[1], bbox$xlim[1], bbox$ylim[2], bbox$xlim[2], bbox$ylim[2],bbox$xlim[1], bbox$ylim[1]), ncol=2, byrow=T)))
 bbox_sf <- sf::st_sfc(bbox_sf)
@@ -73,8 +58,7 @@ table_sf_2020_bbox <- table_sf_2020 %>%
 We can draw a simple plot to show the line transects for any particular
 region with ggplot. Here we plot the line transects and the grid cells.
 
-
-```r
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
 ggplot() +
   geom_sf(data = fishnet, color = 'gray50', fill = NA) +
   geom_sf(data = table_sf_2020_bbox, color = '#D55E00') +
@@ -82,8 +66,3 @@ ggplot() +
   theme_bw()+
   theme(panel.grid = element_blank())
 ```
-
-<div class="figure">
-<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" width="100%" />
-<p class="caption">plot of chunk unnamed-chunk-4</p>
-</div>

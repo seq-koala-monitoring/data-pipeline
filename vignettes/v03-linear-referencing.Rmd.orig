@@ -7,10 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
-
-
-```r
+```{r setup}
 library(SEQKoalaDataPipeline)
 library(ggplot2)
 library(dplyr)
@@ -50,53 +54,18 @@ of the event:
 5.  lpercent: the percentage (proportion) of the transect that is
     covered by this event
 
-
-```r
+```{r}
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(5000) # grid width/ height in meters, and generate grid in local environment
-#> Simple feature collection with 1800 features and 1 field
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 558280 ymax: 7112464
-#> Projected CRS: GDA2020 / MGA zone 56
-#> First 10 features:
-#>                          geometry  GridID
-#> 1  POLYGON ((378280 6862464, 3...  5000_1
-#> 2  POLYGON ((383280 6862464, 3...  5000_2
-#> 3  POLYGON ((388280 6862464, 3...  5000_3
-#> 4  POLYGON ((393280 6862464, 3...  5000_4
-#> 5  POLYGON ((398280 6862464, 4...  5000_5
-#> 6  POLYGON ((403280 6862464, 4...  5000_6
-#> 7  POLYGON ((408280 6862464, 4...  5000_7
-#> 8  POLYGON ((413280 6862464, 4...  5000_8
-#> 9  POLYGON ((418280 6862464, 4...  5000_9
-#> 10 POLYGON ((423280 6862464, 4... 5000_10
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 ```
 
-
-```r
+```{r}
 route_table <- fcn_route_table(fishnet, table_sf_2020)
-#> Warning: attribute variables are assumed to be spatially constant
-#> throughout all geometries
 head(route_table[route_table$lpercent < 0.5,c('TransectID', 'GridID', 'FMEAS', 'TMEAS', "Tlength", "lpercent")])
-#>                     TransectID   GridID    FMEAS     TMEAS   Tlength
-#> 2059   1000.0_7.2_SOL.20200330 5000_451 327.9339 602.86400 602.86400
-#> 2140.1  1004.0_30_SOL.20200716  5000_92   0.0000  52.40427 807.06010
-#> 2178.1  1008.0_10_SOL.20220713 5000_350   0.0000  40.18318 350.37409
-#> 2180     1009.0_1_SOL.20220720 5000_201 104.9016 198.07069 198.07069
-#> 2182     1009.0_5_SOL.20220720 5000_201   0.0000  18.96872  55.44367
-#> 2198     1015.0_1_SOL.20220721 5000_277 722.4784 863.04113 863.04114
-#>         lpercent
-#> 2059   0.4560401
-#> 2140.1 0.0649323
-#> 2178.1 0.1146865
-#> 2180   0.4703833
-#> 2182   0.3421260
-#> 2198   0.1628692
 ```
 
 The results of the event route layer can be viewed by using
@@ -113,8 +82,7 @@ Here, we see that the line transects are successfully segmented at the
 border of the grid cells, as colored by different ID numbers of the Grid
 where transects are colored by the last digit of the GridID:
 
-
-```r
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
 route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
 ggplot() +
   geom_sf(data = fishnet, color = 'gray50', fill = 'gray80') +
@@ -126,8 +94,3 @@ ggplot() +
   theme_bw()+
   theme(panel.grid = element_blank())
 ```
-
-<div class="figure">
-<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" width="100%" />
-<p class="caption">plot of chunk unnamed-chunk-4</p>
-</div>

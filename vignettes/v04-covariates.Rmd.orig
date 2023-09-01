@@ -53,7 +53,7 @@ inspected by using the same approach as above. Creation of the segments
 could take a while. As seen in the outputs, the values of the event
 layer (red) closely match that of the underlying raster layer (in blue).
 ```{r}
-cov_route_table
+head(cov_route_table)
 ```
 
 
@@ -125,7 +125,7 @@ transect is surveyed can be interpolated by the following methods:
 
 ```{r }
 route_table_date_matched <- fcn_covariate_match_date(cov_sptemp_route_table, names(cov_sptemp), method = 'bilinear')
-route_table_date_matched
+head(route_table_date_matched)
 ```
 
 The date matching algorithm creates / overwrites the "value" column in

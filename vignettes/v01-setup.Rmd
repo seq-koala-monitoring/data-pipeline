@@ -47,11 +47,9 @@ This directory can be stored on anywhere on the computer.
 ```r
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
+#> Error in fcn_check_paths(dir, "Home directory", TRUE): Home directory does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data
 list.files(data_dir)
-#> [1] "basedata.gdb"                    "final_covariates.gdb"           
-#> [3] "final_covariates_raster"         "final_covariates_raster_gda1994"
-#> [5] "KoalaSurveyData.gdb"             "KoalaSurveyData2020_cur.accdb"  
-#> [7] "SEQkoalaData.accdb"              "SEQkoalaData_info.pdf"
+#> character(0)
 ```
 
 # Generate fishnet grid
@@ -67,18 +65,11 @@ Here we plot the grid to see how it covers the study area
 
 ```r
 fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-#> class       : SpatRaster 
-#> dimensions  : 2467, 1759, 1  (nrow, ncol, nlyr)
-#> resolution  : 100, 100  (x, y)
-#> extent      : 378280, 554180, 6862464, 7109164  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) 
-#> source(s)   : memory
-#> name        :   lyr.1 
-#> min value   :       1 
-#> max value   : 2311397
+#> Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb
 fishnet <- fcn_get_grid(option = 'raster') # Retrieve grid from environment for plotting
 #> Error in fcn_get_grid(option = "raster"): unused argument (option = "raster")
 study_area <- fcn_get_study_area() # Retrieve study area
+#> Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb
 ggplot() +
   geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
   geom_sf(data = fishnet, color = 'gray50', fill = NA) +

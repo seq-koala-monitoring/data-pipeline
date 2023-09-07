@@ -18,10 +18,14 @@ fcn_fishnet <- function(feature_class) {
 }
 
 fcn_fishnet_raster <- function(feature_class) {
+  state <- fcn_get_state()
+  grid_size <- state$grid_size
   feature_class_vect <- terra::vect(feature_class)
-  fishnet <- terra::rast(feature_class_vect, res = res, vals = 1)
+  fishnet <- terra::rast(feature_class_vect, res = grid_size, vals = 1)
+  names(fishnet) <- "GridID"
   fishnet_masked <- terra::mask(fishnet, feature_class_vect)
-  fishnet_masked[fishnet_masked == 1] <- 1:length(fishnet_masked[fishnet_masked==1])
+  grid_id <- 1:length(fishnet_masked[fishnet_masked==1])
+  fishnet_masked[fishnet_masked == 1] <- grid_id
   return(fishnet_masked)
 }
 

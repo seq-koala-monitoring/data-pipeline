@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(SEQKoalaDataPipeline)
+library(tidyterra)
 ```
 
 
@@ -42,6 +43,7 @@ does the following steps:
 
 ```{r}
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -60,10 +62,18 @@ We can draw a simple plot to show the line transects for any particular
 region with ggplot. Here we plot the line transects and the grid cells.
 
 ```{r line_transect_plot}
-ggplot() +
-  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
+fishnet_bbox <- terra::crop(fishnet, terra::vect(bbox_sf))
+fishnet_plot <- ggplot() +
+  geom_spatraster(data = fishnet_bbox %>% mutate(grid_id_plot = substr(GridID, nchar(GridID), nchar(GridID))), aes(fill = grid_id_plot)) +
+  do.call(coord_sf, bbox) +
+  theme_bw()+
+  scale_fill_brewer(palette = "Set3") +
+  guides(fill = 'none')+
+  theme(panel.grid = element_blank())
+transect_plot <- ggplot() +
   geom_sf(data = table_sf_2020, color = '#D55E00') +
   do.call(coord_sf, bbox) +
   theme_bw()+
   theme(panel.grid = element_blank())
+fishnet_plot + transect_plot
 ```

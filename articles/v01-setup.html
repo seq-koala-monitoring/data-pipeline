@@ -102,11 +102,9 @@ data from 1996-2015</p></li>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in fcn_check_paths(dir, "Home directory", TRUE): Home directory does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "basedata.gdb"                    "final_covariates.gdb"           </span></span>
-<span><span class="co">#&gt; [3] "final_covariates_raster"         "final_covariates_raster_gda1994"</span></span>
-<span><span class="co">#&gt; [5] "KoalaSurveyData.gdb"             "KoalaSurveyData2020_cur.accdb"  </span></span>
-<span><span class="co">#&gt; [7] "SEQkoalaData.accdb"              "SEQkoalaData_info.pdf"</span></span></code></pre></div>
+<span><span class="co">#&gt; character(0)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="generate-fishnet-grid">Generate fishnet grid<a class="anchor" aria-label="anchor" href="#generate-fishnet-grid"></a>
@@ -119,18 +117,11 @@ be able to retrieve the grid directly from the local environment.</p>
 <p>Here we plot the grid to see how it covers the study area</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
-<span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 2467, 1759, 1  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">#&gt; resolution  : 100, 100  (x, y)</span></span>
-<span><span class="co">#&gt; extent      : 378280, 554180, 6862464, 7109164  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) </span></span>
-<span><span class="co">#&gt; source(s)   : memory</span></span>
-<span><span class="co">#&gt; name        :   lyr.1 </span></span>
-<span><span class="co">#&gt; min value   :       1 </span></span>
-<span><span class="co">#&gt; max value   : 2311397</span></span>
+<span><span class="co">#&gt; Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb</span></span>
 <span><span class="va">fishnet</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_grid</span><span class="op">(</span>option <span class="op">=</span> <span class="st">'raster'</span><span class="op">)</span> <span class="co"># Retrieve grid from environment for plotting</span></span>
 <span><span class="co">#&gt; Error in fcn_get_grid(option = "raster"): unused argument (option = "raster")</span></span>
 <span><span class="va">study_area</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_get_study_area.html">fcn_get_study_area</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve study area</span></span>
+<span><span class="co">#&gt; Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">study_area</span>, color <span class="op">=</span> <span class="st">'gray50'</span>, fill <span class="op">=</span> <span class="st">'gray90'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">fishnet</span>, color <span class="op">=</span> <span class="st">'gray50'</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>

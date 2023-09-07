@@ -84,17 +84,11 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in fcn_check_paths(dir, "Home directory", TRUE): Home directory does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data</span></span>
 <span><span class="va">table_sf_2020</span> <span class="op">&lt;-</span> <span class="fu">fcn_line_transect_sf_2020</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in fcn_db_connect_table(2020): Database in file path M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/KoalaSurveyData2020_cur.accdb does not exist</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
-<span><span class="co">#&gt; class       : SpatRaster </span></span>
-<span><span class="co">#&gt; dimensions  : 2467, 1759, 1  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">#&gt; resolution  : 100, 100  (x, y)</span></span>
-<span><span class="co">#&gt; extent      : 378280, 554180, 6862464, 7109164  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) </span></span>
-<span><span class="co">#&gt; source(s)   : memory</span></span>
-<span><span class="co">#&gt; name        :   lyr.1 </span></span>
-<span><span class="co">#&gt; min value   :       1 </span></span>
-<span><span class="co">#&gt; max value   : 2311397</span></span>
+<span><span class="co">#&gt; Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb</span></span>
 <span><span class="va">fishnet</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_grid</span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve grid from environment for plotting</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="covariate-extraction">Covariate extraction<a class="anchor" aria-label="anchor" href="#covariate-extraction"></a>
@@ -107,6 +101,15 @@ extract covariate information from Raster files. The raster layer can be
 loaded using <code>fcn_covariate_raster_load</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_covariate_raster_load.html">fcn_covariate_raster_load</a></span><span class="op">(</span><span class="st">"htele"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span><span class="co">#&gt; Error: [rast] filename is empty. Provide a valid filename</span></span>
 <span><span class="va">cov_route_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_route_table_raster.html">fcn_route_table_raster</a></span><span class="op">(</span><span class="va">cov</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -121,20 +124,13 @@ layer (red) closely match that of the underlying raster layer (in
 blue).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cov_route_table</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           TransectID       Date  Tlength    htele     FMEAS    TMEAS segment_length</span></span>
-<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.12856  39.51914 128.4372       88.91807</span></span>
-<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095 90.80862 128.43721 167.9564       39.51914</span></span>
-<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095 93.57124 167.95635 276.6340      108.67764</span></span>
-<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095 87.75922 276.63400 296.3936       19.75957</span></span>
-<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095 90.65904 296.39357 434.7106      138.31700</span></span>
-<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095 99.36454 434.71056 484.1095       49.39893</span></span>
-<span><span class="co">#&gt;     lpercent</span></span>
-<span><span class="co">#&gt; 1 0.18367347</span></span>
-<span><span class="co">#&gt; 2 0.08163265</span></span>
-<span><span class="co">#&gt; 3 0.22448980</span></span>
-<span><span class="co">#&gt; 4 0.04081633</span></span>
-<span><span class="co">#&gt; 5 0.28571429</span></span>
-<span><span class="co">#&gt; 6 0.10204082</span></span></code></pre></div>
+<span><span class="co">#&gt;           TransectID       Date  Tlength    htele     FMEAS    TMEAS segment_length   lpercent</span></span>
+<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.12614  39.51914 128.4372       88.91807 0.18367347</span></span>
+<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095 90.80642 128.43721 167.9564       39.51914 0.08163265</span></span>
+<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095 93.56960 167.95635 276.6340      108.67764 0.22448980</span></span>
+<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095 87.75806 276.63400 296.3936       19.75957 0.04081633</span></span>
+<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095 90.65868 296.39357 434.7106      138.31700 0.28571429</span></span>
+<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095 99.36263 434.71056 484.1095       49.39893 0.10204082</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cov_route_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_locate_feature_from_route.html">fcn_locate_feature_from_route</a></span><span class="op">(</span><span class="va">cov_route_table</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
 <span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">441430</span>, <span class="fl">449400</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6928706</span>, <span class="fl">6936814</span><span class="op">)</span>, expand <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
@@ -172,11 +168,19 @@ multi-layer SpatRaster in <code>terra</code> and creates the Event Route
 Layer from all spatio-temporal layers.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cov_sptemp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_covariate_raster_load.html">fcn_covariate_raster_load</a></span><span class="op">(</span><span class="st">"hlwdy"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span></span>
+<span><span class="co">#&gt; Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in</span></span>
+<span><span class="co">#&gt; M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster</span></span>
+<span><span class="co">#&gt; Error: [rast] filename is empty. Provide a valid filename</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cov_sptemp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207"</span></span>
-<span><span class="co">#&gt;  [8] "X200307" "X200407" "X200507" "X200607" "X200707" "X200807" "X200907"</span></span>
-<span><span class="co">#&gt; [15] "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607"</span></span>
-<span><span class="co">#&gt; [22] "X201707" "X201807" "X201907"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207" "X200307" "X200407" "X200507" "X200607"</span></span>
+<span><span class="co">#&gt; [12] "X200707" "X200807" "X200907" "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607" "X201707"</span></span>
+<span><span class="co">#&gt; [23] "X201807" "X201907"</span></span></code></pre></div>
 <p>The covariates are extracted as a multi-layer “SpatRaster” (from the
 <code>terra</code> package) where the names of the raster layers
 represents the dates of the raster layer. Where only the year and month
@@ -185,8 +189,7 @@ assumed to be taken on the 15th of the month. The date of the month is
 expected to have a relatively small effect on the covariate
 extracted.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cov_sptemp_route_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_route_table_raster.html">fcn_route_table_raster</a></span><span class="op">(</span><span class="va">cov_sptemp</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): external pointer is not valid</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cov_sptemp_route_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_route_table_raster.html">fcn_route_table_raster</a></span><span class="op">(</span><span class="va">cov_sptemp</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span></code></pre></div>
 <p>The covariate value of the route event layer can be matched to the
 date of the survey. The covariate value representative of the date which
 the transect is surveyed can be interpolated by the following
@@ -207,34 +210,27 @@ earliest layer available.</p></li>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">route_table_date_matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_covariate_match_date.html">fcn_covariate_match_date</a></span><span class="op">(</span><span class="va">cov_sptemp_route_table</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cov_sptemp</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">'bilinear'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">route_table_date_matched</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           TransectID       Date  Tlength X199607 X199707 X199807 X199907 X200007</span></span>
-<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095     161     164     166     166     165</span></span>
-<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095     163     166     167     168     168</span></span>
-<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095     159     160     162     164     166</span></span>
-<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095     160     162     164     166     167</span></span>
-<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095     163     167     168     170     170</span></span>
-<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095     162     164     164     164     164</span></span>
-<span><span class="co">#&gt;   X200107 X200207 X200307 X200407 X200507 X200607 X200707 X200807 X200907 X201007</span></span>
-<span><span class="co">#&gt; 1     164     164     164     163     163     162     162     163     166     170</span></span>
-<span><span class="co">#&gt; 2     169     171     172     169     165     161     158     158     162     166</span></span>
-<span><span class="co">#&gt; 3     167     169     170     169     164     158     156     159     167     173</span></span>
-<span><span class="co">#&gt; 4     168     169     169     167     163     158     155     157     164     170</span></span>
-<span><span class="co">#&gt; 5     171     171     171     168     165     161     159     161     165     171</span></span>
-<span><span class="co">#&gt; 6     165     165     165     164     160     156     153     154     158     164</span></span>
-<span><span class="co">#&gt;   X201107 X201207 X201307 X201407 X201507 X201607 X201707 X201807 X201907     FMEAS</span></span>
-<span><span class="co">#&gt; 1     172     172     171     168     164     161     161     162     167  39.51914</span></span>
-<span><span class="co">#&gt; 2     169     169     168     165     164     163     164     162     162 128.43721</span></span>
-<span><span class="co">#&gt; 3     176     174     169     164     161     161     163     161     161 167.95635</span></span>
-<span><span class="co">#&gt; 4     174     173     169     165     163     162     163     161     161 276.63400</span></span>
-<span><span class="co">#&gt; 5     174     174     170     166     163     162     163     162     163 296.39357</span></span>
-<span><span class="co">#&gt; 6     172     176     175     171     164     157     151     155     159 434.71056</span></span>
-<span><span class="co">#&gt;      TMEAS segment_length   lpercent value</span></span>
-<span><span class="co">#&gt; 1 128.4372       88.91807 0.18367347   167</span></span>
-<span><span class="co">#&gt; 2 167.9564       39.51914 0.08163265   162</span></span>
-<span><span class="co">#&gt; 3 276.6340      108.67764 0.22448980   161</span></span>
-<span><span class="co">#&gt; 4 296.3936       19.75957 0.04081633   161</span></span>
-<span><span class="co">#&gt; 5 434.7106      138.31700 0.28571429   163</span></span>
-<span><span class="co">#&gt; 6 484.1095       49.39893 0.10204082   159</span></span></code></pre></div>
+<span><span class="co">#&gt;           TransectID       Date  Tlength  X199607  X199707  X199807  X199907  X200007  X200107  X200207  X200307</span></span>
+<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095 161.0010 164.0004 166.0000 165.9999 165.0001 164.0007 164.0014 164.0016</span></span>
+<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095 162.9986 165.9979 166.9977 167.9977 167.9985 168.9987 170.9982 171.9978</span></span>
+<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095 159.0008 160.0012 162.0011 164.0010 166.0005 167.0005 169.0003 170.0000</span></span>
+<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095 159.9996 161.9993 163.9989 165.9986 166.9989 167.9991 168.9992 168.9995</span></span>
+<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095 162.9992 166.9987 167.9992 169.9990 169.9994 170.9994 170.9995 170.9991</span></span>
+<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095 161.9986 163.9982 163.9989 163.9992 163.9996 164.9994 164.9991 164.9987</span></span>
+<span><span class="co">#&gt;    X200407  X200507  X200607  X200707  X200807  X200907  X201007  X201107  X201207  X201307  X201407  X201507</span></span>
+<span><span class="co">#&gt; 1 163.0013 163.0002 161.9994 161.9986 162.9982 165.9985 169.9985 171.9987 171.9987 170.9984 167.9984 163.9993</span></span>
+<span><span class="co">#&gt; 2 168.9984 164.9991 160.9995 157.9998 157.9998 161.9998 166.0000 169.0001 168.9998 167.9985 164.9983 163.9978</span></span>
+<span><span class="co">#&gt; 3 168.9996 163.9999 158.0004 156.0000 158.9994 166.9987 172.9984 175.9986 173.9991 168.9999 164.0004 161.0008</span></span>
+<span><span class="co">#&gt; 4 166.9997 163.0006 158.0007 155.0006 157.0003 163.9995 169.9989 173.9987 172.9989 168.9990 164.9992 162.9988</span></span>
+<span><span class="co">#&gt; 5 167.9992 164.9989 160.9987 158.9988 160.9988 164.9994 170.9996 174.0000 173.9999 170.0001 166.0001 163.0000</span></span>
+<span><span class="co">#&gt; 6 163.9982 159.9984 155.9990 153.0004 154.0012 158.0020 164.0023 172.0007 175.9989 174.9979 170.9975 163.9986</span></span>
+<span><span class="co">#&gt;    X201607  X201707  X201807  X201907     FMEAS    TMEAS segment_length   lpercent    value</span></span>
+<span><span class="co">#&gt; 1 161.0000 161.0004 161.9997 166.9980  39.51914 128.4372       88.91807 0.18367347 166.9980</span></span>
+<span><span class="co">#&gt; 2 162.9983 163.9985 161.9992 161.9993 128.43721 167.9564       39.51914 0.08163265 161.9993</span></span>
+<span><span class="co">#&gt; 3 161.0005 163.0001 161.0001 161.0001 167.95635 276.6340      108.67764 0.22448980 161.0001</span></span>
+<span><span class="co">#&gt; 4 161.9987 162.9983 160.9992 161.0000 276.63400 296.3936       19.75957 0.04081633 161.0000</span></span>
+<span><span class="co">#&gt; 5 161.9991 162.9989 161.9992 162.9993 296.39357 434.7106      138.31700 0.28571429 162.9993</span></span>
+<span><span class="co">#&gt; 6 157.0001 151.0025 155.0012 159.0000 434.71056 484.1095       49.39893 0.10204082 159.0000</span></span></code></pre></div>
 <p>The date matching algorithm creates / overwrites the “value” column
 in the route_table as an output. Here we preview the extracted,
 interpolated value next to the most recent layer of the spatio-temporal
@@ -243,7 +239,6 @@ raster.</p>
 <code class="sourceCode R"><span><span class="va">cov_sptemp_date_matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_locate_feature_from_route.html">fcn_locate_feature_from_route</a></span><span class="op">(</span><span class="va">route_table_date_matched</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
 <span><span class="va">ext</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">$</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">cov_sptemp_crop</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">cov_sptemp</span>, <span class="va">ext</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): external pointer is not valid</span></span>
 <span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/minmax.html" class="external-link">minmax</a></span><span class="op">(</span><span class="va">cov_sptemp_crop</span><span class="op">)</span></span>
 <span><span class="va">rast_sptemp_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html" class="external-link">geom_spatraster</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">cov_sptemp_crop</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">X201907</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>

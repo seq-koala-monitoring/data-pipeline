@@ -21,13 +21,20 @@ library(patchwork)
 Get data
 
 ```r
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
-#> Error in fcn_check_paths(dir, "Home directory", TRUE): Home directory does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data
 table_sf_2020 <- fcn_line_transect_sf_2020()
-#> Error in fcn_db_connect_table(2020): Database in file path M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/KoalaSurveyData2020_cur.accdb does not exist
 fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-#> Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb
+#> class       : SpatRaster 
+#> dimensions  : 247, 176, 1  (nrow, ncol, nlyr)
+#> resolution  : 1000, 1000  (x, y)
+#> extent      : 378280, 554280, 6862464, 7109464  (xmin, xmax, ymin, ymax)
+#> coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) 
+#> source(s)   : memory
+#> name        : GridID 
+#> min value   :      1 
+#> max value   :  23970
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
@@ -42,15 +49,6 @@ loaded using `fcn_covariate_raster_load`.
 
 ```r
 cov <- fcn_covariate_raster_load("htele")
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-#> Error: [rast] filename is empty. Provide a valid filename
 cov_route_table <- fcn_route_table_raster(cov, table_sf_2020)
 terra::plot(cov)
 ```
@@ -141,6 +139,7 @@ have a relatively small effect on the covariate extracted.
 
 ```r
 cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
+#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 ```
 
 The covariate value of the route event layer can be matched to the date
@@ -197,6 +196,7 @@ raster.
 cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
+#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 limits <- terra::minmax(cov_sptemp_crop)
 rast_sptemp_plot <- ggplot() +
   geom_spatraster(data = cov_sptemp_crop, aes(fill = X201907)) +

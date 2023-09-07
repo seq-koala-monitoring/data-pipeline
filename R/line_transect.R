@@ -12,7 +12,13 @@ fcn_line_transect_table <- function(year) {
 
 #' @export
 fcn_line_transect_table_1996 <- function() {
-  return()
+  state <- fcn_get_state()
+  query_path <- fs::path_package("sql", "1996/line-transect.sql", package='SEQKoalaDataPipeline')
+  query <- readr::read_file(query_path)
+  conn <- fcn_db_connect_table(1996)
+  table <- RODBC::sqlQuery(conn, query, errors = T)
+  fcn_db_disconnect(conn)
+  return(table)
 }
 
 #' @export

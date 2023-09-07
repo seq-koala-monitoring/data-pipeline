@@ -86,23 +86,15 @@
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
 <span><span class="va">table_sf_2020</span> <span class="op">&lt;-</span> <span class="fu">fcn_line_transect_sf_2020</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
-<span><span class="co">#&gt; Simple feature collection with 43472 features and 1 field</span></span>
-<span><span class="co">#&gt; Geometry type: POLYGON</span></span>
-<span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464</span></span>
-<span><span class="co">#&gt; Projected CRS: GDA2020 / MGA zone 56</span></span>
-<span><span class="co">#&gt; First 10 features:</span></span>
-<span><span class="co">#&gt;                          geometry  GridID</span></span>
-<span><span class="co">#&gt; 1  POLYGON ((378280 6862464, 3...  1000_1</span></span>
-<span><span class="co">#&gt; 2  POLYGON ((379280 6862464, 3...  1000_2</span></span>
-<span><span class="co">#&gt; 3  POLYGON ((380280 6862464, 3...  1000_3</span></span>
-<span><span class="co">#&gt; 4  POLYGON ((381280 6862464, 3...  1000_4</span></span>
-<span><span class="co">#&gt; 5  POLYGON ((382280 6862464, 3...  1000_5</span></span>
-<span><span class="co">#&gt; 6  POLYGON ((383280 6862464, 3...  1000_6</span></span>
-<span><span class="co">#&gt; 7  POLYGON ((384280 6862464, 3...  1000_7</span></span>
-<span><span class="co">#&gt; 8  POLYGON ((385280 6862464, 3...  1000_8</span></span>
-<span><span class="co">#&gt; 9  POLYGON ((386280 6862464, 3...  1000_9</span></span>
-<span><span class="co">#&gt; 10 POLYGON ((387280 6862464, 3... 1000_10</span></span>
+<span><span class="co">#&gt; class       : SpatRaster </span></span>
+<span><span class="co">#&gt; dimensions  : 2467, 1759, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; resolution  : 100, 100  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : 378280, 554180, 6862464, 7109164  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) </span></span>
+<span><span class="co">#&gt; source(s)   : memory</span></span>
+<span><span class="co">#&gt; name        :   lyr.1 </span></span>
+<span><span class="co">#&gt; min value   :       1 </span></span>
+<span><span class="co">#&gt; max value   : 2311397</span></span>
 <span><span class="va">fishnet</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_grid</span><span class="op">(</span><span class="op">)</span> <span class="co"># Retrieve grid from environment for plotting</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="covariate-extraction">Covariate extraction<a class="anchor" aria-label="anchor" href="#covariate-extraction"></a>
@@ -129,20 +121,20 @@ layer (red) closely match that of the underlying raster layer (in
 blue).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cov_route_table</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           TransectID       Date  Tlength    htele     FMEAS    TMEAS</span></span>
-<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.12856  39.51914 128.4372</span></span>
-<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095 90.80862 128.43721 167.9564</span></span>
-<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095 93.57124 167.95635 276.6340</span></span>
-<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095 87.75922 276.63400 296.3936</span></span>
-<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095 90.65904 296.39357 434.7106</span></span>
-<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095 99.36454 434.71056 484.1095</span></span>
-<span><span class="co">#&gt;   segment_length   lpercent</span></span>
-<span><span class="co">#&gt; 1       88.91807 0.18367347</span></span>
-<span><span class="co">#&gt; 2       39.51914 0.08163265</span></span>
-<span><span class="co">#&gt; 3      108.67764 0.22448980</span></span>
-<span><span class="co">#&gt; 4       19.75957 0.04081633</span></span>
-<span><span class="co">#&gt; 5      138.31700 0.28571429</span></span>
-<span><span class="co">#&gt; 6       49.39893 0.10204082</span></span></code></pre></div>
+<span><span class="co">#&gt;           TransectID       Date  Tlength    htele     FMEAS    TMEAS segment_length</span></span>
+<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.12856  39.51914 128.4372       88.91807</span></span>
+<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095 90.80862 128.43721 167.9564       39.51914</span></span>
+<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095 93.57124 167.95635 276.6340      108.67764</span></span>
+<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095 87.75922 276.63400 296.3936       19.75957</span></span>
+<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095 90.65904 296.39357 434.7106      138.31700</span></span>
+<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095 99.36454 434.71056 484.1095       49.39893</span></span>
+<span><span class="co">#&gt;     lpercent</span></span>
+<span><span class="co">#&gt; 1 0.18367347</span></span>
+<span><span class="co">#&gt; 2 0.08163265</span></span>
+<span><span class="co">#&gt; 3 0.22448980</span></span>
+<span><span class="co">#&gt; 4 0.04081633</span></span>
+<span><span class="co">#&gt; 5 0.28571429</span></span>
+<span><span class="co">#&gt; 6 0.10204082</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cov_route_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_locate_feature_from_route.html">fcn_locate_feature_from_route</a></span><span class="op">(</span><span class="va">cov_route_table</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
 <span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">441430</span>, <span class="fl">449400</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6928706</span>, <span class="fl">6936814</span><span class="op">)</span>, expand <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
@@ -215,34 +207,34 @@ earliest layer available.</p></li>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">route_table_date_matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_covariate_match_date.html">fcn_covariate_match_date</a></span><span class="op">(</span><span class="va">cov_sptemp_route_table</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cov_sptemp</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">'bilinear'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">route_table_date_matched</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           TransectID       Date  Tlength X199607 X199707 X199807 X199907</span></span>
-<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095     161     164     166     166</span></span>
-<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095     163     166     167     168</span></span>
-<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095     159     160     162     164</span></span>
-<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095     160     162     164     166</span></span>
-<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095     163     167     168     170</span></span>
-<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095     162     164     164     164</span></span>
-<span><span class="co">#&gt;   X200007 X200107 X200207 X200307 X200407 X200507 X200607 X200707 X200807</span></span>
-<span><span class="co">#&gt; 1     165     164     164     164     163     163     162     162     163</span></span>
-<span><span class="co">#&gt; 2     168     169     171     172     169     165     161     158     158</span></span>
-<span><span class="co">#&gt; 3     166     167     169     170     169     164     158     156     159</span></span>
-<span><span class="co">#&gt; 4     167     168     169     169     167     163     158     155     157</span></span>
-<span><span class="co">#&gt; 5     170     171     171     171     168     165     161     159     161</span></span>
-<span><span class="co">#&gt; 6     164     165     165     165     164     160     156     153     154</span></span>
-<span><span class="co">#&gt;   X200907 X201007 X201107 X201207 X201307 X201407 X201507 X201607 X201707</span></span>
-<span><span class="co">#&gt; 1     166     170     172     172     171     168     164     161     161</span></span>
-<span><span class="co">#&gt; 2     162     166     169     169     168     165     164     163     164</span></span>
-<span><span class="co">#&gt; 3     167     173     176     174     169     164     161     161     163</span></span>
-<span><span class="co">#&gt; 4     164     170     174     173     169     165     163     162     163</span></span>
-<span><span class="co">#&gt; 5     165     171     174     174     170     166     163     162     163</span></span>
-<span><span class="co">#&gt; 6     158     164     172     176     175     171     164     157     151</span></span>
-<span><span class="co">#&gt;   X201807 X201907     FMEAS    TMEAS segment_length   lpercent value</span></span>
-<span><span class="co">#&gt; 1     162     167  39.51914 128.4372       88.91807 0.18367347   167</span></span>
-<span><span class="co">#&gt; 2     162     162 128.43721 167.9564       39.51914 0.08163265   162</span></span>
-<span><span class="co">#&gt; 3     161     161 167.95635 276.6340      108.67764 0.22448980   161</span></span>
-<span><span class="co">#&gt; 4     161     161 276.63400 296.3936       19.75957 0.04081633   161</span></span>
-<span><span class="co">#&gt; 5     162     163 296.39357 434.7106      138.31700 0.28571429   163</span></span>
-<span><span class="co">#&gt; 6     155     159 434.71056 484.1095       49.39893 0.10204082   159</span></span></code></pre></div>
+<span><span class="co">#&gt;           TransectID       Date  Tlength X199607 X199707 X199807 X199907 X200007</span></span>
+<span><span class="co">#&gt; 1 1.0_0_SOL.20210810 2021-08-10 484.1095     161     164     166     166     165</span></span>
+<span><span class="co">#&gt; 2 1.0_0_SOL.20210810 2021-08-10 484.1095     163     166     167     168     168</span></span>
+<span><span class="co">#&gt; 3 1.0_0_SOL.20210810 2021-08-10 484.1095     159     160     162     164     166</span></span>
+<span><span class="co">#&gt; 4 1.0_0_SOL.20210810 2021-08-10 484.1095     160     162     164     166     167</span></span>
+<span><span class="co">#&gt; 5 1.0_0_SOL.20210810 2021-08-10 484.1095     163     167     168     170     170</span></span>
+<span><span class="co">#&gt; 6 1.0_0_SOL.20210810 2021-08-10 484.1095     162     164     164     164     164</span></span>
+<span><span class="co">#&gt;   X200107 X200207 X200307 X200407 X200507 X200607 X200707 X200807 X200907 X201007</span></span>
+<span><span class="co">#&gt; 1     164     164     164     163     163     162     162     163     166     170</span></span>
+<span><span class="co">#&gt; 2     169     171     172     169     165     161     158     158     162     166</span></span>
+<span><span class="co">#&gt; 3     167     169     170     169     164     158     156     159     167     173</span></span>
+<span><span class="co">#&gt; 4     168     169     169     167     163     158     155     157     164     170</span></span>
+<span><span class="co">#&gt; 5     171     171     171     168     165     161     159     161     165     171</span></span>
+<span><span class="co">#&gt; 6     165     165     165     164     160     156     153     154     158     164</span></span>
+<span><span class="co">#&gt;   X201107 X201207 X201307 X201407 X201507 X201607 X201707 X201807 X201907     FMEAS</span></span>
+<span><span class="co">#&gt; 1     172     172     171     168     164     161     161     162     167  39.51914</span></span>
+<span><span class="co">#&gt; 2     169     169     168     165     164     163     164     162     162 128.43721</span></span>
+<span><span class="co">#&gt; 3     176     174     169     164     161     161     163     161     161 167.95635</span></span>
+<span><span class="co">#&gt; 4     174     173     169     165     163     162     163     161     161 276.63400</span></span>
+<span><span class="co">#&gt; 5     174     174     170     166     163     162     163     162     163 296.39357</span></span>
+<span><span class="co">#&gt; 6     172     176     175     171     164     157     151     155     159 434.71056</span></span>
+<span><span class="co">#&gt;      TMEAS segment_length   lpercent value</span></span>
+<span><span class="co">#&gt; 1 128.4372       88.91807 0.18367347   167</span></span>
+<span><span class="co">#&gt; 2 167.9564       39.51914 0.08163265   162</span></span>
+<span><span class="co">#&gt; 3 276.6340      108.67764 0.22448980   161</span></span>
+<span><span class="co">#&gt; 4 296.3936       19.75957 0.04081633   161</span></span>
+<span><span class="co">#&gt; 5 434.7106      138.31700 0.28571429   163</span></span>
+<span><span class="co">#&gt; 6 484.1095       49.39893 0.10204082   159</span></span></code></pre></div>
 <p>The date matching algorithm creates / overwrites the “value” column
 in the route_table as an output. Here we preview the extracted,
 interpolated value next to the most recent layer of the spatio-temporal

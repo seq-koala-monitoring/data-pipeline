@@ -82,6 +82,27 @@
 <p>If <code>devtools</code> is installed on the local machine, the package can be installed using Github.</p>
 <pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"seq-koala-monitoring/data-pipeline"</span><span class="op">)</span></span></code></pre>
 </div>
+<div class="section level1">
+<h1 id="data-structure">Data Structure<a class="anchor" aria-label="anchor" href="#data-structure"></a>
+</h1>
+<p>This package produces table inputs for the statistical model, with the possibility to export auxiliary columns of the processed survey data on demand. The data structure for the inputs are as follows.</p>
+<div class="section level2">
+<h2 id="line-transects-2-tables">Line Transects (2 tables)<a class="anchor" aria-label="anchor" href="#line-transects-2-tables"></a>
+</h2>
+<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect length * Number of koalas observed * Number of observers (although this should always be 1 for line transects) * Time and location specific covariates (still to be discussed what these will be)</p>
+<p>Table of the perpendicular distances of observations (each line relates to a specific koala observation): * Record unique ID (primary key) * Unique ID from line transect table (this relates to the survey that the koala observation occurred on from the surveys table) * Perpendicular distance (noting sometimes this has to be calculated from the sighting distance and angle and sometimes the perpendicular distance is measured directly – to discuss)</p>
+</div>
+<div class="section level2">
+<h2 id="strip-transects-1-table">Strip Transects (1 table)<a class="anchor" aria-label="anchor" href="#strip-transects-1-table"></a>
+</h2>
+<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect area * Number of koalas observed * Number of observers * Time and location specific covariates (still to be discussed what these will be)</p>
+</div>
+<div class="section level2">
+<h2 id="all-of-area-searches-1-table">All of Area Searches (1 table)<a class="anchor" aria-label="anchor" href="#all-of-area-searches-1-table"></a>
+</h2>
+<p>Table of the surveys (each line is a separate area search) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Area number (with this being a unique ID relating to a spatial representation of the area surveyed – for post 2015 data) * Date of survey * Area searches * Number of koalas observed * Number of observers * Time and location specific covariates (still to be discussed what these will be)</p>
+</div>
+</div>
 
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>

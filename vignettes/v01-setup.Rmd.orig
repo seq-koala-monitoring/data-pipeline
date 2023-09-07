@@ -68,7 +68,7 @@ Here we plot the grid to see how it covers the study area
 
 ```{r grid_plot}
 fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
+fishnet <- fcn_get_grid(option = 'raster') # Retrieve grid from environment for plotting
 study_area <- fcn_get_study_area() # Retrieve study area
 ggplot() +
   geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
@@ -78,7 +78,4 @@ ggplot() +
 ```
 
 The `GridID` column in the fishnet feature class uniquely identifies
-each grid cell in the fishnet and is specific the to the `grid_size`,
-with the following format:
-
-"Grid side width (in meters)"\_"Grid Number"
+each grid cell in the fishnet and is specific to the `grid_size`.

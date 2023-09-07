@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 library(SEQKoalaDataPipeline)
 library(ggplot2)
 library(dplyr)
+library(tidyterra)
 ```
 
 
@@ -61,13 +62,13 @@ of the event:
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
+fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 ```
 
 ```{r}
-route_table <- fcn_route_table(fishnet, table_sf_2020)
+route_table <- fcn_route_table_raster(fishnet, table_sf_2020)
 head(route_table[route_table$lpercent < 0.5,c('TransectID', 'GridID', 'FMEAS', 'TMEAS', "Tlength", "lpercent")])
 ```
 
@@ -88,7 +89,7 @@ where transects are colored by the last digit of the GridID:
 ```{r linear_referencing_transects}
 route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
 ggplot() +
-  geom_sf(data = fishnet, color = 'gray50', fill = 'gray80') +
+  geom_spatraster(data = fishnet, color = 'gray50', fill = 'gray80') +
   geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID))), linewidth = 1) +
   do.call(coord_sf, bbox) +
   scale_color_brewer(palette = "Set3") +

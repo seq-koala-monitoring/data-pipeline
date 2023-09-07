@@ -38,24 +38,16 @@ does the following steps:
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-#> Simple feature collection with 43472 features and 1 field
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 378280 ymin: 6862464 xmax: 554280 ymax: 7109464
-#> Projected CRS: GDA2020 / MGA zone 56
-#> First 10 features:
-#>                          geometry  GridID
-#> 1  POLYGON ((378280 6862464, 3...  1000_1
-#> 2  POLYGON ((379280 6862464, 3...  1000_2
-#> 3  POLYGON ((380280 6862464, 3...  1000_3
-#> 4  POLYGON ((381280 6862464, 3...  1000_4
-#> 5  POLYGON ((382280 6862464, 3...  1000_5
-#> 6  POLYGON ((383280 6862464, 3...  1000_6
-#> 7  POLYGON ((384280 6862464, 3...  1000_7
-#> 8  POLYGON ((385280 6862464, 3...  1000_8
-#> 9  POLYGON ((386280 6862464, 3...  1000_9
-#> 10 POLYGON ((387280 6862464, 3... 1000_10
+fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
+#> class       : SpatRaster 
+#> dimensions  : 2467, 1759, 1  (nrow, ncol, nlyr)
+#> resolution  : 100, 100  (x, y)
+#> extent      : 378280, 554180, 6862464, 7109164  (xmin, xmax, ymin, ymax)
+#> coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) 
+#> source(s)   : memory
+#> name        :   lyr.1 
+#> min value   :       1 
+#> max value   : 2311397
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
@@ -79,6 +71,9 @@ ggplot() +
   do.call(coord_sf, bbox) +
   theme_bw()+
   theme(panel.grid = element_blank())
+#> Error in `geom_sf()`:
+#> ! Problem while computing stat.
+#> i Error occurred in the 1st layer.
+#> Caused by error in `compute_layer()`:
+#> ! `stat_sf()` requires the following missing aesthetics: geometry
 ```
-
-![plot of chunk line_transect_plot](fig-line_transect_plot-1.png)

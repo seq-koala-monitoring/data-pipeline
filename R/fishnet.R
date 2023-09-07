@@ -17,11 +17,23 @@ fcn_fishnet <- function(feature_class) {
   return(fishnet_intersect)
 }
 
+fcn_fishnet_raster <- function(feature_class) {
+  feature_class_vect <- terra::vect(feature_class)
+  fishnet <- terra::rast(feature_class_vect, res = res, vals = 1)
+  fishnet_masked <- terra::mask(fishnet, feature_class_vect)
+  fishnet_masked[fishnet_masked == 1] <- 1:length(fishnet_masked[fishnet_masked==1])
+  return(fishnet_masked)
+}
+
 #' Generate new grid based on grid_size
 #' @export
-fcn_new_grid <- function() {
+fcn_new_grid <- function(option = 'raster') {
   study_area <- fcn_get_study_area()
-  fishnet <- fcn_fishnet(study_area)
+  if (option == 'raster') {
+    fishnet <- fcn_fishnet_raster(study_area)
+  } else {
+    fishnet <- fcn_fishnet(study_area)
+  }
   fcn_set_grid(fishnet)
   return(fishnet)
 }

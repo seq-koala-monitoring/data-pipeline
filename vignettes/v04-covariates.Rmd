@@ -16,6 +16,11 @@ library(dplyr)
 library(ggplot2)
 library(tidyterra)
 library(patchwork)
+#> 
+#> Attaching package: 'patchwork'
+#> The following object is masked from 'package:raster':
+#> 
+#>     area
 ```
 
 Get data
@@ -162,28 +167,9 @@ transect is surveyed can be interpolated by the following methods:
 
 ```r
 route_table_date_matched <- fcn_covariate_match_date(cov_sptemp_route_table, names(cov_sptemp), method = 'bilinear')
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_route_table' not found
 head(route_table_date_matched)
-#>           TransectID       Date  Tlength  X199607  X199707  X199807  X199907  X200007  X200107  X200207  X200307
-#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 161.0010 164.0004 166.0000 165.9999 165.0001 164.0007 164.0014 164.0016
-#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 162.9986 165.9979 166.9977 167.9977 167.9985 168.9987 170.9982 171.9978
-#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 159.0008 160.0012 162.0011 164.0010 166.0005 167.0005 169.0003 170.0000
-#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 159.9996 161.9993 163.9989 165.9986 166.9989 167.9991 168.9992 168.9995
-#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 162.9992 166.9987 167.9992 169.9990 169.9994 170.9994 170.9995 170.9991
-#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 161.9986 163.9982 163.9989 163.9992 163.9996 164.9994 164.9991 164.9987
-#>    X200407  X200507  X200607  X200707  X200807  X200907  X201007  X201107  X201207  X201307  X201407  X201507
-#> 1 163.0013 163.0002 161.9994 161.9986 162.9982 165.9985 169.9985 171.9987 171.9987 170.9984 167.9984 163.9993
-#> 2 168.9984 164.9991 160.9995 157.9998 157.9998 161.9998 166.0000 169.0001 168.9998 167.9985 164.9983 163.9978
-#> 3 168.9996 163.9999 158.0004 156.0000 158.9994 166.9987 172.9984 175.9986 173.9991 168.9999 164.0004 161.0008
-#> 4 166.9997 163.0006 158.0007 155.0006 157.0003 163.9995 169.9989 173.9987 172.9989 168.9990 164.9992 162.9988
-#> 5 167.9992 164.9989 160.9987 158.9988 160.9988 164.9994 170.9996 174.0000 173.9999 170.0001 166.0001 163.0000
-#> 6 163.9982 159.9984 155.9990 153.0004 154.0012 158.0020 164.0023 172.0007 175.9989 174.9979 170.9975 163.9986
-#>    X201607  X201707  X201807  X201907     FMEAS    TMEAS segment_length   lpercent    value
-#> 1 161.0000 161.0004 161.9997 166.9980  39.51914 128.4372       88.91807 0.18367347 166.9980
-#> 2 162.9983 163.9985 161.9992 161.9993 128.43721 167.9564       39.51914 0.08163265 161.9993
-#> 3 161.0005 163.0001 161.0001 161.0001 167.95635 276.6340      108.67764 0.22448980 161.0001
-#> 4 161.9987 162.9983 160.9992 161.0000 276.63400 296.3936       19.75957 0.04081633 161.0000
-#> 5 161.9991 162.9989 161.9992 162.9993 296.39357 434.7106      138.31700 0.28571429 162.9993
-#> 6 157.0001 151.0025 155.0012 159.0000 434.71056 484.1095       49.39893 0.10204082 159.0000
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'head': object 'route_table_date_matched' not found
 ```
 
 The date matching algorithm creates / overwrites the "value" column in
@@ -194,10 +180,12 @@ raster.
 
 ```r
 cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
+#> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
 #> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 limits <- terra::minmax(cov_sptemp_crop)
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found
 rast_sptemp_plot <- ggplot() +
   geom_spatraster(data = cov_sptemp_crop, aes(fill = X201907)) +
   do.call(coord_sf, bbox)+
@@ -207,6 +195,7 @@ rast_sptemp_plot <- ggplot() +
   #guides(color = 'none')+
   theme_bw()+
   theme(panel.grid = element_blank())
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_crop' not found
 transect_sptemp_plot <- ggplot() +
   geom_sf(data = cov_sptemp_date_matched, aes(color = value), linewidth = 1) +
   do.call(coord_sf, bbox)+
@@ -215,7 +204,7 @@ transect_sptemp_plot <- ggplot() +
   scale_color_viridis_c(limits = c(limits[1], limits[2])) +
   theme_bw()+
   theme(panel.grid = element_blank())
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_date_matched' not found
 rast_sptemp_plot + transect_sptemp_plot + plot_layout(guides = 'collect')
+#> Error in eval(expr, envir, enclos): object 'rast_sptemp_plot' not found
 ```
-
-![plot of chunk hlwdy_plot](fig-hlwdy_plot-1.png)

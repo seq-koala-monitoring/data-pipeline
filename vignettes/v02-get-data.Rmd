@@ -81,6 +81,6 @@ transect_plot <- ggplot() +
   theme_bw()+
   theme(panel.grid = element_blank())
 fishnet_plot + transect_plot
+#> Error in `ggplot_add()`:
+#> ! Can't add `transect_plot` to a <ggplot> object.
 ```
-
-![plot of chunk line_transect_plot](fig-line_transect_plot-1.png)

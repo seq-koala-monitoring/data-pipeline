@@ -118,6 +118,6 @@ route_plot <- ggplot() +
   theme_bw()+
   theme(panel.grid = element_blank())
 fishnet_plot + route_plot
+#> Error in `ggplot_add()`:
+#> ! Can't add `route_plot` to a <ggplot> object.
 ```
-
-![plot of chunk linear_referencing_transects](fig-linear_referencing_transects-1.png)

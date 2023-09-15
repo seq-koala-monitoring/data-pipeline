@@ -45,11 +45,14 @@ This directory can be stored on anywhere on the computer.
 
 
 ```r
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
-#> Error in fcn_check_paths(dir, "Home directory", TRUE): Home directory does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data
 list.files(data_dir)
-#> character(0)
+#>  [1] "basedata.gdb"                  "final_covariates.gdb"          "final_covariates_raster"      
+#>  [4] "koala_survey_data_ver2_0.gdb"  "KoalaSurveyData.gdb"           "KoalaSurveyData2020_cur.accdb"
+#>  [7] "KoalaSurveySites"              "SEQkoalaData.accdb"            "SEQkoalaData_info.pdf"        
+#> [10] "test_grid.gdb"
 ```
 
 # Generate fishnet grid
@@ -59,28 +62,6 @@ grid size. After generating the grid by calling `fcn_set_grid_size`, the
 grid feature class is stored in the local environment. Functions that
 require this newly generated grid will be able to retrieve the grid
 directly from the local environment.
-
-Here we plot the grid to see how it covers the study area
-
-
-```r
-fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-#> Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb
-fishnet <- fcn_get_grid(option = 'raster') # Retrieve grid from environment for plotting
-#> Error in fcn_get_grid(option = "raster"): unused argument (option = "raster")
-study_area <- fcn_get_study_area() # Retrieve study area
-#> Error in fcn_check_paths(dsn_path, "Study area file", TRUE): Study area file does not exist in M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/basedata.gdb
-ggplot() +
-  geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
-  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
-  theme_bw()+
-  theme(panel.grid = element_blank())
-#> Error in `geom_sf()`:
-#> ! Problem while computing stat.
-#> i Error occurred in the 2nd layer.
-#> Caused by error in `compute_layer()`:
-#> ! `stat_sf()` requires the following missing aesthetics: geometry
-```
 
 The `GridID` column in the fishnet feature class uniquely identifies
 each grid cell in the fishnet and is specific to the `grid_size`.

@@ -51,7 +51,8 @@ on the computer to a directory with the following files:
 This directory can be stored on anywhere on the computer.
 
 ```{r}
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 list.files(data_dir)
 ```
@@ -63,19 +64,6 @@ grid size. After generating the grid by calling `fcn_set_grid_size`, the
 grid feature class is stored in the local environment. Functions that
 require this newly generated grid will be able to retrieve the grid
 directly from the local environment.
-
-Here we plot the grid to see how it covers the study area
-
-```{r grid_plot}
-fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-fishnet <- fcn_get_grid(option = 'raster') # Retrieve grid from environment for plotting
-study_area <- fcn_get_study_area() # Retrieve study area
-ggplot() +
-  geom_sf(data = study_area, color = 'gray50', fill = 'gray90') +
-  geom_sf(data = fishnet, color = 'gray50', fill = NA) +
-  theme_bw()+
-  theme(panel.grid = element_blank())
-```
 
 The `GridID` column in the fishnet feature class uniquely identifies
 each grid cell in the fishnet and is specific to the `grid_size`.

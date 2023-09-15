@@ -10,6 +10,19 @@ fcn_line_transect_table <- function(year) {
   )
 }
 
+#' @title Get all line transects in SF format
+#' @export
+fcn_line_transect_sf_all <- function(cols = c("TransectID","SiteID","Date","TrSiteID",
+                                              "Tlength","Sighting_Number","Number_Observers",
+                                              "Start_Eastings","Start_Northings","End_Eastings",
+                                              "End_Northings","geometry")) {
+
+  db_1996 <- fcn_line_transect_sf_1996() %>% rename(TrSiteID = TransectNumber) %>% dplyr::select(cols)
+  db_2020 <- fcn_line_transect_sf_2020() %>% dplyr::select(cols)
+
+  return(rbind(db_1996, db_2020))
+}
+
 #' @export
 fcn_line_transect_table_1996 <- function() {
   state <- fcn_get_state()
@@ -57,7 +70,7 @@ fcn_line_transect_sf_1996 <- function() {
     discarded_row_number <- nrow(dplyr::anti_join(unjoined_table, site_table, by = c('SiteNumber')))
     warning(sprintf("Attribute join incomplete. \nJoined uniquely: %s. \nJoined at the site level: %s. \nJoin failed: %s", nrow(joined_table), nrow(site_transect_sf), discarded_row_number))
     # Select columns and join back to the line transect representations
-    cols <- c("TransectID","SiteID","TransectNumber", "Date","Tlength", "Number_Sightings", "Number_Observers", "Start_Eastings", "Start_Northings", "End_Eastings", "End_Northings", "geometry")
+    cols <- c("TransectID","SiteID","TransectNumber", "Date","Tlength", "Sighting_Number", "Number_Observers", "Start_Eastings", "Start_Northings", "End_Eastings", "End_Northings", "geometry")
     joined_table <- rbind(dplyr::select(joined_sf, cols), dplyr::select(site_transect_sf, cols))
   } else {
     message(sprintf("All line transects (%s records) successfully joined.\n", nrow(joined_table)))

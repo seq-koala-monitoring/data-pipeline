@@ -1,6 +1,6 @@
 #' Covariate extraction functions
 
-#' List all layers in covariate database
+#' @title List all layers in covariate database
 #' @export
 fcn_list_covariate_layers <- function() {
   covariate_filepath <- fcn_get_raster_path()$covariates
@@ -8,21 +8,22 @@ fcn_list_covariate_layers <- function() {
   return(rastlist)
 }
 
-#' List constant covariate layers
+#' @title List constant covariate layers
 #' @export
 fcn_list_covariate_layers_constant <- function() {
   rastList <- fcn_list_covariate_layers()
   return(rastList[grep("^[[:alnum:]]{5}\\.tif$", rastList)])
 }
 
-#' List temporally-variant covariate layers
+#' @title List temporally-variant covariate layers
 #' @export
 fcn_list_covariate_layers_temporal <- function() {
   rastList <- fcn_list_covariate_layers()
   return(rastList[grep("^[[:alnum:]]{5}_\\d{6}\\.tif$", rastList)])
 }
 
-#' List covariate layers as a df
+#' @title List covariate layers as a df
+#' @export
 fcn_covariate_layer_df <- function(layer = NULL) {
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
@@ -57,9 +58,24 @@ fcn_covariate_raster_load <- function(covariate = "htele") {
   covariate_raster
 }
 
+#' @title Read raster
+#' @export
+fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T, resample_to_grid = T) {
 
-fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T) {
+  state <- fcn_get_state()
   covariate_raster <- terra::rast(covariate_files)
+
+  if (resample_to_grid) {
+    # Resample to fishnet grid
+    grid <- fcn_get_grid()
+    if (class(fcn_new_grid())[1] != "SpatRaster") {
+      grid <- fcn_new_grid(option = 'raster') # Covariate extraction with resampling only works when fishnet grid is raster
+    }
+
+    # Allowing default resampling - nearest if categorical, bilinear if continuous
+    covariate_raster <- terra::resample(covariate_raster, grid)
+  }
+
   if (all(!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names)))) {
     names(covariate_raster) <- covariate_names
   }
@@ -69,7 +85,7 @@ fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, pro
   covariate_raster
 }
 
-#' Project raster layer to CRS as specified in the environment
+#' @title Project raster layer to CRS as specified in the environment
 #' @param raster a `SpatRaster` object to be projected
 fcn_project_raster <- function(raster) {
   state <- fcn_get_state()
@@ -79,7 +95,7 @@ fcn_project_raster <- function(raster) {
   return(projected_raster)
 }
 
-#' Get covariate value from a spatio-temporal raster
+#' @title Get covariate value from a spatio-temporal raster
 #' @export
 fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear') {
   # Date difference matrix between transect survey dates with route table layer dates
@@ -92,4 +108,11 @@ fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear'
   event_matrix <- route_table[,col_names] %>% as.matrix()
   route_table$value <- Matrix::rowSums(event_matrix * weights) %>% as.vector()
   return(route_table)
+}
+
+#' @title Extract covariates with mixed multipolygon/ linestring entries
+#' @export
+fcn_mixed_extract_raster <- function(input_raster, df) {
+  df_geom_type <- sf::st_geometry_type(df)
+
 }

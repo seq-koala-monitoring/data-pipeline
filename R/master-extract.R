@@ -13,6 +13,18 @@ fcn_all_tables <- function(table_names = c('line_transect', 'perp_distance', 'st
   return(master)
 }
 
+#' @title Extract all tables in SF format
+#' @export
+fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect', 'uaoa')) {
+  master <- list()
+
+  if ('line_transect' %in% table_names) master$line_transect = fcn_line_transect_sf_all()
+  if ('strip_transect' %in% table_names) master$strip_transect = fcn_strip_transect_sf_all()
+  if ('uaoa' %in% table_names) master$uaoa = fcn_all_of_area_sf_all()
+
+  return(master)
+}
+
 #' @title Extract LGA information
 fcn_get_lga <- function() {
   lga <- lapply(c('1996','2020'), function(x) fcn_sql_exec(x, 'lga')) %>%

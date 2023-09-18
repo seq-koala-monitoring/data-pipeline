@@ -27,6 +27,9 @@ the$raster_path <- list(
 # Standardized projection system (GDA2020 / MGA zone 56 as default)
 the$crs <- 7856
 
+# Boolean for whether raster files should be resampled to the generated grid
+the$resample_to_grid <- TRUE
+
 #' Get the whole state, or elements of the state if a second argument is specified
 #' @export
 fcn_get_state <- function(elem = NULL) {
@@ -178,4 +181,12 @@ fcn_get_raster_path <- function() {
     path
   })
   return(full_path)
+}
+
+#' @title Set parameter: resample to grid
+#' @export
+fcn_set_resample_to_grid <- function(val) {
+  old <- the$resample_to_grid
+  the$resample_to_grid <- val
+  invisible(old)
 }

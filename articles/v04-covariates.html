@@ -79,12 +79,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dieghernan.github.io/tidyterra/" class="external-link">tidyterra</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'patchwork'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:raster':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     area</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span></code></pre></div>
 <p>Get data</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#data_dir &lt;- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
@@ -215,7 +210,7 @@ earliest layer available.</p></li>
 <code class="sourceCode R"><span><span class="va">route_table_date_matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_covariate_match_date.html">fcn_covariate_match_date</a></span><span class="op">(</span><span class="va">cov_sptemp_route_table</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cov_sptemp</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">'bilinear'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'cov_sptemp_route_table' not found</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">route_table_date_matched</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'head': object 'route_table_date_matched' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found</span></span></code></pre></div>
 <p>The date matching algorithm creates / overwrites the “value” column
 in the route_table as an output. Here we preview the extracted,
 interpolated value next to the most recent layer of the spatio-temporal

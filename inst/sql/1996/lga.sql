@@ -1,0 +1,2 @@
+SELECT tblTransects.[Site Number] & '.' & tblTransects.[Sub-Survey Number] & '_' & tblTransects.[Transect Number] & '_' & Switch(tblTransects.SurveyMethod='Strip', 'ST', tblTransects.SurveyMethod='Line', 'SOL', tblTransects.SurveyMethod='Urban', 'UAoA') & '.' & Format(tblTransects.Date, 'yyyymmdd') AS TransectID, [Site Name] AS SiteName, LGA
+FROM tblTransects RIGHT OUTER JOIN tblSites ON tblTransects.[Site Number] = tblSites.[Site Number];

@@ -25,3 +25,23 @@ fcn_db_connect_table <- function(year) {
 fcn_db_disconnect <- function(conn) {
   RODBC::odbcClose(conn)
 }
+
+#' @title SQL extract table by database year and script name
+#' @export
+fcn_sql_exec <- function(year, script_name) {
+  query_path <- fs::path_package("sql", sprintf("%s/%s.sql", year, script_name), package='SEQKoalaDataPipeline')
+  if (!file.exists(query_path)) {
+    error(sprintf("SQL script does not exist in path %s", query_path))
+  }
+  query <- readr::read_file(query_path)
+  conn <- fcn_db_connect_table(as.numeric(year))
+  table <- RODBC::sqlQuery(conn, query, errors = TRUE)
+  if (is.character(table)) {
+    fcn_db_disconnect(conn)
+    stop(table)
+    return()
+  } else {
+    fcn_db_disconnect(conn)
+    return(table)
+  }
+}

@@ -1,0 +1,3 @@
+SELECT tblTransects.[Site Number] & '.' & tblTransects.[Sub-Survey Number] & '_' & tblTransects.[Transect Number] & '_' & Switch(tblTransects.SurveyMethod='Strip', 'ST', tblTransects.SurveyMethod='Line', 'SOL', tblTransects.SurveyMethod='Urban', 'UAoA') & '.' & Format(tblTransects.Date, 'yyyymmdd') AS TransectID, TransectID & '.' & tblSightings.[Sighting Number] AS SightingID, tblSightings.Distance AS Perp_Dist
+FROM tblSightings LEFT JOIN tblTransects ON (tblSightings.[Transect Number] = tblTransects.[Transect Number]) AND (tblSightings.[Site Number] = tblTransects.[Site Number]) AND (tblSightings.[Sub-Survey Number] = tblTransects.[Sub-Survey Number]) AND (tblSightings.[Survey Number] = tblTransects.[Survey Number])
+WHERE tblTransects.SurveyMethod='Line';

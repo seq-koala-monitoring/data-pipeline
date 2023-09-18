@@ -7,10 +7,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7, fig.height = 4, dpi = 150,
+  fig.path = "fig-"
+)
+```
 
-
-
-```r
+```{r setup}
 library(SEQKoalaDataPipeline)
 library(dplyr)
 library(ggplot2)
@@ -19,22 +26,12 @@ library(patchwork)
 ```
 
 Get data
-
-```r
+```{r}
 #data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(1000) # grid width/ height in meters, and generate grid in local environment
-#> class       : SpatRaster 
-#> dimensions  : 247, 176, 1  (nrow, ncol, nlyr)
-#> resolution  : 1000, 1000  (x, y)
-#> extent      : 378280, 554280, 6862464, 7109464  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA2020 / MGA zone 56 (EPSG:7856) 
-#> source(s)   : memory
-#> name        : GridID 
-#> min value   :      1 
-#> max value   :  23970
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 
@@ -46,37 +43,22 @@ Likewise, the capabilities of linear referencing can be applied to
 extract covariate information from Raster files. The raster layer can be
 loaded using `fcn_covariate_raster_load`.
 
-
-```r
+```{r dpi=300,out.width="100%", fig.height=4, fig.width=7}
 cov <- fcn_covariate_raster_load("htele")
 cov_route_table <- fcn_route_table_raster(cov, table_sf_2020)
 terra::plot(cov)
 ```
 
-<div class="figure">
-<img src="fig-unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3" width="100%" />
-<p class="caption">plot of chunk unnamed-chunk-3</p>
-</div>
-
 The results of the linear referencing (route event layer) can be
 inspected by using the same approach as above. Creation of the segments
 could take a while. As seen in the outputs, the values of the event
 layer (red) closely match that of the underlying raster layer (in blue).
-
-```r
+```{r}
 head(cov_route_table)
-#>           TransectID       Date  Tlength    htele     FMEAS    TMEAS segment_length   lpercent
-#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.12614  39.51914 128.4372       88.91807 0.18367347
-#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 90.80642 128.43721 167.9564       39.51914 0.08163265
-#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 93.56960 167.95635 276.6340      108.67764 0.22448980
-#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 87.75806 276.63400 296.3936       19.75957 0.04081633
-#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 90.65868 296.39357 434.7106      138.31700 0.28571429
-#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 99.36263 434.71056 484.1095       49.39893 0.10204082
 ```
 
 
-
-```r
+```{r htele_covariate}
 cov_route_features <- fcn_locate_feature_from_route(cov_route_table, table_sf_2020)
 bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
@@ -102,8 +84,6 @@ transect_plot <- ggplot() +
 rast_plot + transect_plot + plot_layout(guides = 'collect')
 ```
 
-![plot of chunk htele_covariate](fig-htele_covariate-1.png)
-
 ## Spatio-temporal rasters
 
 Extraction of covariates from spatio-temporal raster files are also
@@ -111,22 +91,9 @@ supported. The algorithm first extracts spatio-temporal rasters as a
 multi-layer SpatRaster in `terra` and creates the Event Route Layer from
 all spatio-temporal layers.
 
-
-```r
+```{r cache = TRUE}
 cov_sptemp <- fcn_covariate_raster_load("hlwdy")
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-#> Error: [rast] filename is empty. Provide a valid filename
 names(cov_sptemp)
-#>  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207" "X200307" "X200407" "X200507" "X200607"
-#> [12] "X200707" "X200807" "X200907" "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607" "X201707"
-#> [23] "X201807" "X201907"
 ```
 
 The covariates are extracted as a multi-layer "SpatRaster" (from the
@@ -136,10 +103,8 @@ layers are available, the dates of the raster layers are assumed to be
 taken on the 15th of the month. The date of the month is expected to
 have a relatively small effect on the covariate extracted.
 
-
-```r
+```{r }
 cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
-#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 ```
 
 The covariate value of the route event layer can be matched to the date
@@ -159,12 +124,9 @@ transect is surveyed can be interpolated by the following methods:
     date. If the lagged layer is not available, then select the earliest
     layer available.
 
-
-```r
+```{r }
 route_table_date_matched <- fcn_covariate_match_date(cov_sptemp_route_table, names(cov_sptemp), method = 'bilinear')
-#> Error in eval(expr, envir, enclos): object 'cov_sptemp_route_table' not found
 head(route_table_date_matched)
-#> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ```
 
 The date matching algorithm creates / overwrites the "value" column in
@@ -172,15 +134,11 @@ the route_table as an output. Here we preview the extracted,
 interpolated value next to the most recent layer of the spatio-temporal
 raster.
 
-
-```r
+```{r hlwdy_plot}
 cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
-#> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
-#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 limits <- terra::minmax(cov_sptemp_crop)
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found
 rast_sptemp_plot <- ggplot() +
   geom_spatraster(data = cov_sptemp_crop, aes(fill = X201907)) +
   do.call(coord_sf, bbox)+
@@ -190,7 +148,6 @@ rast_sptemp_plot <- ggplot() +
   #guides(color = 'none')+
   theme_bw()+
   theme(panel.grid = element_blank())
-#> Error in eval(expr, envir, enclos): object 'cov_sptemp_crop' not found
 transect_sptemp_plot <- ggplot() +
   geom_sf(data = cov_sptemp_date_matched, aes(color = value), linewidth = 1) +
   do.call(coord_sf, bbox)+
@@ -199,7 +156,5 @@ transect_sptemp_plot <- ggplot() +
   scale_color_viridis_c(limits = c(limits[1], limits[2])) +
   theme_bw()+
   theme(panel.grid = element_blank())
-#> Error in eval(expr, envir, enclos): object 'cov_sptemp_date_matched' not found
 rast_sptemp_plot + transect_sptemp_plot + plot_layout(guides = 'collect')
-#> Error in eval(expr, envir, enclos): object 'rast_sptemp_plot' not found
 ```

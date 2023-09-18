@@ -1,0 +1,1 @@
+SELECT TransectID, [SiteName], LGA FROM tblKoalaSurveyData2020_cur WHERE Sighting_Number <= 1;

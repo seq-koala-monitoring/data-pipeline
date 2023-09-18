@@ -7,3 +7,7 @@
 ^pkgdown$
 ^\.github$
 ^vignettes/source$
+^vignettes/source/v01-setup\.Rmd$
+^vignettes/source/v02-get-data\.Rmd$
+^vignettes/source/v03-linear-referencing\.Rmd$
+^vignettes/source/v04-covariates\.Rmd$

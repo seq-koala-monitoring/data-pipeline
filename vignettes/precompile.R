@@ -8,7 +8,7 @@ library(filesstrings)
 vignette_list <- c('v01-setup', 'v02-get-data', 'v03-linear-referencing', 'v04-covariates')
 
 lapply(vignette_list, function(v) {
-  v_source_path <- sprintf('vignettes/source/%s.Rmd', v)
+  v_source_path <- sprintf('inst/vignette_source/%s.Rmd', v)
   v_orig_path <- sprintf('vignettes/%s.Rmd.orig', v)
   v_knit_path <- sprintf('vignettes/%s.Rmd', v)
   if (file.exists(v_source_path)) {

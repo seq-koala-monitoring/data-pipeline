@@ -31,7 +31,7 @@ data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 #data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
-fcn_set_grid_size(500) # grid width/ height in meters, and generate grid in local environment
+fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
 fishnet <- fcn_get_grid() # Retrieve grid from environment for plotting
 ```
 

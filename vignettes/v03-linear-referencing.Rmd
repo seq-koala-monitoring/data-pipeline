@@ -53,8 +53,8 @@ of the event:
 
 
 ```r
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -76,12 +76,12 @@ bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
 route_table <- fcn_route_table_raster(fishnet, table_sf_2020)
 head(route_table[route_table$lpercent < 0.5,c('TransectID', 'GridID', 'FMEAS', 'TMEAS', "Tlength", "lpercent")])
 #>           TransectID  GridID     FMEAS     TMEAS  Tlength   lpercent
-#> 1 1.0_0_SOL.20210810 1406599  29.63936  39.51914 484.1095 0.02040816
-#> 2 1.0_0_SOL.20210810 1406600  39.51914 177.83614 484.1095 0.28571429
-#> 3 1.0_0_SOL.20210810 1406601 177.83614 187.71593 484.1095 0.02040816
-#> 4 1.0_0_SOL.20210810 1405037 187.71593 306.27335 484.1095 0.24489796
-#> 5 1.0_0_SOL.20210810 1405038 306.27335 345.79249 484.1095 0.08163265
-#> 6 1.0_0_SOL.20210810 1403475 345.79249 434.71056 484.1095 0.18367347
+#> 1 1.0_0_SOL.20210810 1408162   0.00000  29.63936 484.1095 0.06122449
+#> 2 1.0_0_SOL.20210810 1406599  29.63936  39.51914 484.1095 0.02040816
+#> 3 1.0_0_SOL.20210810 1406600  39.51914 177.83614 484.1095 0.28571429
+#> 4 1.0_0_SOL.20210810 1406601 177.83614 187.71593 484.1095 0.02040816
+#> 5 1.0_0_SOL.20210810 1405037 187.71593 306.27335 484.1095 0.24489796
+#> 6 1.0_0_SOL.20210810 1405038 306.27335 345.79249 484.1095 0.08163265
 ```
 
 The results of the event route layer can be viewed by using
@@ -93,6 +93,14 @@ route event layers of rasterized covariate layers (described below). In
 many cases, the route event layer table itself is a sufficient spatial
 representation of the linear referencing results, but only by doing this
 step can we inspect the results visually.
+
+
+```r
+bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
+bbox_sf <- sf::st_polygon(list(matrix(c(bbox$xlim[1], bbox$ylim[1], bbox$xlim[2], bbox$ylim[1], bbox$xlim[1], bbox$ylim[2], bbox$xlim[2], bbox$ylim[2],bbox$xlim[1], bbox$ylim[1]), ncol=2, byrow=T)))
+bbox_sf <- sf::st_sfc(bbox_sf)
+sf::st_crs(bbox_sf) <- fcn_get_state()$crs
+```
 
 Here, we see that the line transects are successfully segmented at the
 border of the grid cells, as colored by different ID numbers of the Grid

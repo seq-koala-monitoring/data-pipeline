@@ -60,6 +60,7 @@ of the event:
 
 ```{r}
 data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -82,19 +83,34 @@ many cases, the route event layer table itself is a sufficient spatial
 representation of the linear referencing results, but only by doing this
 step can we inspect the results visually.
 
+```{r}
+bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
+bbox_sf <- sf::st_polygon(list(matrix(c(bbox$xlim[1], bbox$ylim[1], bbox$xlim[2], bbox$ylim[1], bbox$xlim[1], bbox$ylim[2], bbox$xlim[2], bbox$ylim[2],bbox$xlim[1], bbox$ylim[1]), ncol=2, byrow=T)))
+bbox_sf <- sf::st_sfc(bbox_sf)
+sf::st_crs(bbox_sf) <- fcn_get_state()$crs
+```
+
 Here, we see that the line transects are successfully segmented at the
 border of the grid cells, as colored by different ID numbers of the Grid
 where transects are colored by the last digit of the GridID:
 
 ```{r linear_referencing_transects}
 route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
-ggplot() +
-  geom_spatraster(data = fishnet, color = 'gray50', fill = 'gray80') +
-  geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID))), linewidth = 1) +
+fishnet_bbox <- terra::crop(fishnet, terra::vect(bbox_sf))
+fishnet_plot <- ggplot() +
+  geom_spatraster(data = fishnet_bbox %>% mutate(grid_id_plot = substr(GridID, nchar(GridID), nchar(GridID))), aes(fill = grid_id_plot)) +
+  do.call(coord_sf, bbox) +
+  theme_bw()+
+  scale_fill_brewer(palette = "Set3") +
+  guides(fill = 'none')+
+  theme(panel.grid = element_blank())
+route_plot <- ggplot() +
+  geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID)))) +
   do.call(coord_sf, bbox) +
   scale_color_brewer(palette = "Set3") +
   labs(color = "") +
   #guides(color = 'none')+
   theme_bw()+
   theme(panel.grid = element_blank())
+fishnet_plot + route_plot
 ```

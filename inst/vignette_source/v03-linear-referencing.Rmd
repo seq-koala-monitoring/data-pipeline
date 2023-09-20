@@ -59,8 +59,8 @@ of the event:
     covered by this event
 
 ```{r}
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -82,6 +82,13 @@ route event layers of rasterized covariate layers (described below). In
 many cases, the route event layer table itself is a sufficient spatial
 representation of the linear referencing results, but only by doing this
 step can we inspect the results visually.
+
+```{r}
+bbox <- list(xlim = c(441430, 449400), ylim = c(6928706, 6936814), expand = F)
+bbox_sf <- sf::st_polygon(list(matrix(c(bbox$xlim[1], bbox$ylim[1], bbox$xlim[2], bbox$ylim[1], bbox$xlim[1], bbox$ylim[2], bbox$xlim[2], bbox$ylim[2],bbox$xlim[1], bbox$ylim[1]), ncol=2, byrow=T)))
+bbox_sf <- sf::st_sfc(bbox_sf)
+sf::st_crs(bbox_sf) <- fcn_get_state()$crs
+```
 
 Here, we see that the line transects are successfully segmented at the
 border of the grid cells, as colored by different ID numbers of the Grid

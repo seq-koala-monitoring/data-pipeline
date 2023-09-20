@@ -3,9 +3,10 @@ library(filesstrings)
 
 # Precompile vignette
 # 1. Scans and deletes .orig files if the Rmd file exists
-# 2.
+# 2. Copy the source Rmd file to the vignette folder and renaming it with .orig to avoid building on the server
+# 3. Knit the .orig file locally on a device with the dataset to a knitted Rmd file
 
-vignette_list <- c('v01-setup', 'v02-get-data', 'v03-linear-referencing', 'v04-covariates')
+vignette_list <- c('v01-setup', 'v02-get-data', 'v03-linear-referencing', 'v04-covariates', 'v05-master-data')
 
 lapply(vignette_list, function(v) {
   v_source_path <- sprintf('inst/vignette_source/%s.Rmd', v)

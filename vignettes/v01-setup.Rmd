@@ -45,14 +45,15 @@ This directory can be stored on anywhere on the computer.
 
 
 ```r
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 list.files(data_dir)
-#>  [1] "basedata.gdb"                   "final_covariates.gdb"           "final_covariates_raster"       
-#>  [4] "koala_survey_data_ver2_0.gdb"   "KoalaSurveyData.gdb"            "KoalaSurveyData2020_cur.accdb" 
-#>  [7] "KoalaSurveyData2020_cur.laccdb" "KoalaSurveySites"               "SEQkoalaData.accdb"            
-#> [10] "SEQkoalaData_info.pdf"          "SEQkoalaQueries.accdb"          "test_grid.gdb"
+#> [1] "basedata.gdb"                    "final_covariates.gdb"           
+#> [3] "final_covariates_raster"         "final_covariates_raster_gda1994"
+#> [5] "koala_survey_data_ver2_0.gdb"    "KoalaSurveyData.gdb"            
+#> [7] "KoalaSurveyData2020_cur.accdb"   "SEQkoalaData.accdb"             
+#> [9] "SEQkoalaData_info.pdf"
 ```
 
 # Generate fishnet grid

@@ -16,7 +16,8 @@ fcn_all_of_area_table <- function(year) {
 #' @export
 fcn_all_of_area_all <- function() {
   db_1996 <- fcn_all_of_area_table_1996()
-  db_2020 <- fcn_all_of_area_table_2020()  %>% mutate(Date = as.POSIXct(Date))
+  db_2020 <- fcn_all_of_area_table_2020()  %>%
+    dplyr::mutate(Date = as.POSIXct(Date))
   out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
   return(out_db)

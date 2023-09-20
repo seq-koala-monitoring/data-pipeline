@@ -9,3 +9,4 @@ working_data/
 Rprof.out
 docs
 cache/
+inst/setup.R

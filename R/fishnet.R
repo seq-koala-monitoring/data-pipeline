@@ -29,10 +29,16 @@ fcn_fishnet_raster <- function(feature_class) {
   return(fishnet_masked)
 }
 
-#' Generate new grid based on grid_size
+#' @title Generate new grid based on grid_size
+#' @param option: 'raster', or 'vector', denotes the format of the fishnet grid
+#' @param buffer: buffer around the study area for grid generation, in meters
 #' @export
-fcn_new_grid <- function(option = 'raster') {
+fcn_new_grid <- function(option = 'raster', buffer = 0) {
   study_area <- fcn_get_study_area()
+  if (buffer > 0) {
+    study_area <- sf::st_buffer(study_area, buffer)
+  }
+
   if (option == 'raster') {
     fishnet <- fcn_fishnet_raster(study_area)
   } else {

@@ -2,7 +2,7 @@
 
 An R package with functionality that consumes ACCESS databases of koala monitoring data and outputs tables that are direct inputs to a Bayesian state-space model.
 
-A user-friendly documentation of the package functionality is available here: (documentation)[https://seq-koala-monitoring.github.io/data-pipeline]
+A user-friendly documentation of the package functionality is available here: [documentation](https://seq-koala-monitoring.github.io/data-pipeline)
 
 This vignette describes the usage of the toolbox provided by the custom
 R package `SEQKoalaDataPipeline` that reads from ACCESS databases of

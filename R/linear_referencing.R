@@ -48,7 +48,9 @@ fcn_df_to_sf <- function(df) {
 #' @param n number of sample points (including start and finish) for each transect line (precise for (100/n)% of the length -- e.g. n=50 means precise for 2% of the length)
 fcn_line_sample_extract_raster <- function(input_raster, line_transect, n = 50) {
   sample_seq <- seq(0,1,length.out=n)
-  reference_points <- sf::st_line_sample(line_transect, sample = sample_seq) %>% sf::st_cast("POINT") %>% sf::st_sf()
+  reference_points <- sf::st_line_sample(line_transect, sample = sample_seq) %>%
+    sf::st_cast("POINT") %>%
+    sf::st_sf()
   reference_points$TransectID <- rep(line_transect$TransectID, each = n)
   reference_points$Tlength <- rep(line_transect$Tlength, each = n)
   reference_points$Date <- rep(line_transect$Date, each = n)
@@ -70,9 +72,10 @@ fcn_sample_point_to_route <- function(extract_table, names) {
     dplyr::ungroup() %>%
     tidyr::unite("value", names, remove = FALSE) %>%
     dplyr::mutate(dup = value == dplyr::lag(value) & TransectID == dplyr::lag(TransectID)) %>%
+    dplyr::mutate(dup = ifelse(is.na(dup), FALSE, dup)) %>%
     dplyr::filter(!dup) %>%
     dplyr::select(-value) %>%
-    dplyr::mutate(distance_to_end = ifelse(dplyr::lead(TransectID) == TransectID, dplyr::lead(distance_from_start), Tlength)) %>%
+    dplyr::mutate(distance_to_end = ifelse((dplyr::lead(TransectID) == TransectID) & !is.na(dplyr::lead(TransectID)), dplyr::lead(distance_from_start), Tlength)) %>%
     dplyr::mutate(segment_length = distance_to_end - distance_from_start) %>%
     dplyr::select(TransectID, Date, Tlength, dplyr::all_of(names), distance_from_start, distance_to_end, segment_length, geometry) %>%
     dplyr::mutate(lpercent = segment_length / Tlength) %>%

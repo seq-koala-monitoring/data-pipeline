@@ -18,7 +18,9 @@ fcn_line_transect_sf_all <- function(cols = c("TransectID","SiteID","Date","TrSi
                                               "Start_Eastings","Start_Northings","End_Eastings",
                                               "End_Northings","geometry")) {
 
-  db_1996 <- fcn_line_transect_sf_1996() %>% rename(TrSiteID = TransectNumber) %>% dplyr::select(cols)
+  db_1996 <- fcn_line_transect_sf_1996() %>%
+    dplyr::rename(TrSiteID = TransectNumber) %>%
+    dplyr::select(cols)
   db_2020 <- fcn_line_transect_sf_2020() %>% dplyr::select(cols)
 
   out_db <- list(db_1996, db_2020) %>%
@@ -30,6 +32,10 @@ fcn_line_transect_sf_all <- function(cols = c("TransectID","SiteID","Date","TrSi
 fcn_line_transect_table_1996 <- function() {
   state <- fcn_get_state()
   table <- fcn_sql_exec('1996', 'line-transect')
+
+  # Check if the transect ID uniquely identifies the line transects
+  fcn_check_transect_id_unique(table)
+
   return(table)
 }
 
@@ -37,6 +43,10 @@ fcn_line_transect_table_1996 <- function() {
 fcn_line_transect_table_2020 <- function() {
   state <- fcn_get_state()
   table <- fcn_sql_exec("2020", "line-transect")
+
+  # Check if the transect ID uniquely identifies the line transects
+  fcn_check_transect_id_unique(table)
+
   return(table)
 }
 
@@ -47,13 +57,15 @@ fcn_line_transect_sf_1996 <- function() {
   transect_sf <- sf::st_read(koala_survey_data_path, layer = "KoalaSurveyLineTransects", quiet = TRUE) %>%
     sf::st_transform(state$crs) %>%
     dplyr::rename(SiteNumber=site, TransectNumber=transect, SurveyNumber=survey)
+  transect_sf <- fcn_keep_distinct(transect_sf)
+
   site_sf <- sf::st_read(koala_survey_data_path, layer = "KoalaSurveySites", quiet = TRUE) %>%
     sf::st_transform(state$crs) %>%
     dplyr::rename(SiteNumber=Site)
   sf::st_geometry(site_sf) <- "geometry"
   line_transects <- fcn_line_transect_table_1996()
 
-  joined_table <- dplyr::inner_join(transect_sf, line_transects, by = c('SiteNumber', 'TransectNumber', 'SurveyNumber'))
+  joined_table <- dplyr::inner_join(transect_sf, line_transects, by = c('SiteNumber', 'TransectNumber', 'SurveyNumber'), relationship = 'one-to-many')
   joined_sf <- fcn_sf_start_end_coord(joined_table) # Add start and end eastings/ northings information
 
   unjoined_table <- dplyr::anti_join(line_transects, transect_sf, by = c('SiteNumber', 'TransectNumber', 'SurveyNumber'))
@@ -70,6 +82,8 @@ fcn_line_transect_sf_1996 <- function() {
   } else {
     message(sprintf("All line transects (%s records) successfully joined.\n", nrow(joined_table)))
   }
+
+  fcn_check_transect_id_unique(joined_table)
 
   return(joined_table)
 }
@@ -108,6 +122,8 @@ fcn_sf_start_end_coord <- function(sf_object) {
 fcn_line_transect_sf_2020 <- function() {
   table_2020 <- fcn_line_transect_table_2020()
   line_transect_sf <- fcn_line_transect_sf(table_2020)
+  fcn_check_transect_id_unique(line_transect_sf)
+  return(line_transect_sf)
 }
 
 #' @export
@@ -115,3 +131,4 @@ fcn_transect_start_points_2020 <- function() {
   table_2020 <- fcn_line_transect_table_2020()
   line_transect_sf <- fcn_line_transect_sf(table_2020, start_point = T)
 }
+

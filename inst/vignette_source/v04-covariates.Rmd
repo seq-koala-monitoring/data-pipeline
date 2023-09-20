@@ -27,8 +27,8 @@ library(patchwork)
 
 Get data
 ```{r}
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(500) # grid width/ height in meters, and generate grid in local environment
@@ -157,19 +157,5 @@ transect_sptemp_plot <- ggplot() +
   theme_bw()+
   theme(panel.grid = element_blank())
 rast_sptemp_plot + transect_sptemp_plot + plot_layout(guides = 'collect')
-```
-
-# Covariate extraction: polygons
-
-The syntax for covariate extraction for polygons is written to resemble that used in the linear referencing approach to enhance code reusability. Of course, covariates extracted as polygons do not have columns of "FMEAS" and "TMEAS" specific to linearly-referenced transects. The structure is otherwise the same.
-
-We begin by extracting all tables as SF.
-```{r}
-master <- fcn_all_tables_sf()
-```
-
-```{r}
-df <- fcn_polygon_extract_raster(fishnet, master$strip_transect[1:10,])
-
 ```
 

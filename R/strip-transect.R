@@ -16,7 +16,8 @@ fcn_strip_transect_table <- function(year) {
 #' @export
 fcn_strip_transect_all <- function() {
   db_1996 <- fcn_strip_transect_table_1996()
-  db_2020 <- fcn_strip_transect_table_2020() %>% mutate(Date = as.POSIXct(Date))
+  db_2020 <- fcn_strip_transect_table_2020() %>%
+    dplyr::mutate(Date = as.POSIXct(Date))
   out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
   return(out_db)
@@ -45,6 +46,7 @@ fcn_strip_transect_sf_all <- function() {
   transect_sf <- sf::st_read(koala_survey_data_path, layer = "KoalaSurveyTransects", quiet = TRUE) %>%
     sf::st_transform(state$crs) %>%
     dplyr::rename(SiteNumber=Site, TransectNumber=Transect, SurveyNumber=Survey)
+  transect_sf <- fcn_keep_distinct(transect_sf, cols = c('SiteNumber', 'TransectNumber', 'SurveyNumber'))
   site_sf <- sf::st_read(koala_survey_data_path, layer = "KoalaSurveySites", quiet = TRUE) %>%
     sf::st_transform(state$crs) %>%
     dplyr::rename(SiteNumber=Site)

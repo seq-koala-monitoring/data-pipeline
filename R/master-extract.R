@@ -25,6 +25,19 @@ fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect',
   return(master)
 }
 
+#' @title Extract transect information with grid fractions
+#' @export
+fcn_all_transect_grid_fractions <- function(buffer = 0) {
+  fishnet <- fcn_get_grid()
+  master <- fcn_all_tables_sf()
+  if (buffer > 0) {
+    master <- lapply(master, function(x) sf::st_buffer(x, dist = buffer, joinStyle = 'ROUND'))
+  }
+
+  master_grid <- lapply(master, function(x) fcn_mixed_extract_raster(fishnet, x))
+  return(master_grid)
+}
+
 #' @title Extract LGA information
 fcn_get_lga <- function() {
   lga <- lapply(c('1996','2020'), function(x) fcn_sql_exec(x, 'lga')) %>%
@@ -50,4 +63,19 @@ fcn_summarise_sightings <- function(group_by_cols = c('LGA', 'Method', 'db')) {
     dplyr::left_join(lga, by = 'TransectID') %>%
     dplyr::group_by(.dots = dots) %>%
     summarise(Sightings = sum(Number_Sightings))
+}
+
+#' @title Remove observations where the observations cannot be identified uniquely, and warn accordingly
+#' @export
+fcn_keep_distinct <- function(df, cols = c('SiteNumber', 'TransectNumber', 'SurveyNumber')) {
+  df_unite <- tidyr::unite(df, value, cols, remove = FALSE)
+  if (anyDuplicated(df_unite$value)) {
+    warning(sprintf("%i records cannot be uniquely identified with %s. Keeping only distinct records.",
+
+                           sum(duplicated(df_unite$value)), paste0(cols, collapse = '-')))
+    df <- df_unite %>%
+      dplyr::distinct(value, .keep_all = TRUE) %>%
+      dplyr::select(-value)
+  }
+  return(df)
 }

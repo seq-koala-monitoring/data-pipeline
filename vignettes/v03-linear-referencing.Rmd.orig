@@ -59,8 +59,7 @@ of the event:
     covered by this event
 
 ```{r}
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -89,21 +88,13 @@ where transects are colored by the last digit of the GridID:
 
 ```{r linear_referencing_transects}
 route_features <- fcn_locate_feature_from_route(route_table, table_sf_2020)
-fishnet_bbox <- terra::crop(fishnet, terra::vect(bbox_sf))
-fishnet_plot <- ggplot() +
-  geom_spatraster(data = fishnet_bbox %>% mutate(grid_id_plot = substr(GridID, nchar(GridID), nchar(GridID))), aes(fill = grid_id_plot)) +
-  do.call(coord_sf, bbox) +
-  theme_bw()+
-  scale_fill_brewer(palette = "Set3") +
-  guides(fill = 'none')+
-  theme(panel.grid = element_blank())
-route_plot <- ggplot() +
-  geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID)))) +
+ggplot() +
+  geom_spatraster(data = fishnet, color = 'gray50', fill = 'gray80') +
+  geom_sf(data = route_features, aes(color = substr(GridID, nchar(GridID), nchar(GridID))), linewidth = 1) +
   do.call(coord_sf, bbox) +
   scale_color_brewer(palette = "Set3") +
   labs(color = "") +
   #guides(color = 'none')+
   theme_bw()+
   theme(panel.grid = element_blank())
-fishnet_plot + route_plot
 ```

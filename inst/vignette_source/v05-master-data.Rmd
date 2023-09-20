@@ -1,0 +1,57 @@
+---
+title: "5. Master data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{5. Master data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SEQKoalaDataPipeline)
+```
+
+# Master data
+
+Wrapper functions documented in the "Master data" section are designed to abstract away the details of the smaller functions, such that the most common use-cases of the package can be executed in succinct code.
+
+We begin by extracting all tables as simple features.
+```{r}
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+fcn_set_home_dir(data_dir)
+fcn_set_grid_size(100)
+master <- fcn_all_tables_sf()
+```
+
+The extracted "master" dataframe contains spatial representations of the transects in both linestring formats (single observer line transects from the newer 2020-current database) as well as other spatial representations (strip/ UAoA transects, and some line transects from 1996-2015). The `fcn_mixed_extract_raster` function handles these mixed formats simultaneously. It wraps around functions that use linear referencing approaches to extract grid information from rasters, as well as raster extraction tools, with `exactextractr` that uses C++ as a backend for quick extraction.
+
+The function `fcn_all_transect_grid_fractions` abstracts away from that. In one function call, the algorithm executes the following:
+
+1. Generate spatial grid
+
+2. SQL queries to extract transect-level data
+
+3. Joining with spatial features (if needed) or generate spatial features by coordinates
+
+4. Buffer spatial features (if needed)
+
+5. Calculate weight fractions
+
+```{r}
+transect_grid <- fcn_all_transect_grid_fractions()
+```
+
+ Equivalently the grid weights can be extracted for buffered polygons.
+ 
+```{r}
+transect_grid_buffered <- fcn_all_transect_grid_fractions(buffer = 100)
+```
+ 

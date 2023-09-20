@@ -12,4 +12,3 @@ fcn_check_paths <- function(path, suffix = "", stop_exec = F) {
     }
   }
 }
-

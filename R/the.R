@@ -15,8 +15,8 @@ the$gdb_path <- list(
   covariates="final_covariates.gdb"
 )
 
-# Grid size in meters (default: 1000 meters)
-the$grid_size <- 1000
+# Grid size in meters (default: 100 meters)
+the$grid_size <- 100
 
 the$study_area <- list(dsn = "basedata.gdb", layer = "seqrp_study_area_2017_mga56")
 
@@ -113,6 +113,10 @@ fcn_set_grid <- function(grid) {
 
 #' @export
 fcn_get_grid <- function() {
+  if (is.null(the$grid)) {
+    grid <- fcn_new_grid()
+    return(grid)
+  }
   the$grid
 }
 

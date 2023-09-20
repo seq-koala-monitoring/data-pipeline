@@ -110,9 +110,50 @@ fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear'
   return(route_table)
 }
 
-#' @title Extract covariates with mixed multipolygon/ linestring entries
+#' @title Extract covariates with mixed multipolygon/ linestring rows
 #' @export
 fcn_mixed_extract_raster <- function(input_raster, df) {
+
+  df_no_geom <- sf::st_drop_geometry(df)
+  fcn_join_to_original <- function(out) {
+    out_select <- dplyr::select(out, TransectID, dplyr::all_of(names(input_raster)), fraction)
+    dplyr::left_join(df_no_geom, out, by = 'TransectID')
+  }
+
+  fcn_check_transect_id_unique(df)
+
   df_geom_type <- sf::st_geometry_type(df)
 
+  all_linestrings <- all(df_geom_type == 'LINESTRING')
+  all_polygons <- all(df_geom_type != 'LINESTRING')
+
+  if (!all_polygons) {
+    # Handle linestrings with route table functions
+    df_linestrings <- df[df_geom_type == 'LINESTRING',]
+    route_table <- fcn_route_table_raster(input_raster, df_linestrings)
+    df_linestring_extracted <- route_table %>%
+      dplyr::select(TransectID, Date, dplyr::all_of(names(input_raster)), lpercent) %>%
+      dplyr::rename(fraction = lpercent)
+  }
+
+  if (all_linestrings) {
+    df_out <- fcn_join_to_original(df_linestring_extracted)
+    return(df_out)
+  }
+
+  df_polygons <- df[df_geom_type != 'LINESTRING',]
+  polygon_table <- fcn_polygon_extract_raster(input_raster, df_polygons)
+  df_polygon_extracted <- polygon_table %>%
+    dplyr::select(TransectID, Date, dplyr::all_of(names(input_raster)), fraction)
+
+  if (all_polygons) {
+    return(df_polygon_extracted %>% fcn_join_to_original())
+  }
+
+  if (all(names(df_linestring_extracted) == names(df_polygon_extracted))) {
+    combined_table <- rbind(df_linestring_extracted, df_polygon_extracted)
+    return(combined_table %>% fcn_join_to_original())
+  } else {
+    stop("Column names of the dataframes do not match.")
+  }
 }

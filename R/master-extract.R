@@ -26,16 +26,41 @@ fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect',
 }
 
 #' @title Extract transect information with grid fractions
+#' @param buffer: a vector of polygon buffer sizes to extract,
 #' @export
-fcn_all_transect_grid_fractions <- function(buffer = 0) {
+fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
   fishnet <- fcn_get_grid()
   master <- fcn_all_tables_sf()
-  if (buffer > 0) {
-    master <- lapply(master, function(x) sf::st_buffer(x, dist = buffer, joinStyle = 'ROUND'))
-  }
 
-  master_grid <- lapply(master, function(x) fcn_mixed_extract_raster(fishnet, x))
+  master_grid <- lapply(master, function(df) {
+    res <- fcn_extract_raster_buffer(df, fishnet, buffer[1])
+    var_name <- paste0('fraction_', buffer)
+    res <- res %>% dplyr::rename(!!var_name[1] := fraction)
+    if (length(buffer) > 1) {
+    for (i in 2:length(buffer)) {
+        res_buffer <- fcn_extract_raster_buffer(df, fishnet, buffer[i]) %>%
+          dplyr::select(TransectID, dplyr::all_of(names(fishnet)), fraction) %>%
+          dplyr::rename(!!var_name[i] := fraction)
+        res <- dplyr::full_join(res, res_buffer, by = c('TransectID', 'GridID'))
+      }
+      # Fill up empty weights with zeros
+      res <- res %>%
+        dplyr::mutate_at(var_name, ~replace(., is.na(.), 0))
+    }
+    return(res)
+  })
+
+  master_grid$perp_distance <- fcn_strip_transect_all()
   return(master_grid)
+}
+
+#' @title Extract raster after buffering polygons
+fcn_extract_raster_buffer <- function(df, fishnet, buffer = 0) {
+  if (buffer > 0) {
+    df <- sf::st_buffer(df, dist = buffer, joinStyle = 'ROUND')
+  }
+  res <- fcn_mixed_extract_raster(fishnet, df)
+  return(res)
 }
 
 #' @title Extract LGA information

@@ -21,8 +21,8 @@ library(patchwork)
 
 
 ```r
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
 #> class       : SpatRaster 
@@ -58,30 +58,30 @@ line_transects <- fcn_line_transect_sf_all()
 #> Joined at the site level: 169. 
 #> Join failed: 0
 summary(line_transects)
-#>       db             TransectID            SiteID            Date                       
-#>  Length:2963        Length:2963        Min.   :   1.0   Min.   :2001-08-28 00:00:00.00  
-#>  Class :character   Class :character   1st Qu.: 122.0   1st Qu.:2020-06-19 00:00:00.00  
-#>  Mode  :character   Mode  :character   Median : 416.0   Median :2021-07-21 00:00:00.00  
-#>                                        Mean   : 509.8   Mean   :2019-06-22 07:14:28.71  
-#>                                        3rd Qu.: 814.5   3rd Qu.:2022-03-23 00:00:00.00  
-#>                                        Max.   :1301.0   Max.   :2022-12-20 00:00:00.00  
-#>                                                                                         
-#>     TrSiteID         Tlength        Number_Sightings Number_Observers Start_Eastings  
-#>  Min.   :   1.0   Min.   :  19.42   Min.   :0.0000   Min.   : 1.000   Min.   :399462  
-#>  1st Qu.: 111.0   1st Qu.: 226.04   1st Qu.:0.0000   1st Qu.: 2.000   1st Qu.:466312  
-#>  Median : 417.0   Median : 447.00   Median :0.0000   Median : 2.000   Median :491411  
-#>  Mean   : 483.3   Mean   : 524.78   Mean   :0.1974   Mean   : 2.086   Mean   :484205  
-#>  3rd Qu.: 814.5   3rd Qu.: 733.81   3rd Qu.:0.0000   3rd Qu.: 2.000   3rd Qu.:501812  
-#>  Max.   :1301.0   Max.   :2281.24   Max.   :8.0000   Max.   :70.000   Max.   :550605  
-#>                                                      NA's   :1        NA's   :169     
-#>  Start_Northings    End_Eastings    End_Northings              geometry   
-#>  Min.   :6870195   Min.   :399394   Min.   :6870028   LINESTRING   :2794  
-#>  1st Qu.:6939228   1st Qu.:466208   1st Qu.:6939270   MULTIPOLYGON : 169  
-#>  Median :6972056   Median :491319   Median :6971992   epsg:7856    :   0  
-#>  Mean   :6975275   Mean   :484208   Mean   :6975276   +proj=utm ...:   0  
-#>  3rd Qu.:6998774   3rd Qu.:501743   3rd Qu.:6998793                       
-#>  Max.   :7106583   Max.   :551033   Max.   :7106708                       
-#>  NA's   :169       NA's   :169      NA's   :169
+#>       db             TransectID            SiteID            Date                           TrSiteID     
+#>  Length:2963        Length:2963        Min.   :   1.0   Min.   :2001-08-28 00:00:00.00   Min.   :   1.0  
+#>  Class :character   Class :character   1st Qu.: 122.0   1st Qu.:2020-06-19 00:00:00.00   1st Qu.: 111.0  
+#>  Mode  :character   Mode  :character   Median : 416.0   Median :2021-07-21 00:00:00.00   Median : 417.0  
+#>                                        Mean   : 509.8   Mean   :2019-06-22 07:14:28.71   Mean   : 483.3  
+#>                                        3rd Qu.: 814.5   3rd Qu.:2022-03-23 00:00:00.00   3rd Qu.: 814.5  
+#>                                        Max.   :1301.0   Max.   :2022-12-20 00:00:00.00   Max.   :1301.0  
+#>                                                                                                          
+#>     Tlength        Number_Sightings Number_Observers Start_Eastings   Start_Northings    End_Eastings   
+#>  Min.   :  19.42   Min.   :0.0000   Min.   : 1.000   Min.   :399462   Min.   :6870195   Min.   :399394  
+#>  1st Qu.: 226.04   1st Qu.:0.0000   1st Qu.: 2.000   1st Qu.:466312   1st Qu.:6939228   1st Qu.:466208  
+#>  Median : 447.00   Median :0.0000   Median : 2.000   Median :491411   Median :6972056   Median :491319  
+#>  Mean   : 524.78   Mean   :0.1974   Mean   : 2.086   Mean   :484205   Mean   :6975275   Mean   :484208  
+#>  3rd Qu.: 733.81   3rd Qu.:0.0000   3rd Qu.: 2.000   3rd Qu.:501812   3rd Qu.:6998774   3rd Qu.:501743  
+#>  Max.   :2281.24   Max.   :8.0000   Max.   :70.000   Max.   :550605   Max.   :7106583   Max.   :551033  
+#>                                     NA's   :1        NA's   :169      NA's   :169       NA's   :169     
+#>  End_Northings              geometry   
+#>  Min.   :6870028   LINESTRING   :2794  
+#>  1st Qu.:6939270   MULTIPOLYGON : 169  
+#>  Median :6971992   epsg:7856    :   0  
+#>  Mean   :6975276   +proj=utm ...:   0  
+#>  3rd Qu.:6998793                       
+#>  Max.   :7106708                       
+#>  NA's   :169
 ```
 
 ```r
@@ -186,9 +186,8 @@ Strip transects are extracted using a similar interface. Likewise to line transe
 
 ```r
 strip_transects <- fcn_strip_transect_sf_all()
-#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records
-#> cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct
-#> records.
+#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be
+#> uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
 #> Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. 
 #> Joined uniquely: 916. 
 #> Joined at the site level: 1726. 
@@ -217,8 +216,13 @@ Summary statistics can be produced of the full table. For example, to count the 
 
 ```r
 summary_table <- fcn_summarise_sightings(c('LGA', 'Method', 'db'))
+#> Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.
+#> ℹ The deprecated feature was likely used in the dplyr package.
+#>   Please report the issue at <https://github.com/tidyverse/dplyr/issues>.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 summary_table
-#> # A tibble: 27 x 4
+#> # A tibble: 27 × 4
 #> # Groups:   LGA, Method [26]
 #>    LGA            Method         db        Sightings
 #>    <chr>          <chr>          <chr>         <int>
@@ -232,5 +236,5 @@ summary_table
 #>  8 Ipswich        strip_transect 1996-2015        37
 #>  9 Ipswich        uaoa           1996-2015         3
 #> 10 Lockyer Valley line_transect  2020-cur          6
-#> # i 17 more rows
+#> # ℹ 17 more rows
 ```

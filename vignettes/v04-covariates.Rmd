@@ -21,8 +21,8 @@ library(patchwork)
 Get data
 
 ```r
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -66,12 +66,12 @@ layer (red) closely match that of the underlying raster layer (in blue).
 ```r
 head(cov_route_table)
 #>           TransectID       Date  Tlength    htele     FMEAS     TMEAS segment_length   lpercent
-#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.10001   0.00000  29.63936      29.639357 0.06122449
-#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 89.89634  29.63936  39.51914       9.879786 0.02040816
-#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 95.11482  39.51914 177.83614     138.316998 0.28571429
-#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 97.26097 177.83614 187.71593       9.879786 0.02040816
-#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 91.13354 187.71593 306.27335     118.557427 0.24489796
-#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 92.10400 306.27335 345.79249      39.519142 0.08163265
+#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 97.99000   0.00000  39.51914      39.519142 0.08163265
+#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 89.84758  39.51914  49.39893       9.879786 0.02040816
+#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 95.02319  49.39893 177.83614     128.437212 0.26530612
+#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 97.15929 177.83614 187.71593       9.879786 0.02040816
+#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 91.05743 187.71593 306.27335     118.557427 0.24489796
+#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 92.10048 306.27335 345.79249      39.519142 0.08163265
 ```
 
 
@@ -114,11 +114,19 @@ all spatio-temporal layers.
 
 ```r
 cov_sptemp <- fcn_covariate_raster_load("hlwdy")
+#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
+#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
+
+#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
+#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
+
+#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
+#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
+#> Error: [rast] filename is empty. Provide a valid filename
 names(cov_sptemp)
-#>  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207"
-#>  [8] "X200307" "X200407" "X200507" "X200607" "X200707" "X200807" "X200907"
-#> [15] "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607"
-#> [22] "X201707" "X201807" "X201907"
+#>  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207" "X200307" "X200407" "X200507" "X200607"
+#> [12] "X200707" "X200807" "X200907" "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607" "X201707"
+#> [23] "X201807" "X201907"
 ```
 
 The covariates are extracted as a multi-layer "SpatRaster" (from the
@@ -131,7 +139,7 @@ have a relatively small effect on the covariate extracted.
 
 ```r
 cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
-#> Error: external pointer is not valid
+#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 ```
 
 The covariate value of the route event layer can be matched to the date
@@ -154,35 +162,9 @@ transect is surveyed can be interpolated by the following methods:
 
 ```r
 route_table_date_matched <- fcn_covariate_match_date(cov_sptemp_route_table, names(cov_sptemp), method = 'bilinear')
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_route_table' not found
 head(route_table_date_matched)
-#>           TransectID       Date  Tlength  X199607  X199707  X199807  X199907  X200007  X200107
-#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 161.9270 162.1506 162.7119 161.3237 160.3490 160.3555
-#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 162.4202 162.4098 162.4790 161.8063 161.6388 162.4461
-#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 161.7007 164.6380 166.2059 166.6754 166.1637 166.0654
-#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 158.6266 160.2637 161.7145 163.1401 164.0166 164.9979
-#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 159.5827 161.0962 163.0775 165.0775 166.6332 167.6079
-#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 162.8420 166.1545 167.7541 169.7607 170.9347 171.3921
-#>    X200207  X200307  X200407  X200507  X200607  X200707  X200807  X200907  X201007  X201107
-#> 1 161.7690 161.7942 161.7755 159.8381 157.8568 156.8755 158.0178 161.0178 164.4686 165.9195
-#> 2 164.3956 164.8212 164.7398 162.7529 160.3338 158.9148 158.9400 162.3656 166.3656 168.3843
-#> 3 166.9419 167.3422 165.5032 163.7063 161.3416 160.0582 160.7140 164.2396 168.3023 170.7531
-#> 4 166.3421 166.1812 164.5881 160.7743 156.5349 155.0588 157.4722 163.1438 168.5507 171.5694
-#> 5 169.0879 169.6118 168.1422 163.6370 158.1318 155.7249 158.2488 165.6914 171.6662 175.0983
-#> 6 170.8682 170.2938 167.8934 164.8560 160.8373 158.8121 160.3003 164.9243 170.3499 173.9430
-#>    X201207  X201307  X201407  X201507  X201607  X201707  X201807  X201907     FMEAS     TMEAS
-#> 1 165.3451 163.5061 161.6044 159.5417 158.5043 158.9364 159.9364 158.9821   0.00000  29.63936
-#> 2 167.9774 164.6584 161.6584 160.0335 159.7969 161.1785 161.7155 161.4348  29.63936  39.51914
-#> 3 170.7410 169.6157 166.5783 163.8429 161.7633 162.2329 161.9561 164.7018  39.51914 177.83614
-#> 4 171.2795 167.4592 163.6201 160.6453 160.1149 161.5283 161.1318 161.0439 177.83614 187.71593
-#> 5 173.5931 169.0944 164.5705 161.9774 161.5771 163.1010 161.0944 161.0627 187.71593 306.27335
-#> 6 173.9121 170.9982 167.5352 164.5100 164.5513 164.8946 162.9038 162.2816 306.27335 345.79249
-#>   segment_length   lpercent    value
-#> 1      29.639357 0.06122449 158.9821
-#> 2       9.879786 0.02040816 161.4348
-#> 3     138.316998 0.28571429 164.7018
-#> 4       9.879786 0.02040816 161.0439
-#> 5     118.557427 0.24489796 161.0627
-#> 6      39.519142 0.08163265 162.2816
+#> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ```
 
 The date matching algorithm creates / overwrites the "value" column in
@@ -193,10 +175,12 @@ raster.
 
 ```r
 cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matched, table_sf_2020)
+#> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
-#> Error: external pointer is not valid
+#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
 limits <- terra::minmax(cov_sptemp_crop)
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found
 rast_sptemp_plot <- ggplot() +
   geom_spatraster(data = cov_sptemp_crop, aes(fill = X201907)) +
   do.call(coord_sf, bbox)+
@@ -206,6 +190,7 @@ rast_sptemp_plot <- ggplot() +
   #guides(color = 'none')+
   theme_bw()+
   theme(panel.grid = element_blank())
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_crop' not found
 transect_sptemp_plot <- ggplot() +
   geom_sf(data = cov_sptemp_date_matched, aes(color = value), linewidth = 1) +
   do.call(coord_sf, bbox)+
@@ -214,8 +199,8 @@ transect_sptemp_plot <- ggplot() +
   scale_color_viridis_c(limits = c(limits[1], limits[2])) +
   theme_bw()+
   theme(panel.grid = element_blank())
+#> Error in eval(expr, envir, enclos): object 'cov_sptemp_date_matched' not found
 rast_sptemp_plot + transect_sptemp_plot + plot_layout(guides = 'collect')
+#> Error in eval(expr, envir, enclos): object 'rast_sptemp_plot' not found
 ```
-
-![plot of chunk hlwdy_plot](fig-hlwdy_plot-1.png)
 

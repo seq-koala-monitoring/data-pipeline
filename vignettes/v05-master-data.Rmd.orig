@@ -24,8 +24,8 @@ Wrapper functions documented in the "Master data" section are designed to abstra
 
 We begin by extracting all tables as simple features.
 ```{r}
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100)
 master <- fcn_all_tables_sf()
@@ -43,8 +43,18 @@ The function `fcn_all_transect_grid_fractions` abstracts away from that. In one 
 
 4. Buffer spatial features (if needed)
 
-5. Calculate weight fractions
+5. Calculate grid weight fractions - iterating through all buffer values by buffering each polygon and extracting its weights
+
+6. Collating all results into a list format
 
 ```{r}
-transect_grid <- fcn_all_transect_grid_fractions()
+transect_grid <- fcn_all_transect_grid_fractions(buffer = c(0, 2500))
 ```
+The end result is a list containing tables of line transects, strip transect, and all of area transects. The tables are in long format, so each row corresponds to one grid cell that has an overlap with the transect. Each transect is identified uniquely by its TransectID.
+
+Particularly the Line Transect, Strip Transect and UAoA tables contain the "GridID" and "fraction" column that contains the Grid cell that it overlaps with, and the "fraction" columns showing the fraction which the transect overlaps with. Depending on the buffer, the "fraction" is different; here we illustrate a no-buffer (0) and 2.5km (2500) buffer, in the columns 'fraction_0' and 'fraction_2500' respectively.
+
+```{r}
+glimpse(transect_grid)
+```
+

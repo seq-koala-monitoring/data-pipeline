@@ -30,7 +30,8 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   df <- dplyr::bind_rows(list(constant = constant_covariates, temporal = temporal_covariates), .id = 'type') %>%
     dplyr::mutate(name = substr(filename, 1, 5)) %>%
     dplyr::mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
-    dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date)))
+    dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date))) %>%
+    dplyr::mutate(fullname = sub('\\.tif$', '', filename) )
 
   if (!is.null(layer)) {
     df <- df %>%
@@ -117,7 +118,7 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
   df_no_geom <- sf::st_drop_geometry(df)
   fcn_join_to_original <- function(out) {
     out_select <- dplyr::select(out, TransectID, dplyr::all_of(names(input_raster)), fraction)
-    dplyr::left_join(df_no_geom, out, by = 'TransectID')
+    dplyr::left_join(df_no_geom, out_select, by = 'TransectID')
   }
 
   fcn_check_transect_id_unique(df)
@@ -156,4 +157,22 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
   } else {
     stop("Column names of the dataframes do not match.")
   }
+}
+
+#' @title Extract all covariate by fishnet grid
+#' @export
+fcn_extract_covariate_grid <- function() {
+  fishnet <- fcn_get_grid()
+  study_area <- fcn_get_study_area()
+  covariates <- fcn_covariate_layer_df()
+  covariate_raster <- lapply(covariates$filename, function(n) {
+    print(sprintf("Reading raster: %s", n))
+    r <- terra::rast(paste0(fcn_get_raster_path(), '\\', n))
+    resampled <- terra::resample(r, fishnet)
+  })
+  covariate_raster$GridID <- fishnet
+  covariate_raster_resampled <- terra::rast(covariate_raster)
+  covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area))
+  names(covariate_raster_resampled) <- c(covariates$fullname, 'GridID')
+  return(covariate_raster_resampled)
 }

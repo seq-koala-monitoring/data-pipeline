@@ -18,6 +18,6 @@ fcn_check_fractions <- function(df) {
   not_one <- (abs(fraction_sum$frac_sum - 1) > 1e-2)
 
   if (any(not_one)) {
-    stop("%i TransectIDs detected with fractions unequal to 1", sum(not_one))
+    stop(sprintf("%i TransectIDs detected with fractions unequal to 1", sum(not_one)))
   }
 }

@@ -84,8 +84,8 @@
 <h3 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
-<span><span class="co">#data_dir &lt;- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
+<code class="sourceCode R"><span><span class="co">#data_dir &lt;- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
+<span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
@@ -124,30 +124,30 @@ both 1996 and 2020 databases are as follows, producing the so-called
 <span><span class="co">#&gt; Joined at the site level: 169. </span></span>
 <span><span class="co">#&gt; Join failed: 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">line_transects</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       db             TransectID            SiteID            Date                       </span></span>
-<span><span class="co">#&gt;  Length:2963        Length:2963        Min.   :   1.0   Min.   :2001-08-28 00:00:00.00  </span></span>
-<span><span class="co">#&gt;  Class :character   Class :character   1st Qu.: 122.0   1st Qu.:2020-06-19 00:00:00.00  </span></span>
-<span><span class="co">#&gt;  Mode  :character   Mode  :character   Median : 416.0   Median :2021-07-21 00:00:00.00  </span></span>
-<span><span class="co">#&gt;                                        Mean   : 509.8   Mean   :2019-06-22 07:14:28.71  </span></span>
-<span><span class="co">#&gt;                                        3rd Qu.: 814.5   3rd Qu.:2022-03-23 00:00:00.00  </span></span>
-<span><span class="co">#&gt;                                        Max.   :1301.0   Max.   :2022-12-20 00:00:00.00  </span></span>
-<span><span class="co">#&gt;                                                                                         </span></span>
-<span><span class="co">#&gt;     TrSiteID         Tlength        Number_Sightings Number_Observers Start_Eastings  </span></span>
-<span><span class="co">#&gt;  Min.   :   1.0   Min.   :  19.42   Min.   :0.0000   Min.   : 1.000   Min.   :399462  </span></span>
-<span><span class="co">#&gt;  1st Qu.: 111.0   1st Qu.: 226.04   1st Qu.:0.0000   1st Qu.: 2.000   1st Qu.:466312  </span></span>
-<span><span class="co">#&gt;  Median : 417.0   Median : 447.00   Median :0.0000   Median : 2.000   Median :491411  </span></span>
-<span><span class="co">#&gt;  Mean   : 483.3   Mean   : 524.78   Mean   :0.1974   Mean   : 2.086   Mean   :484205  </span></span>
-<span><span class="co">#&gt;  3rd Qu.: 814.5   3rd Qu.: 733.81   3rd Qu.:0.0000   3rd Qu.: 2.000   3rd Qu.:501812  </span></span>
-<span><span class="co">#&gt;  Max.   :1301.0   Max.   :2281.24   Max.   :8.0000   Max.   :70.000   Max.   :550605  </span></span>
-<span><span class="co">#&gt;                                                      NA's   :1        NA's   :169     </span></span>
-<span><span class="co">#&gt;  Start_Northings    End_Eastings    End_Northings              geometry   </span></span>
-<span><span class="co">#&gt;  Min.   :6870195   Min.   :399394   Min.   :6870028   LINESTRING   :2794  </span></span>
-<span><span class="co">#&gt;  1st Qu.:6939228   1st Qu.:466208   1st Qu.:6939270   MULTIPOLYGON : 169  </span></span>
-<span><span class="co">#&gt;  Median :6972056   Median :491319   Median :6971992   epsg:7856    :   0  </span></span>
-<span><span class="co">#&gt;  Mean   :6975275   Mean   :484208   Mean   :6975276   +proj=utm ...:   0  </span></span>
-<span><span class="co">#&gt;  3rd Qu.:6998774   3rd Qu.:501743   3rd Qu.:6998793                       </span></span>
-<span><span class="co">#&gt;  Max.   :7106583   Max.   :551033   Max.   :7106708                       </span></span>
-<span><span class="co">#&gt;  NA's   :169       NA's   :169      NA's   :169</span></span></code></pre></div>
+<span><span class="co">#&gt;       db             TransectID            SiteID            Date                           TrSiteID     </span></span>
+<span><span class="co">#&gt;  Length:2963        Length:2963        Min.   :   1.0   Min.   :2001-08-28 00:00:00.00   Min.   :   1.0  </span></span>
+<span><span class="co">#&gt;  Class :character   Class :character   1st Qu.: 122.0   1st Qu.:2020-06-19 00:00:00.00   1st Qu.: 111.0  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Mode  :character   Median : 416.0   Median :2021-07-21 00:00:00.00   Median : 417.0  </span></span>
+<span><span class="co">#&gt;                                        Mean   : 509.8   Mean   :2019-06-22 07:14:28.71   Mean   : 483.3  </span></span>
+<span><span class="co">#&gt;                                        3rd Qu.: 814.5   3rd Qu.:2022-03-23 00:00:00.00   3rd Qu.: 814.5  </span></span>
+<span><span class="co">#&gt;                                        Max.   :1301.0   Max.   :2022-12-20 00:00:00.00   Max.   :1301.0  </span></span>
+<span><span class="co">#&gt;                                                                                                          </span></span>
+<span><span class="co">#&gt;     Tlength        Number_Sightings Number_Observers Start_Eastings   Start_Northings    End_Eastings   </span></span>
+<span><span class="co">#&gt;  Min.   :  19.42   Min.   :0.0000   Min.   : 1.000   Min.   :399462   Min.   :6870195   Min.   :399394  </span></span>
+<span><span class="co">#&gt;  1st Qu.: 226.04   1st Qu.:0.0000   1st Qu.: 2.000   1st Qu.:466312   1st Qu.:6939228   1st Qu.:466208  </span></span>
+<span><span class="co">#&gt;  Median : 447.00   Median :0.0000   Median : 2.000   Median :491411   Median :6972056   Median :491319  </span></span>
+<span><span class="co">#&gt;  Mean   : 524.78   Mean   :0.1974   Mean   : 2.086   Mean   :484205   Mean   :6975275   Mean   :484208  </span></span>
+<span><span class="co">#&gt;  3rd Qu.: 733.81   3rd Qu.:0.0000   3rd Qu.: 2.000   3rd Qu.:501812   3rd Qu.:6998774   3rd Qu.:501743  </span></span>
+<span><span class="co">#&gt;  Max.   :2281.24   Max.   :8.0000   Max.   :70.000   Max.   :550605   Max.   :7106583   Max.   :551033  </span></span>
+<span><span class="co">#&gt;                                     NA's   :1        NA's   :169      NA's   :169       NA's   :169     </span></span>
+<span><span class="co">#&gt;  End_Northings              geometry   </span></span>
+<span><span class="co">#&gt;  Min.   :6870028   LINESTRING   :2794  </span></span>
+<span><span class="co">#&gt;  1st Qu.:6939270   MULTIPOLYGON : 169  </span></span>
+<span><span class="co">#&gt;  Median :6971992   epsg:7856    :   0  </span></span>
+<span><span class="co">#&gt;  Mean   :6975276   +proj=utm ...:   0  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:6998793                       </span></span>
+<span><span class="co">#&gt;  Max.   :7106708                       </span></span>
+<span><span class="co">#&gt;  NA's   :169</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">line_transects</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Number_Sightings</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
@@ -258,9 +258,8 @@ representation in the geodatabase, with a fallback to joining at the
 site level if an exact match at the transect level is not found.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">strip_transects</span> <span class="op">&lt;-</span> <span class="fu">fcn_strip_transect_sf_all</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records</span></span>
-<span><span class="co">#&gt; cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct</span></span>
-<span><span class="co">#&gt; records.</span></span>
+<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be</span></span>
+<span><span class="co">#&gt; uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
 <span><span class="co">#&gt; Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 916. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 1726. </span></span>
@@ -287,8 +286,13 @@ list structure.</p>
 count the number of koalas sighted in each LGA.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">summary_table</span> <span class="op">&lt;-</span> <span class="fu">fcn_summarise_sightings</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'LGA'</span>, <span class="st">'Method'</span>, <span class="st">'db'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span></span>
+<span><span class="co">#&gt; ℹ The deprecated feature was likely used in the dplyr package.</span></span>
+<span><span class="co">#&gt;   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</span></span>
+<span><span class="co">#&gt; This warning is displayed once every 8 hours.</span></span>
+<span><span class="co">#&gt; Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
 <span><span class="va">summary_table</span></span>
-<span><span class="co">#&gt; # A tibble: 27 x 4</span></span>
+<span><span class="co">#&gt; # A tibble: 27 × 4</span></span>
 <span><span class="co">#&gt; # Groups:   LGA, Method [26]</span></span>
 <span><span class="co">#&gt;    LGA            Method         db        Sightings</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;         &lt;int&gt;</span></span>
@@ -302,7 +306,7 @@ count the number of koalas sighted in each LGA.</p>
 <span><span class="co">#&gt;  8 Ipswich        strip_transect 1996-2015        37</span></span>
 <span><span class="co">#&gt;  9 Ipswich        uaoa           1996-2015         3</span></span>
 <span><span class="co">#&gt; 10 Lockyer Valley line_transect  2020-cur          6</span></span>
-<span><span class="co">#&gt; # i 17 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 17 more rows</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

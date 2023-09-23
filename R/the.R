@@ -30,6 +30,14 @@ the$crs <- 7856
 # Boolean for whether raster files should be resampled to the generated grid
 the$resample_to_grid <- TRUE
 
+# Covariate time-matching algorithm
+the$covariate_time_match = list(
+  hlkha = 'nearest',
+  hlpsz = 'bilinear',
+  hlrem = 'nearest',
+  hlwdy = 'bilinear'
+)
+
 #' Get the whole state, or elements of the state if a second argument is specified
 #' @export
 fcn_get_state <- function(elem = NULL) {
@@ -192,5 +200,26 @@ fcn_get_raster_path <- function() {
 fcn_set_resample_to_grid <- function(val) {
   old <- the$resample_to_grid
   the$resample_to_grid <- val
+  invisible(old)
+}
+
+fcn_set_cov_raster <- function(val) {
+  old <- the$cov_raster
+  the$cov_raster <- val
+  invisible(old)
+}
+
+fcn_get_cov_raster <- function() {
+  if (is.null(the$cov_raster)) {
+    fcn_set_cov_raster(fcn_extract_covariate_grid())
+  } else {
+    cov <- the$cov_raster
+  }
+  return(cov)
+}
+
+fcn_set_covariate_time_match <- function(obj) {
+  old <- the$covariate_time_match
+  the$covariate_time_match <- val
   invisible(old)
 }

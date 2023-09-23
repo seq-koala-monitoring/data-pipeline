@@ -24,8 +24,8 @@ Wrapper functions documented in the "Master data" section are designed to abstra
 
 We begin by extracting all tables as simple features.
 ```{r}
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100)
 master <- fcn_all_tables_sf()
@@ -48,13 +48,37 @@ The function `fcn_all_transect_grid_fractions` abstracts away from that. In one 
 6. Collating all results into a list format
 
 ```{r}
-transect_grid <- fcn_all_transect_grid_fractions(buffer = c(0, 2500))
+transect_grid <- fcn_all_transect_grid_fractions(buffer = c(0))
 ```
 The end result is a list containing tables of line transects, strip transect, and all of area transects. The tables are in long format, so each row corresponds to one grid cell that has an overlap with the transect. Each transect is identified uniquely by its TransectID.
 
 Particularly the Line Transect, Strip Transect and UAoA tables contain the "GridID" and "fraction" column that contains the Grid cell that it overlaps with, and the "fraction" columns showing the fraction which the transect overlaps with. Depending on the buffer, the "fraction" is different; here we illustrate a no-buffer (0) and 2.5km (2500) buffer, in the columns 'fraction_0' and 'fraction_2500' respectively.
 
 ```{r}
-glimpse(transect_grid)
+dplyr::glimpse(transect_grid)
 ```
 
+# Master extraction of covariate grid
+
+Likewise, the covariate raster can be stored and extracted as (1) a multi-layer SpatRaster and (2) dataframe containing covariate values for each grid. The dataframe can be exported directly for use in out of sample prediction by multiplying the model coefficients with the covariate values.
+
+```{r}
+cov <- fcn_extract_covariate_grid()
+cov_df <- fcn_cov_grid_df(cov, buffer = c(0))
+saveRDS(cov_df, "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/cov_df.rds")
+data.table::fwrite(cov_df, "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/cov_df.csv")
+head(cov_df)
+```
+
+The covariate table can be joined to the transect table to produce training samples for the statistical models with covariate information.
+
+```{r}
+transect_grid_cov <- fcn_transect_grid_covariates(transect_grid, cov)
+```
+
+```{r}
+df_datematched <- fcn_master_covariate_df_match_date(transect_grid_cov, chunk_size = 1e6)
+fcn_write_list_csv(df_datematched, 
+                   path = "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/",
+                   prefix = "transect_date_matched_")
+```

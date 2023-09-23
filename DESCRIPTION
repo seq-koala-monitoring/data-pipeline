@@ -20,7 +20,7 @@ Imports:
     lubridate,
     Matrix,
     exactextractr,
-    future
+    Rcpp
 Suggests: 
     knitr,
     rmarkdown,
@@ -29,3 +29,5 @@ Suggests:
     patchwork
 VignetteBuilder: knitr
 URL: https://seq-koala-monitoring.github.io/data-pipeline/
+LinkingTo: 
+    Rcpp

@@ -5,7 +5,10 @@
 \title{Extract Line transect tables
 Wrapper function for generating line transect tables}
 \usage{
-fcn_line_transect_table(year)
+fcn_line_transect_table(
+  cols = c("TransectID", "SiteID", "Date", "TrSiteID", "Tlength", "Number_Sightings",
+    "Number_Observers")
+)
 }
 \description{
 Extract Line transect tables

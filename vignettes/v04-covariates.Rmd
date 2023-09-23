@@ -21,8 +21,8 @@ library(patchwork)
 Get data
 
 ```r
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 table_sf_2020 <- fcn_line_transect_sf_2020()
 fcn_set_grid_size(100) # grid width/ height in meters, and generate grid in local environment
@@ -65,13 +65,20 @@ layer (red) closely match that of the underlying raster layer (in blue).
 
 ```r
 head(cov_route_table)
-#>           TransectID       Date  Tlength    htele     FMEAS     TMEAS segment_length   lpercent
-#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 97.99000   0.00000  39.51914      39.519142 0.08163265
-#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 89.84758  39.51914  49.39893       9.879786 0.02040816
-#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 95.02319  49.39893 177.83614     128.437212 0.26530612
-#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 97.15929 177.83614 187.71593       9.879786 0.02040816
-#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 91.05743 187.71593 306.27335     118.557427 0.24489796
-#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 92.10048 306.27335 345.79249      39.519142 0.08163265
+#>           TransectID       Date  Tlength    htele     FMEAS     TMEAS segment_length
+#> 1 1.0_0_SOL.20210810 2021-08-10 484.1095 98.10001   0.00000  29.63936      29.639357
+#> 2 1.0_0_SOL.20210810 2021-08-10 484.1095 89.89634  29.63936  39.51914       9.879786
+#> 3 1.0_0_SOL.20210810 2021-08-10 484.1095 95.11482  39.51914 177.83614     138.316998
+#> 4 1.0_0_SOL.20210810 2021-08-10 484.1095 97.26097 177.83614 187.71593       9.879786
+#> 5 1.0_0_SOL.20210810 2021-08-10 484.1095 91.13354 187.71593 306.27335     118.557427
+#> 6 1.0_0_SOL.20210810 2021-08-10 484.1095 92.10400 306.27335 345.79249      39.519142
+#>     lpercent
+#> 1 0.06122449
+#> 2 0.02040816
+#> 3 0.28571429
+#> 4 0.02040816
+#> 5 0.24489796
+#> 6 0.08163265
 ```
 
 
@@ -114,19 +121,11 @@ all spatio-temporal layers.
 
 ```r
 cov_sptemp <- fcn_covariate_raster_load("hlwdy")
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-
-#> Warning in fcn_check_paths(path, paste("Database", idx)): Database covariates does not exist in
-#> M:\Users\uqfcho\Documents\seq-koala-monitoring\working_data/final_covariates_raster
-#> Error: [rast] filename is empty. Provide a valid filename
 names(cov_sptemp)
-#>  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207" "X200307" "X200407" "X200507" "X200607"
-#> [12] "X200707" "X200807" "X200907" "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607" "X201707"
-#> [23] "X201807" "X201907"
+#>  [1] "X199607" "X199707" "X199807" "X199907" "X200007" "X200107" "X200207"
+#>  [8] "X200307" "X200407" "X200507" "X200607" "X200707" "X200807" "X200907"
+#> [15] "X201007" "X201107" "X201207" "X201307" "X201407" "X201507" "X201607"
+#> [22] "X201707" "X201807" "X201907"
 ```
 
 The covariates are extracted as a multi-layer "SpatRaster" (from the
@@ -139,7 +138,7 @@ have a relatively small effect on the covariate extracted.
 
 ```r
 cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
-#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
+#> Error: external pointer is not valid
 ```
 
 The covariate value of the route event layer can be matched to the date
@@ -178,7 +177,7 @@ cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matche
 #> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
-#> Error in .External(structure(list(name = "CppMethod__invoke_notvoid", : NULL value passed as symbol address
+#> Error: external pointer is not valid
 limits <- terra::minmax(cov_sptemp_crop)
 #> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found
 rast_sptemp_plot <- ggplot() +

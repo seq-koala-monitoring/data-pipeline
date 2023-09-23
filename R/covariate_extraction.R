@@ -25,13 +25,16 @@ fcn_list_covariate_layers_temporal <- function() {
 #' @title List covariate layers as a df
 #' @export
 fcn_covariate_layer_df <- function(layer = NULL) {
+  state <- fcn_get_state()
+  match_method <- state$covariate_time_match
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
   df <- dplyr::bind_rows(list(constant = constant_covariates, temporal = temporal_covariates), .id = 'type') %>%
     dplyr::mutate(name = substr(filename, 1, 5)) %>%
     dplyr::mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
     dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date))) %>%
-    dplyr::mutate(fullname = sub('\\.tif$', '', filename) )
+    dplyr::mutate(fullname = sub('\\.tif$', '', filename)) %>%
+    dplyr::mutate(match_method = ifelse(type == 'temporal',match_method[name] , NA))
 
   if (!is.null(layer)) {
     df <- df %>%
@@ -100,15 +103,48 @@ fcn_project_raster <- function(raster) {
 #' @export
 fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear') {
   # Date difference matrix between transect survey dates with route table layer dates
-  date_diff_mat <- fcn_date_diff_matrix(as.Date(route_table$Date), fcn_ym_to_date(col_names))
-  if (method == "bilinear") {
-    weights <- fcn_date_bilinear_interpolation_date(date_diff_mat)
-  } else {
-    weights <- fcn_date_weights_nearest_date(date_diff_mat)
-  }
-  event_matrix <- route_table[,col_names] %>% as.matrix()
-  route_table$value <- Matrix::rowSums(event_matrix * weights) %>% as.vector()
+  dates <- as.Date(route_table$Date)
+  dates_unique <- unique(dates)
+  #dates_unique_idx <- fcn_find_unique_idx(dates)
+
+  date_diff_mat <- outer(dates_unique,  fcn_ym_to_date(col_names), function(a,b) b-a)
+  #if (method == "bilinear") {
+  #  weights <- fcn_date_bilinear_interpolation_date(date_diff_mat)
+  #  weights_table <- weights[match(dates, dates_unique),]
+  #  event_matrix <- route_table[,col_names] %>% as.matrix()
+  #  route_table$value <- as.vector(rowSums(event_matrix * weights_table, na.rm = T))
+  #} else {
+    idx <- apply(date_diff_mat, 1, function(x) which.min(abs(x)))
+    idx_table <- idx[match(dates, dates_unique)]
+    event_matrix <- route_table[,col_names] %>% as.matrix()
+    rownames(event_matrix) <- colnames(event_matrix) <- NULL
+    route_table$value <- sapply(seq_along(idx_table), \(i) event_matrix[i, idx_table[i]])
+  #}
+
   return(route_table)
+}
+
+#' @title Match date for a dataframe with transect Dates and multi-temporal covariate layers
+#' @export
+fcn_covariate_df_match_date <- function(df) {
+  cov_info <- fcn_covariate_layer_df()
+  cov_temp <- cov_info %>%
+    dplyr::filter(type == 'temporal')
+  cov_temp_names <- unique(cov_temp$name)
+  # Iterate through all temporal covariate names
+  for (i in 1:length(cov_temp_names)) {
+    cov_name_i <- cov_temp_names[i]
+    cov_name_df_i <- cov_temp %>%
+      dplyr::filter(name == cov_name_i)
+    cov_name_list <- cov_name_df_i$fullname
+    df_out <- fcn_covariate_match_date(df[, c('Date', cov_name_list)], cov_name_list, method = cov_name_df_i$match_method[1])
+    df$value <- df_out$value
+    rm(df_out)
+    df <- df %>%
+      dplyr::rename(!!cov_name_i := value) %>%
+      dplyr::select(-dplyr::all_of(cov_name_list))
+  }
+  return(df)
 }
 
 #' @title Extract covariates with mixed multipolygon/ linestring rows
@@ -167,12 +203,51 @@ fcn_extract_covariate_grid <- function() {
   covariates <- fcn_covariate_layer_df()
   covariate_raster <- lapply(covariates$filename, function(n) {
     print(sprintf("Reading raster: %s", n))
-    r <- terra::rast(paste0(fcn_get_raster_path(), '\\', n))
-    resampled <- terra::resample(r, fishnet)
+    path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
+    r <- terra::rast(path)
+    resampled <- terra::resample(r, fishnet, method = 'bilinear', threads = 8)
+    resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1], upper = terra::minmax(r)[2], values = F)
   })
   covariate_raster$GridID <- fishnet
   covariate_raster_resampled <- terra::rast(covariate_raster)
   covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area))
-  names(covariate_raster_resampled) <- c(covariates$fullname, 'GridID')
-  return(covariate_raster_resampled)
+  names(covariate_raster_cropped) <- c(covariates$fullname, 'GridID')
+  return(covariate_raster_cropped)
+}
+
+fcn_terra_get_nodata_value <- function(path) {
+  v <- grep("NoData Value", terra::describe(path), value=TRUE)
+  strsplit(v, "=")[[1]][2] %>% as.numeric()
+}
+
+#' @title Extract covariate in data frame format with GridID
+#' @param cov: the output of fcn_extract_covariate_grid
+#' @export
+fcn_cov_grid_df <- function(cov = NULL, buffer = c(0, 2500)) {
+  if (is.null(cov)) {
+    cov <- fcn_get_cov_raster()
+  }
+  cell_with_values <- is.na(cov[['GridID']][]) == F
+  res_list <- lapply(buffer, function(b) {
+    if (b > 0) {
+      cov_b <- terra::focal(cov, w = ceiling(b/state$grid_size), fun=sum, na.rm=TRUE)
+    } else {
+      cov_b <- cov
+    }
+
+    # Extract raw values from raster
+    df <- cov_b[cell_with_values] %>%
+      as.data.frame()
+    colnames(df) <- names(cov)
+    df <- df %>%
+      dplyr::select('GridID', dplyr::everything())
+    if (b > 0) {
+      colnames(df)[2:length(colnames(df))] <- paste0(colnames(df)[2:length(colnames(df))], '_', b)
+    }
+    return(df)
+  })
+
+  df <- purrr::reduce(res_list, inner_join, by = 'GridID')
+
+  return(df)
 }

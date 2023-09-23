@@ -4,7 +4,12 @@
 \alias{fcn_new_grid}
 \title{Generate new grid based on grid_size}
 \usage{
-fcn_new_grid()
+fcn_new_grid(option = "raster", buffer = 0)
+}
+\arguments{
+\item{option:}{'raster', or 'vector', denotes the format of the fishnet grid}
+
+\item{buffer:}{buffer around the study area for grid generation, in meters}
 }
 \description{
 Generate new grid based on grid_size

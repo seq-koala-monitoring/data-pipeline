@@ -2,12 +2,10 @@
 % Please edit documentation in R/covariate_extraction.R
 \name{fcn_list_covariate_layers}
 \alias{fcn_list_covariate_layers}
-\title{Covariate extraction functions
-List all layers in covariate database}
+\title{List all layers in covariate database}
 \usage{
 fcn_list_covariate_layers()
 }
 \description{
 Covariate extraction functions
-List all layers in covariate database
 }

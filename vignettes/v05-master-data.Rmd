@@ -21,8 +21,8 @@ Wrapper functions documented in the "Master data" section are designed to abstra
 We begin by extracting all tables as simple features.
 
 ```r
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100)
 #> class       : SpatRaster 
@@ -35,14 +35,15 @@ fcn_set_grid_size(100)
 #> min value   :       1 
 #> max value   : 2311397
 master <- fcn_all_tables_sf()
-#> Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified with
-#> SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
+#> Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified
+#> with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
 #> Warning in fcn_line_transect_sf_1996(): Line Transect: attribute join incomplete. 
 #> Joined uniquely: 376. 
 #> Joined at the site level: 169. 
 #> Join failed: 0
-#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be
-#> uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
+#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", :
+#> 83 records cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber.
+#> Keeping only distinct records.
 #> Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. 
 #> Joined uniquely: 916. 
 #> Joined at the site level: 1726. 
@@ -68,14 +69,15 @@ The function `fcn_all_transect_grid_fractions` abstracts away from that. In one 
 
 ```r
 transect_grid <- fcn_all_transect_grid_fractions(buffer = c(0, 2500))
-#> Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified with
-#> SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
+#> Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified
+#> with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
 #> Warning in fcn_line_transect_sf_1996(): Line Transect: attribute join incomplete. 
 #> Joined uniquely: 376. 
 #> Joined at the site level: 169. 
 #> Join failed: 0
-#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be
-#> uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.
+#> Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", :
+#> 83 records cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber.
+#> Keeping only distinct records.
 #> Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. 
 #> Joined uniquely: 916. 
 #> Joined at the site level: 1726. 
@@ -93,7 +95,7 @@ glimpse(transect_grid)
 #>   ..$ db              : chr [1:7255924] "1" "1" "1" "1" ...
 #>   ..$ TransectID      : chr [1:7255924] "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" ...
 #>   ..$ SiteID          : int [1:7255924] 109 109 109 109 109 109 109 109 109 109 ...
-#>   ..$ Date            : POSIXct[1:7255924], format: "2011-09-01" "2011-09-01" "2011-09-01" ...
+#>   ..$ Date            : POSIXct[1:7255924], format: "2011-09-01" "2011-09-01" ...
 #>   ..$ TrSiteID        : num [1:7255924] 1 1 1 1 1 1 1 1 1 1 ...
 #>   ..$ Tlength         : num [1:7255924] 278 278 278 278 278 275 275 275 275 275 ...
 #>   ..$ Number_Sightings: int [1:7255924] 2 2 2 2 2 0 0 0 0 0 ...
@@ -108,7 +110,7 @@ glimpse(transect_grid)
 #>  $ strip_transect:'data.frame':	8080793 obs. of  9 variables:
 #>   ..$ TransectID      : chr [1:8080793] "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" ...
 #>   ..$ SiteID          : int [1:8080793] 1 1 1 1 1 1 1 1 1 1 ...
-#>   ..$ Date            : POSIXct[1:8080793], format: "2010-11-16" "2010-11-16" "2010-11-16" ...
+#>   ..$ Date            : POSIXct[1:8080793], format: "2010-11-16" "2010-11-16" ...
 #>   ..$ TArea           : num [1:8080793] 7.45 7.45 7.45 7.45 7.45 ...
 #>   ..$ Number_Sightings: int [1:8080793] 0 0 0 0 0 0 0 0 0 0 ...
 #>   ..$ Number_Observers: num [1:8080793] 5 5 5 5 5 5 5 5 5 5 ...
@@ -122,7 +124,7 @@ glimpse(transect_grid)
 #>   ..$ db              : chr [1:327602] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...
 #>   ..$ TransectID      : chr [1:327602] "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" ...
 #>   ..$ SiteID          : int [1:327602] 216 216 216 216 216 216 216 216 216 216 ...
-#>   ..$ Date            : POSIXct[1:327602], format: "2011-04-17" "2011-04-17" "2011-04-17" ...
+#>   ..$ Date            : POSIXct[1:327602], format: "2011-04-17" "2011-04-17" ...
 #>   ..$ TArea           : num [1:327602] 114 114 114 114 114 ...
 #>   ..$ Number_Sightings: int [1:327602] 1 1 1 1 1 1 1 1 1 1 ...
 #>   ..$ Number_Observers: num [1:327602] NA NA NA NA NA NA NA NA NA NA ...
@@ -137,7 +139,7 @@ glimpse(transect_grid)
 #>   ..$ db              : chr [1:2642] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...
 #>   ..$ TransectID      : chr [1:2642] "1.1_1_ST.19960213" "1.1_1_ST.19960816" "1.1_1_ST.19970318" "1.1_1_ST.19970818" ...
 #>   ..$ SiteID          : int [1:2642] 1 1 1 1 1 1 1 1 1 1 ...
-#>   ..$ Date            : POSIXct[1:2642], format: "1996-02-13" "1996-08-16" "1997-03-18" ...
+#>   ..$ Date            : POSIXct[1:2642], format: "1996-02-13" "1996-08-16" ...
 #>   ..$ TArea           : num [1:2642] 6.74 4.77 2.38 2.38 3.18 ...
 #>   ..$ Number_Sightings: int [1:2642] 2 1 0 2 2 2 4 0 1 0 ...
 #>   ..$ Number_Observers: num [1:2642] 6 7 4 4 5 6 4 5 5 4 ...
@@ -146,5 +148,208 @@ glimpse(transect_grid)
 #>   ..$ SurveyNumber    : int [1:2642] 1 2 3 4 7 7 15 18 20 22 ...
 #>   ..$ SubSurveyNumber : int [1:2642] 1 1 1 1 1 1 1 1 1 1 ...
 #>   ..$ TrSiteID        : num [1:2642] NA NA NA NA NA NA NA NA NA NA ...
+```
+
+# Master extraction of covariate grid
+
+Likewise, the covariate raster can be stored and extracted as (1) a multi-layer SpatRaster and (2) dataframe containing covariate values for each grid. The dataframe can be exported directly for use in out of sample prediction by multiplying the model coefficients with the covariate values.
+
+
+```r
+cov <- fcn_get_cov_raster()
+#> [1] "Reading raster: hcapr.tif"
+#> [1] "Reading raster: hcmil.tif"
+#> [1] "Reading raster: hctem.tif"
+#> [1] "Reading raster: hscec.tif"
+#> [1] "Reading raster: hsnit.tif"
+#> [1] "Reading raster: hspho.tif"
+#> [1] "Reading raster: hswat.tif"
+#> [1] "Reading raster: htele.tif"
+#> [1] "Reading raster: htrug.tif"
+#> [1] "Reading raster: htslo.tif"
+#> [1] "Reading raster: hlkha_199706.tif"
+#> [1] "Reading raster: hlkha_199906.tif"
+#> [1] "Reading raster: hlkha_200006.tif"
+#> [1] "Reading raster: hlkha_200106.tif"
+#> [1] "Reading raster: hlkha_200306.tif"
+#> [1] "Reading raster: hlkha_200506.tif"
+#> [1] "Reading raster: hlkha_200606.tif"
+#> [1] "Reading raster: hlkha_200706.tif"
+#> [1] "Reading raster: hlkha_200906.tif"
+#> [1] "Reading raster: hlkha_201106.tif"
+#> [1] "Reading raster: hlkha_201306.tif"
+#> [1] "Reading raster: hlkha_201506.tif"
+#> [1] "Reading raster: hlkha_201706.tif"
+#> [1] "Reading raster: hlkha_201906.tif"
+#> [1] "Reading raster: hlpsz_199708.tif"
+#> [1] "Reading raster: hlpsz_199803.tif"
+#> [1] "Reading raster: hlpsz_199911.tif"
+#> [1] "Reading raster: hlpsz_200011.tif"
+#> [1] "Reading raster: hlpsz_200110.tif"
+#> [1] "Reading raster: hlpsz_200210.tif"
+#> [1] "Reading raster: hlpsz_200310.tif"
+#> [1] "Reading raster: hlpsz_200410.tif"
+#> [1] "Reading raster: hlpsz_200510.tif"
+#> [1] "Reading raster: hlpsz_200610.tif"
+#> [1] "Reading raster: hlpsz_200710.tif"
+#> [1] "Reading raster: hlpsz_200810.tif"
+#> [1] "Reading raster: hlpsz_200910.tif"
+#> [1] "Reading raster: hlpsz_201010.tif"
+#> [1] "Reading raster: hlpsz_201110.tif"
+#> [1] "Reading raster: hlpsz_201210.tif"
+#> [1] "Reading raster: hlpsz_201310.tif"
+#> [1] "Reading raster: hlpsz_201410.tif"
+#> [1] "Reading raster: hlpsz_201510.tif"
+#> [1] "Reading raster: hlpsz_201610.tif"
+#> [1] "Reading raster: hlpsz_201710.tif"
+#> [1] "Reading raster: hlpsz_201810.tif"
+#> [1] "Reading raster: hlpsz_201910.tif"
+#> [1] "Reading raster: hlpsz_202010.tif"
+#> [1] "Reading raster: hlpsz_202110.tif"
+#> [1] "Reading raster: hlrem_199706.tif"
+#> [1] "Reading raster: hlrem_199906.tif"
+#> [1] "Reading raster: hlrem_200006.tif"
+#> [1] "Reading raster: hlrem_200106.tif"
+#> [1] "Reading raster: hlrem_200306.tif"
+#> [1] "Reading raster: hlrem_200506.tif"
+#> [1] "Reading raster: hlrem_200606.tif"
+#> [1] "Reading raster: hlrem_200706.tif"
+#> [1] "Reading raster: hlrem_200906.tif"
+#> [1] "Reading raster: hlrem_201106.tif"
+#> [1] "Reading raster: hlrem_201306.tif"
+#> [1] "Reading raster: hlrem_201506.tif"
+#> [1] "Reading raster: hlrem_201706.tif"
+#> [1] "Reading raster: hlrem_201906.tif"
+#> [1] "Reading raster: hlwdy_199607.tif"
+#> [1] "Reading raster: hlwdy_199707.tif"
+#> [1] "Reading raster: hlwdy_199807.tif"
+#> [1] "Reading raster: hlwdy_199907.tif"
+#> [1] "Reading raster: hlwdy_200007.tif"
+#> [1] "Reading raster: hlwdy_200107.tif"
+#> [1] "Reading raster: hlwdy_200207.tif"
+#> [1] "Reading raster: hlwdy_200307.tif"
+#> [1] "Reading raster: hlwdy_200407.tif"
+#> [1] "Reading raster: hlwdy_200507.tif"
+#> [1] "Reading raster: hlwdy_200607.tif"
+#> [1] "Reading raster: hlwdy_200707.tif"
+#> [1] "Reading raster: hlwdy_200807.tif"
+#> [1] "Reading raster: hlwdy_200907.tif"
+#> [1] "Reading raster: hlwdy_201007.tif"
+#> [1] "Reading raster: hlwdy_201107.tif"
+#> [1] "Reading raster: hlwdy_201207.tif"
+#> [1] "Reading raster: hlwdy_201307.tif"
+#> [1] "Reading raster: hlwdy_201407.tif"
+#> [1] "Reading raster: hlwdy_201507.tif"
+#> [1] "Reading raster: hlwdy_201607.tif"
+#> [1] "Reading raster: hlwdy_201707.tif"
+#> [1] "Reading raster: hlwdy_201807.tif"
+#> [1] "Reading raster: hlwdy_201907.tif"
+cov_df <- fcn_cov_grid_df(cov)
+head(cov_df)
+#>   GridID        hcapr hcmil        hctem hscec hsnit hspho hswat    htele    htrug
+#> 1      1 2.147484e+09    NA 2.147484e+09   Inf   Inf   Inf   Inf       NA       NA
+#> 2      2 1.546088e+03    63 2.889561e+02     5  0.14 0.021 0.246 38.37436 5.400044
+#> 3      3 1.547912e+03    63 2.880439e+02     5  0.14 0.021 0.246 39.66676 4.880239
+#> 4      4 1.545648e+03    63 2.890000e+02     5  0.14 0.021 0.246 36.29015 3.971878
+#> 5      5 1.538000e+03    63 2.890000e+02     5  0.14 0.021 0.246 27.68007 6.137964
+#> 6      6 2.147484e+09    NA 2.147484e+09   Inf   Inf   Inf   Inf       NA       NA
+#>      htslo hlkha_199706 hlkha_199906 hlkha_200006 hlkha_200106 hlkha_200306
+#> 1       NA         <NA>         <NA>         <NA>         <NA>         <NA>
+#> 2 1.757931           11           11           11           11           11
+#> 3 1.741007           11           11           11           11           11
+#> 4 3.255229           11           11           11           11           11
+#> 5 2.947045           11           11           11           11           11
+#> 6       NA         <NA>         <NA>         <NA>         <NA>         <NA>
+#>   hlkha_200506 hlkha_200606 hlkha_200706 hlkha_200906 hlkha_201106 hlkha_201306
+#> 1         <NA>         <NA>         <NA>         <NA>         <NA>         <NA>
+#> 2           11           11           11           11           11           10
+#> 3           11           11           11           11           11           10
+#> 4           11           11           11           11           11           10
+#> 5           11           11           11           11           11           10
+#> 6         <NA>         <NA>         <NA>         <NA>         <NA>         <NA>
+#>   hlkha_201506 hlkha_201706 hlkha_201906 hlpsz_199708 hlpsz_199803 hlpsz_199911
+#> 1         <NA>         <NA>         <NA>           NA           NA           NA
+#> 2           11           11           11      1999437      2006188           NA
+#> 3           11           11           11           NA           NA      2019788
+#> 4           11           11           11           NA           NA      2018366
+#> 5           11           11           11           NA           NA      2017215
+#> 6         <NA>         <NA>         <NA>           NA           NA      2014725
+#>   hlpsz_200011 hlpsz_200110 hlpsz_200210 hlpsz_200310 hlpsz_200410 hlpsz_200510
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2      1999437     48395108           NA           NA           NA           NA
+#> 3           NA           NA           NA           NA           NA           NA
+#> 4           NA           NA           NA           NA           NA           NA
+#> 5           NA           NA           NA           NA           NA           NA
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlpsz_200610 hlpsz_200710 hlpsz_200810 hlpsz_200910 hlpsz_201010 hlpsz_201110
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2           NA    129124712    129235128    129242688    129196232    130425768
+#> 3           NA           NA           NA           NA           NA           NA
+#> 4           NA           NA           NA           NA           NA           NA
+#> 5           NA           NA           NA           NA           NA           NA
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlpsz_201210 hlpsz_201310 hlpsz_201410 hlpsz_201510 hlpsz_201610 hlpsz_201710
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2    130425768    130425768    130425768    130425768    130425768      1932533
+#> 3           NA           NA           NA           NA           NA           NA
+#> 4           NA           NA           NA           NA           NA           NA
+#> 5           NA           NA           NA           NA           NA           NA
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlpsz_201810 hlpsz_201910 hlpsz_202010 hlpsz_202110 hlrem_199706 hlrem_199906
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2      1932533      1932533    130417208      1932533            1            1
+#> 3           NA           NA           NA           NA            1            1
+#> 4           NA           NA           NA           NA            1            1
+#> 5           NA           NA           NA           NA            1            1
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlrem_200006 hlrem_200106 hlrem_200306 hlrem_200506 hlrem_200606 hlrem_200706
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2            1            1            1            1            1            1
+#> 3            1            1            1            1            1            1
+#> 4            1            1            1            1            1            1
+#> 5            1            1            1            1            1            1
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlrem_200906 hlrem_201106 hlrem_201306 hlrem_201506 hlrem_201706 hlrem_201906
+#> 1           NA           NA           NA           NA           NA           NA
+#> 2            1            1           NA            1            1            1
+#> 3            1            1           NA            1            1            1
+#> 4            1            1           NA            1            1            1
+#> 5            1            1           NA            1            1            1
+#> 6           NA           NA           NA           NA           NA           NA
+#>   hlwdy_199607 hlwdy_199707 hlwdy_199807 hlwdy_199907 hlwdy_200007 hlwdy_200107
+#> 1     4.139723     4.164966     4.190207     4.190207     4.190207     4.190207
+#> 2    94.275818    94.875450    95.424599    95.424599    95.374115    95.348869
+#> 3    95.797050    96.945831    96.996315    96.996315    95.898018    95.323631
+#> 4    93.101791    94.174850    95.222664    95.222664    95.172180    94.597786
+#> 5    90.060364    89.511215    88.412918    88.412918    87.314621    86.765472
+#> 6     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000
+#>   hlwdy_200207 hlwdy_200307 hlwdy_200407 hlwdy_200507 hlwdy_200607 hlwdy_200707
+#> 1      4.21545      4.21545     4.240692     4.265934           NA     4.291176
+#> 2     95.84753     95.84753    96.421928    96.996315     169.9121    97.621193
+#> 3     94.17485     94.14960    94.698753    95.298386     167.9561    97.046799
+#> 4     93.47424     92.89986    92.899857    94.048637     166.6924    96.346199
+#> 5     86.21632     85.66718    85.667175    86.765472     160.0000    88.962067
+#> 6      0.00000      0.00000     0.000000     0.000000           NA     0.000000
+#>   hlwdy_200807 hlwdy_200907 hlwdy_201007 hlwdy_201107 hlwdy_201207 hlwdy_201307
+#> 1     4.265934     4.240692     4.240692     4.240692      4.21545     4.240692
+#> 2    97.021561    96.421928    96.371445    96.346199     95.82230    96.421928
+#> 3    95.923264    94.749237    93.600456    93.000824     93.54997    94.673515
+#> 4    95.797050    94.149605    93.076553    91.978256     91.97826    92.476921
+#> 5    88.962067    88.962067    89.511215    89.511215     89.51122    88.412918
+#> 6     0.000000     0.000000     0.000000     0.000000      0.00000     0.000000
+#>   hlwdy_201407 hlwdy_201507 hlwdy_201607 hlwdy_201707 hlwdy_201807 hlwdy_201907
+#> 1     4.265934     4.316419     4.341661     4.341661     4.366903     4.366903
+#> 2    97.046799    98.170341    98.744736    98.694244    99.218155    99.192909
+#> 3    96.346199    96.945831    97.520226    96.421928    95.872780    95.298386
+#> 4    92.950340    94.048637    94.572540    94.572540    94.547302    93.947670
+#> 5    86.765472    86.765472    86.216324    86.216324    85.667175    84.568878
+#> 6     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000
+```
+
+The covariate table can be joined to the transect table to produce training samples for the statistical models with covariate information.
+
+
+```r
+transect_grid_cov <- fcn_join_transect_grid_covariates(transect_grid, cov)
 ```
 

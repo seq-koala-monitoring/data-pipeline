@@ -31,17 +31,23 @@ fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect',
 fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
   fishnet <- fcn_get_grid()
   master <- fcn_all_tables_sf()
+  buffer <- sort(buffer)
 
   master_grid <- lapply(master, function(df) {
-    res <- fcn_extract_raster_buffer(df, fishnet, buffer[1])
-    var_name <- paste0('fraction_', buffer)
+    res <- fcn_extract_raster_buffer(df, fishnet, 0)
+    if (length(buffer) == 1) {
+      var_name <- c('fraction')
+    } else {
+      var_name <- paste0('fraction_', buffer)
+    }
     res <- res %>% dplyr::rename(!!var_name[1] := fraction)
     if (length(buffer) > 1) {
     for (i in 2:length(buffer)) {
         res_buffer <- fcn_extract_raster_buffer(df, fishnet, buffer[i]) %>%
-          dplyr::select(TransectID, dplyr::all_of(names(fishnet)), fraction) %>%
           dplyr::rename(!!var_name[i] := fraction)
-        res <- dplyr::full_join(res, res_buffer, by = c('TransectID', 'GridID'))
+        res <- res %>%
+          dplyr::select(TransectID, GridID, dplyr::all_of(var_name[1:(i-1)])) %>%
+          dplyr::right_join(res_buffer, by = c('TransectID', 'GridID'))
       }
       # Fill up empty weights with zeros
       res <- res %>%
@@ -104,3 +110,43 @@ fcn_keep_distinct <- function(df, cols = c('SiteNumber', 'TransectNumber', 'Surv
   }
   return(df)
 }
+
+#' @title Join transect grid with covariate based on GridID
+#' @export
+fcn_transect_grid_covariates <- function(transect_grid, cov = NULL) {
+  cov_df <- fcn_cov_grid_df(cov)
+  res <- lapply(transect_grid, function(df) {
+    if ('GridID' %in% colnames(df)) {
+      res <- dplyr::left_join(df, cov_df, by = 'GridID')
+      return(res)
+    } else {
+      return(df)
+    }
+  })
+  return(res)
+}
+
+#' @title Update covariate table to match date
+#' @export
+fcn_master_covariate_df_match_date <- function(transect_grid, chunk_size = 10000) {
+  res <- lapply(transect_grid[c('line_transect','strip_transect', 'uaoa')], function(df) {
+    # Break up large dataframes for memory requirements
+    nrow_df <- nrow(df)
+    rows_processed <- 0
+    for (i in 1:ceiling(nrow_df/chunk_size)) {
+      e <- fcn_covariate_df_match_date(df[rows_processed:min(nrow_df,(rows_processed+chunk_size)),])
+      if (i==1) {
+        df_out <- e
+      } else {
+        rbind(df_out,e)
+      }
+      rows_processed <- min(nrow_df,(rows_processed+chunk_size))
+      print(sprintf("Progress: %s percent", round(100*rows_processed/ nrow_df, digits = 0)))
+    }
+    return(df_out)
+  })
+  names(res) <- c('line_transect','strip_transect', 'uaoa')
+  res$perp_distance <- transect_grid$perp_distance
+  return(res)
+}
+

@@ -79,17 +79,6 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://seq-koala-monitoring.github.io/data-pipeline/">SEQKoalaDataPipeline</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:filesstrings':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     all_equal</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dieghernan.github.io/tidyterra/" class="external-link">tidyterra</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="linear-referencing-dynamic-segmentation">Linear referencing / dynamic segmentation<a class="anchor" aria-label="anchor" href="#linear-referencing-dynamic-segmentation"></a>
@@ -124,8 +113,8 @@ the GridID of the grid cell this “Event” is describing</li>
 covered by this event</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
-<span><span class="co">#data_dir &lt;- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
+<code class="sourceCode R"><span><span class="co">#data_dir &lt;- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
+<span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
 <span><span class="va">table_sf_2020</span> <span class="op">&lt;-</span> <span class="fu">fcn_line_transect_sf_2020</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span> <span class="co"># grid width/ height in meters, and generate grid in local environment</span></span>

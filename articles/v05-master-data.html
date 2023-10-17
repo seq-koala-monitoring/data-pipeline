@@ -86,8 +86,8 @@ that the most common use-cases of the package can be executed in
 succinct code.</p>
 <p>We begin by extracting all tables as simple features.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
-<span><span class="co">#data_dir &lt;- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
+<code class="sourceCode R"><span><span class="co">#data_dir &lt;- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"</span></span>
+<span><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_home_dir.html">fcn_set_home_dir</a></span><span class="op">(</span><span class="va">data_dir</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fcn_set_grid_size.html">fcn_set_grid_size</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
@@ -100,15 +100,14 @@ succinct code.</p>
 <span><span class="co">#&gt; min value   :       1 </span></span>
 <span><span class="co">#&gt; max value   : 2311397</span></span>
 <span><span class="va">master</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_all_tables_sf.html">fcn_all_tables_sf</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified</span></span>
-<span><span class="co">#&gt; with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
+<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified with</span></span>
+<span><span class="co">#&gt; SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
 <span><span class="co">#&gt; Warning in fcn_line_transect_sf_1996(): Line Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 376. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 169. </span></span>
 <span><span class="co">#&gt; Join failed: 0</span></span>
-<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", :</span></span>
-<span><span class="co">#&gt; 83 records cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber.</span></span>
-<span><span class="co">#&gt; Keeping only distinct records.</span></span>
+<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be</span></span>
+<span><span class="co">#&gt; uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
 <span><span class="co">#&gt; Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 916. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 1726. </span></span>
@@ -136,16 +135,15 @@ values by buffering each polygon and extracting its weights</p></li>
 <li><p>Collating all results into a list format</p></li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">transect_grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_all_transect_grid_fractions.html">fcn_all_transect_grid_fractions</a></span><span class="op">(</span>buffer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2500</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified</span></span>
-<span><span class="co">#&gt; with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
+<code class="sourceCode R"><span><span class="va">transect_grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_all_transect_grid_fractions.html">fcn_all_transect_grid_fractions</a></span><span class="op">(</span>buffer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf): 24 records cannot be uniquely identified with</span></span>
+<span><span class="co">#&gt; SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
 <span><span class="co">#&gt; Warning in fcn_line_transect_sf_1996(): Line Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 376. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 169. </span></span>
 <span><span class="co">#&gt; Join failed: 0</span></span>
-<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", :</span></span>
-<span><span class="co">#&gt; 83 records cannot be uniquely identified with SiteNumber-TransectNumber-SurveyNumber.</span></span>
-<span><span class="co">#&gt; Keeping only distinct records.</span></span>
+<span><span class="co">#&gt; Warning in fcn_keep_distinct(transect_sf, cols = c("SiteNumber", "TransectNumber", : 83 records cannot be</span></span>
+<span><span class="co">#&gt; uniquely identified with SiteNumber-TransectNumber-SurveyNumber. Keeping only distinct records.</span></span>
 <span><span class="co">#&gt; Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 916. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 1726. </span></span>
@@ -162,57 +160,54 @@ which the transect overlaps with. Depending on the buffer, the
 (2500) buffer, in the columns ‘fraction_0’ and ‘fraction_2500’
 respectively.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">transect_grid</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">transect_grid</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 4</span></span>
-<span><span class="co">#&gt;  $ line_transect :'data.frame':  7255924 obs. of  15 variables:</span></span>
-<span><span class="co">#&gt;   ..$ db              : chr [1:7255924] "1" "1" "1" "1" ...</span></span>
-<span><span class="co">#&gt;   ..$ TransectID      : chr [1:7255924] "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" ...</span></span>
-<span><span class="co">#&gt;   ..$ SiteID          : int [1:7255924] 109 109 109 109 109 109 109 109 109 109 ...</span></span>
-<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:7255924], format: "2011-09-01" "2011-09-01" ...</span></span>
-<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:7255924] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span><span class="co">#&gt;   ..$ Tlength         : num [1:7255924] 278 278 278 278 278 275 275 275 275 275 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:7255924] 2 2 2 2 2 0 0 0 0 0 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Observers: num [1:7255924] 2 2 2 2 2 3 3 3 3 3 ...</span></span>
-<span><span class="co">#&gt;   ..$ Start_Eastings  : num [1:7255924] 495982 495982 495982 495982 495982 ...</span></span>
-<span><span class="co">#&gt;   ..$ Start_Northings : num [1:7255924] 6984954 6984954 6984954 6984954 6984954 ...</span></span>
-<span><span class="co">#&gt;   ..$ End_Eastings    : num [1:7255924] 495707 495707 495707 495707 495707 ...</span></span>
-<span><span class="co">#&gt;   ..$ End_Northings   : num [1:7255924] 6984989 6984989 6984989 6984989 6984989 ...</span></span>
-<span><span class="co">#&gt;   ..$ GridID          : num [1:7255924] 903602 903601 902646 902645 902644 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_0      : num [1:7255924] 0.0204 0.2653 0.102 0.3469 0.2653 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_2500   : num [1:7255924] 0.000476 0.000476 0.000476 0.000476 0.000476 ...</span></span>
-<span><span class="co">#&gt;  $ strip_transect:'data.frame':  8080793 obs. of  9 variables:</span></span>
-<span><span class="co">#&gt;   ..$ TransectID      : chr [1:8080793] "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" ...</span></span>
-<span><span class="co">#&gt;   ..$ SiteID          : int [1:8080793] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:8080793], format: "2010-11-16" "2010-11-16" ...</span></span>
-<span><span class="co">#&gt;   ..$ TArea           : num [1:8080793] 7.45 7.45 7.45 7.45 7.45 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:8080793] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Observers: num [1:8080793] 5 5 5 5 5 5 5 5 5 5 ...</span></span>
-<span><span class="co">#&gt;   ..$ GridID          : num [1:8080793] 1439596 1439597 1439598 1439599 1439600 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_0      : num [1:8080793] 0.00753 0.07986 0.06464 0.04362 0.02261 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_2500   : num [1:8080793] 0.000383 0.000383 0.000383 0.000383 0.000383 ...</span></span>
-<span><span class="co">#&gt;  $ uaoa          :'data.frame':  327602 obs. of  17 variables:</span></span>
-<span><span class="co">#&gt;   ..$ SiteNumber      : int [1:327602] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
-<span><span class="co">#&gt;   ..$ Shape_Length    : num [1:327602] 5725 5725 5725 5725 5725 ...</span></span>
-<span><span class="co">#&gt;   ..$ Shape_Area      : num [1:327602] 1137144 1137144 1137144 1137144 1137144 ...</span></span>
-<span><span class="co">#&gt;   ..$ db              : chr [1:327602] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...</span></span>
-<span><span class="co">#&gt;   ..$ TransectID      : chr [1:327602] "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" ...</span></span>
-<span><span class="co">#&gt;   ..$ SiteID          : int [1:327602] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
-<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:327602], format: "2011-04-17" "2011-04-17" ...</span></span>
-<span><span class="co">#&gt;   ..$ TArea           : num [1:327602] 114 114 114 114 114 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:327602] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span><span class="co">#&gt;   ..$ Number_Observers: num [1:327602] NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span><span class="co">#&gt;   ..$ TransectNumber  : int [1:327602] 99 99 99 99 99 99 99 99 99 99 ...</span></span>
-<span><span class="co">#&gt;   ..$ SurveyNumber    : int [1:327602] 21 21 21 21 21 21 21 21 21 21 ...</span></span>
-<span><span class="co">#&gt;   ..$ SubSurveyNumber : int [1:327602] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:327602] NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span><span class="co">#&gt;   ..$ GridID          : num [1:327602] 1372965 1372966 1372967 1372968 1372969 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_0      : num [1:327602] 0.005845 0.005186 0.003696 0.002284 0.000751 ...</span></span>
-<span><span class="co">#&gt;   ..$ fraction_2500   : num [1:327602] 0.000305 0.000305 0.000305 0.000305 0.000305 ...</span></span>
+<span><span class="co">#&gt;  $ line_transect :'data.frame':  80679 obs. of  14 variables:</span></span>
+<span><span class="co">#&gt;   ..$ db              : chr [1:80679] "1" "1" "1" "1" ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:80679] "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : int [1:80679] 109 109 109 109 109 109 109 109 109 109 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:80679], format: "2011-09-01" "2011-09-01" "2011-09-01" "2011-09-01" ...</span></span>
+<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:80679] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Tlength         : num [1:80679] 278 278 278 278 278 275 275 275 275 275 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:80679] 2 2 2 2 2 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:80679] 2 2 2 2 2 3 3 3 3 3 ...</span></span>
+<span><span class="co">#&gt;   ..$ Start_Eastings  : num [1:80679] 495982 495982 495982 495982 495982 ...</span></span>
+<span><span class="co">#&gt;   ..$ Start_Northings : num [1:80679] 6984954 6984954 6984954 6984954 6984954 ...</span></span>
+<span><span class="co">#&gt;   ..$ End_Eastings    : num [1:80679] 495707 495707 495707 495707 495707 ...</span></span>
+<span><span class="co">#&gt;   ..$ End_Northings   : num [1:80679] 6984989 6984989 6984989 6984989 6984989 ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:80679] 903602 903601 902646 902645 902644 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:80679] 0.0204 0.2653 0.102 0.3469 0.2653 ...</span></span>
+<span><span class="co">#&gt;  $ strip_transect:'data.frame':  274043 obs. of  8 variables:</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:274043] "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : num [1:274043] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:274043], format: "2010-11-16" "2010-11-16" "2010-11-16" "2010-11-16" ...</span></span>
+<span><span class="co">#&gt;   ..$ TArea           : num [1:274043] 7.45 7.45 7.45 7.45 7.45 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: num [1:274043] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:274043] 5 5 5 5 5 5 5 5 5 5 ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:274043] 1439596 1439597 1439598 1439599 1439600 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:274043] 0.00753 0.07986 0.06464 0.04362 0.02261 ...</span></span>
+<span><span class="co">#&gt;  $ uaoa          :'data.frame':  12527 obs. of  16 variables:</span></span>
+<span><span class="co">#&gt;   ..$ SiteNumber      : int [1:12527] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
+<span><span class="co">#&gt;   ..$ Shape_Length    : num [1:12527] 5725 5725 5725 5725 5725 ...</span></span>
+<span><span class="co">#&gt;   ..$ Shape_Area      : num [1:12527] 1137144 1137144 1137144 1137144 1137144 ...</span></span>
+<span><span class="co">#&gt;   ..$ db              : chr [1:12527] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:12527] "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : int [1:12527] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:12527], format: "2011-04-17" "2011-04-17" "2011-04-17" "2011-04-17" ...</span></span>
+<span><span class="co">#&gt;   ..$ TArea           : num [1:12527] 114 114 114 114 114 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:12527] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:12527] NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectNumber  : int [1:12527] 99 99 99 99 99 99 99 99 99 99 ...</span></span>
+<span><span class="co">#&gt;   ..$ SurveyNumber    : int [1:12527] 21 21 21 21 21 21 21 21 21 21 ...</span></span>
+<span><span class="co">#&gt;   ..$ SubSurveyNumber : int [1:12527] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:12527] NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:12527] 1372965 1372966 1372967 1372968 1372969 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:12527] 0.005845 0.005186 0.003696 0.002284 0.000751 ...</span></span>
 <span><span class="co">#&gt;  $ perp_distance :'data.frame':  2642 obs. of  12 variables:</span></span>
 <span><span class="co">#&gt;   ..$ db              : chr [1:2642] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...</span></span>
 <span><span class="co">#&gt;   ..$ TransectID      : chr [1:2642] "1.1_1_ST.19960213" "1.1_1_ST.19960816" "1.1_1_ST.19970318" "1.1_1_ST.19970818" ...</span></span>
 <span><span class="co">#&gt;   ..$ SiteID          : int [1:2642] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:2642], format: "1996-02-13" "1996-08-16" ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:2642], format: "1996-02-13" "1996-08-16" "1997-03-18" "1997-08-18" ...</span></span>
 <span><span class="co">#&gt;   ..$ TArea           : num [1:2642] 6.74 4.77 2.38 2.38 3.18 ...</span></span>
 <span><span class="co">#&gt;   ..$ Number_Sightings: int [1:2642] 2 1 0 2 2 2 4 0 1 0 ...</span></span>
 <span><span class="co">#&gt;   ..$ Number_Observers: num [1:2642] 6 7 4 4 5 6 4 5 5 4 ...</span></span>
@@ -230,200 +225,190 @@ multi-layer SpatRaster and (2) dataframe containing covariate values for
 each grid. The dataframe can be exported directly for use in out of
 sample prediction by multiplying the model coefficients with the
 covariate values.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cov</span> <span class="op">&lt;-</span> <span class="fu">fcn_get_cov_raster</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hcapr.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hcmil.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hctem.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hscec.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hsnit.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hspho.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hswat.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: htele.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: htrug.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: htslo.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_199706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_199906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200006.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200106.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200306.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200506.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200606.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_200906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_201106.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_201306.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_201506.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_201706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlkha_201906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_199708.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_199803.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_199911.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200011.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200110.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200210.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200310.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200410.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200510.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200610.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200710.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200810.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_200910.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201010.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201110.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201210.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201310.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201410.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201510.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201610.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201710.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201810.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_201910.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_202010.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlpsz_202110.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_199706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_199906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200006.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200106.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200306.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200506.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200606.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_200906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_201106.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_201306.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_201506.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_201706.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlrem_201906.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_199607.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_199707.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_199807.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_199907.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200007.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200107.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200207.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200307.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200407.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200507.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200607.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200707.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200807.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_200907.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201007.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201107.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201207.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201307.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201407.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201507.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201607.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201707.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201807.tif"</span></span>
-<span><span class="co">#&gt; [1] "Reading raster: hlwdy_201907.tif"</span></span>
-<span><span class="va">cov_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_cov_grid_df.html">fcn_cov_grid_df</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cov_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   GridID        hcapr hcmil        hctem hscec hsnit hspho hswat    htele    htrug</span></span>
-<span><span class="co">#&gt; 1      1 2.147484e+09    NA 2.147484e+09   Inf   Inf   Inf   Inf       NA       NA</span></span>
-<span><span class="co">#&gt; 2      2 1.546088e+03    63 2.889561e+02     5  0.14 0.021 0.246 38.37436 5.400044</span></span>
-<span><span class="co">#&gt; 3      3 1.547912e+03    63 2.880439e+02     5  0.14 0.021 0.246 39.66676 4.880239</span></span>
-<span><span class="co">#&gt; 4      4 1.545648e+03    63 2.890000e+02     5  0.14 0.021 0.246 36.29015 3.971878</span></span>
-<span><span class="co">#&gt; 5      5 1.538000e+03    63 2.890000e+02     5  0.14 0.021 0.246 27.68007 6.137964</span></span>
-<span><span class="co">#&gt; 6      6 2.147484e+09    NA 2.147484e+09   Inf   Inf   Inf   Inf       NA       NA</span></span>
-<span><span class="co">#&gt;      htslo hlkha_199706 hlkha_199906 hlkha_200006 hlkha_200106 hlkha_200306</span></span>
-<span><span class="co">#&gt; 1       NA         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2 1.757931           11           11           11           11           11</span></span>
-<span><span class="co">#&gt; 3 1.741007           11           11           11           11           11</span></span>
-<span><span class="co">#&gt; 4 3.255229           11           11           11           11           11</span></span>
-<span><span class="co">#&gt; 5 2.947045           11           11           11           11           11</span></span>
-<span><span class="co">#&gt; 6       NA         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;</span></span>
-<span><span class="co">#&gt;   hlkha_200506 hlkha_200606 hlkha_200706 hlkha_200906 hlkha_201106 hlkha_201306</span></span>
-<span><span class="co">#&gt; 1         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;</span></span>
-<span><span class="co">#&gt; 2           11           11           11           11           11           10</span></span>
-<span><span class="co">#&gt; 3           11           11           11           11           11           10</span></span>
-<span><span class="co">#&gt; 4           11           11           11           11           11           10</span></span>
-<span><span class="co">#&gt; 5           11           11           11           11           11           10</span></span>
-<span><span class="co">#&gt; 6         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;</span></span>
-<span><span class="co">#&gt;   hlkha_201506 hlkha_201706 hlkha_201906 hlpsz_199708 hlpsz_199803 hlpsz_199911</span></span>
-<span><span class="co">#&gt; 1         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2           11           11           11      1999437      2006188           NA</span></span>
-<span><span class="co">#&gt; 3           11           11           11           NA           NA      2019788</span></span>
-<span><span class="co">#&gt; 4           11           11           11           NA           NA      2018366</span></span>
-<span><span class="co">#&gt; 5           11           11           11           NA           NA      2017215</span></span>
-<span><span class="co">#&gt; 6         &lt;NA&gt;         &lt;NA&gt;         &lt;NA&gt;           NA           NA      2014725</span></span>
-<span><span class="co">#&gt;   hlpsz_200011 hlpsz_200110 hlpsz_200210 hlpsz_200310 hlpsz_200410 hlpsz_200510</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2      1999437     48395108           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 3           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 4           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 5           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlpsz_200610 hlpsz_200710 hlpsz_200810 hlpsz_200910 hlpsz_201010 hlpsz_201110</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2           NA    129124712    129235128    129242688    129196232    130425768</span></span>
-<span><span class="co">#&gt; 3           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 4           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 5           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlpsz_201210 hlpsz_201310 hlpsz_201410 hlpsz_201510 hlpsz_201610 hlpsz_201710</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2    130425768    130425768    130425768    130425768    130425768      1932533</span></span>
-<span><span class="co">#&gt; 3           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 4           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 5           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlpsz_201810 hlpsz_201910 hlpsz_202010 hlpsz_202110 hlrem_199706 hlrem_199906</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2      1932533      1932533    130417208      1932533            1            1</span></span>
-<span><span class="co">#&gt; 3           NA           NA           NA           NA            1            1</span></span>
-<span><span class="co">#&gt; 4           NA           NA           NA           NA            1            1</span></span>
-<span><span class="co">#&gt; 5           NA           NA           NA           NA            1            1</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlrem_200006 hlrem_200106 hlrem_200306 hlrem_200506 hlrem_200606 hlrem_200706</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2            1            1            1            1            1            1</span></span>
-<span><span class="co">#&gt; 3            1            1            1            1            1            1</span></span>
-<span><span class="co">#&gt; 4            1            1            1            1            1            1</span></span>
-<span><span class="co">#&gt; 5            1            1            1            1            1            1</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlrem_200906 hlrem_201106 hlrem_201306 hlrem_201506 hlrem_201706 hlrem_201906</span></span>
-<span><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt; 2            1            1           NA            1            1            1</span></span>
-<span><span class="co">#&gt; 3            1            1           NA            1            1            1</span></span>
-<span><span class="co">#&gt; 4            1            1           NA            1            1            1</span></span>
-<span><span class="co">#&gt; 5            1            1           NA            1            1            1</span></span>
-<span><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA</span></span>
-<span><span class="co">#&gt;   hlwdy_199607 hlwdy_199707 hlwdy_199807 hlwdy_199907 hlwdy_200007 hlwdy_200107</span></span>
-<span><span class="co">#&gt; 1     4.139723     4.164966     4.190207     4.190207     4.190207     4.190207</span></span>
-<span><span class="co">#&gt; 2    94.275818    94.875450    95.424599    95.424599    95.374115    95.348869</span></span>
-<span><span class="co">#&gt; 3    95.797050    96.945831    96.996315    96.996315    95.898018    95.323631</span></span>
-<span><span class="co">#&gt; 4    93.101791    94.174850    95.222664    95.222664    95.172180    94.597786</span></span>
-<span><span class="co">#&gt; 5    90.060364    89.511215    88.412918    88.412918    87.314621    86.765472</span></span>
-<span><span class="co">#&gt; 6     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000</span></span>
-<span><span class="co">#&gt;   hlwdy_200207 hlwdy_200307 hlwdy_200407 hlwdy_200507 hlwdy_200607 hlwdy_200707</span></span>
-<span><span class="co">#&gt; 1      4.21545      4.21545     4.240692     4.265934           NA     4.291176</span></span>
-<span><span class="co">#&gt; 2     95.84753     95.84753    96.421928    96.996315     169.9121    97.621193</span></span>
-<span><span class="co">#&gt; 3     94.17485     94.14960    94.698753    95.298386     167.9561    97.046799</span></span>
-<span><span class="co">#&gt; 4     93.47424     92.89986    92.899857    94.048637     166.6924    96.346199</span></span>
-<span><span class="co">#&gt; 5     86.21632     85.66718    85.667175    86.765472     160.0000    88.962067</span></span>
-<span><span class="co">#&gt; 6      0.00000      0.00000     0.000000     0.000000           NA     0.000000</span></span>
-<span><span class="co">#&gt;   hlwdy_200807 hlwdy_200907 hlwdy_201007 hlwdy_201107 hlwdy_201207 hlwdy_201307</span></span>
-<span><span class="co">#&gt; 1     4.265934     4.240692     4.240692     4.240692      4.21545     4.240692</span></span>
-<span><span class="co">#&gt; 2    97.021561    96.421928    96.371445    96.346199     95.82230    96.421928</span></span>
-<span><span class="co">#&gt; 3    95.923264    94.749237    93.600456    93.000824     93.54997    94.673515</span></span>
-<span><span class="co">#&gt; 4    95.797050    94.149605    93.076553    91.978256     91.97826    92.476921</span></span>
-<span><span class="co">#&gt; 5    88.962067    88.962067    89.511215    89.511215     89.51122    88.412918</span></span>
-<span><span class="co">#&gt; 6     0.000000     0.000000     0.000000     0.000000      0.00000     0.000000</span></span>
-<span><span class="co">#&gt;   hlwdy_201407 hlwdy_201507 hlwdy_201607 hlwdy_201707 hlwdy_201807 hlwdy_201907</span></span>
-<span><span class="co">#&gt; 1     4.265934     4.316419     4.341661     4.341661     4.366903     4.366903</span></span>
-<span><span class="co">#&gt; 2    97.046799    98.170341    98.744736    98.694244    99.218155    99.192909</span></span>
-<span><span class="co">#&gt; 3    96.346199    96.945831    97.520226    96.421928    95.872780    95.298386</span></span>
-<span><span class="co">#&gt; 4    92.950340    94.048637    94.572540    94.572540    94.547302    93.947670</span></span>
-<span><span class="co">#&gt; 5    86.765472    86.765472    86.216324    86.216324    85.667175    84.568878</span></span>
-<span><span class="co">#&gt; 6     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cov <span class="ot">&lt;-</span> <span class="fu">fcn_extract_covariate_grid</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hcapr.tif"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hcmil.tif"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hctem.tif"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hscec.tif"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hsnit.tif"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hspho.tif"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hswat.tif"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: htele.tif"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: htrug.tif"</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: htslo.tif"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_199706.tif"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_199906.tif"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200006.tif"</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200106.tif"</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200306.tif"</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200506.tif"</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200606.tif"</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200706.tif"</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_200906.tif"</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_201106.tif"</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_201306.tif"</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_201506.tif"</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_201706.tif"</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlkha_201906.tif"</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_199708.tif"</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_199803.tif"</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_199911.tif"</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200011.tif"</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200110.tif"</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200210.tif"</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200310.tif"</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200410.tif"</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200510.tif"</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200610.tif"</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200710.tif"</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200810.tif"</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_200910.tif"</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201010.tif"</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201110.tif"</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201210.tif"</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201310.tif"</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201410.tif"</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201510.tif"</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201610.tif"</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201710.tif"</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201810.tif"</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_201910.tif"</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_202010.tif"</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlpsz_202110.tif"</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_199706.tif"</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_199906.tif"</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200006.tif"</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200106.tif"</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200306.tif"</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200506.tif"</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200606.tif"</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200706.tif"</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_200906.tif"</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_201106.tif"</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_201306.tif"</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_201506.tif"</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_201706.tif"</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlrem_201906.tif"</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_199607.tif"</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_199707.tif"</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_199807.tif"</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_199907.tif"</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200007.tif"</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200107.tif"</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200207.tif"</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200307.tif"</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200407.tif"</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200507.tif"</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200607.tif"</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200707.tif"</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200807.tif"</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_200907.tif"</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201007.tif"</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201107.tif"</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201207.tif"</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201307.tif"</span></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201407.tif"</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201507.tif"</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201607.tif"</span></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201707.tif"</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201807.tif"</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Reading raster: hlwdy_201907.tif"</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="sc">|---------</span><span class="er">|</span><span class="sc">---------</span><span class="er">|</span><span class="sc">---------</span><span class="er">|</span><span class="sc">---------</span><span class="er">|</span></span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a><span class="er">=========================================</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>                                          </span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>cov_df <span class="ot">&lt;-</span> <span class="fu">fcn_cov_grid_df</span>(cov, <span class="at">buffer =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cov_df)</span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   GridID    hcapr hcmil    hctem hscec hsnit hspho hswat    htele    htrug    htslo hlkha_199706 hlkha_199906</span></span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      1       NA    NA       NA    NA    NA    NA    NA       NA       NA       NA           NA           NA</span></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      2 1546.099    63 288.9503     5  0.14 0.021 0.246 38.38303 5.397172 1.757402            6            6</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      3 1547.901    63 288.0497     5  0.14 0.021 0.246 39.64868 4.874127 1.750276            6            6</span></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      4 1545.602    63 289.0000     5  0.14 0.021 0.246 36.23794 3.985015 3.253359            6            6</span></span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      5 1538.000    63 289.0000     5  0.14 0.021 0.246 27.68007 6.137964 2.947045            6            6</span></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      6       NA    NA       NA    NA    NA    NA    NA       NA       NA       NA           NA           NA</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlkha_200006 hlkha_200106 hlkha_200306 hlkha_200506 hlkha_200606 hlkha_200706 hlkha_200906 hlkha_201106</span></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2            6            6            6            4            4            4            4            4</span></span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            6            6            6            4            4            4            4            4</span></span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            6            6            6            4            4            4            4            4</span></span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5            6            6            6            4            4            4            4            4</span></span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlkha_201306 hlkha_201506 hlkha_201706 hlkha_201906 hlpsz_199708 hlpsz_199803 hlpsz_199911 hlpsz_200011</span></span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2            2            4            4            4      1999437      2006188           NA      1999437</span></span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            2            4            4            4           NA           NA      2019788           NA</span></span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            2            4            4            4           NA           NA      2018366           NA</span></span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5            2            4            4            4           NA           NA      2017215           NA</span></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA      2014725           NA</span></span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlpsz_200110 hlpsz_200210 hlpsz_200310 hlpsz_200410 hlpsz_200510 hlpsz_200610 hlpsz_200710 hlpsz_200810</span></span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     48395108           NA           NA           NA           NA           NA    129124712    129235128</span></span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlpsz_200910 hlpsz_201010 hlpsz_201110 hlpsz_201210 hlpsz_201310 hlpsz_201410 hlpsz_201510 hlpsz_201610</span></span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    129242688    129196232    130425768    130425768    130425768    130425768    130425768    130425768</span></span>
+<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlpsz_201710 hlpsz_201810 hlpsz_201910 hlpsz_202010 hlpsz_202110 hlrem_199706 hlrem_199906 hlrem_200006</span></span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      1932533      1932533      1932533    130417208      1932533            1            1            1</span></span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           NA           NA           NA           NA           NA            1            1            1</span></span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           NA           NA           NA           NA           NA            1            1            1</span></span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           NA           NA           NA           NA           NA            1            1            1</span></span>
+<span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlrem_200106 hlrem_200306 hlrem_200506 hlrem_200606 hlrem_200706 hlrem_200906 hlrem_201106 hlrem_201306</span></span>
+<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2            1            1            1            1            1            1            1           NA</span></span>
+<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            1            1            1            1            1            1            1           NA</span></span>
+<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            1            1            1            1            1            1            1           NA</span></span>
+<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5            1            1            1            1            1            1            1           NA</span></span>
+<span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA           NA           NA           NA           NA           NA</span></span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlrem_201506 hlrem_201706 hlrem_201906 hlwdy_199607 hlwdy_199707 hlwdy_199807 hlwdy_199907 hlwdy_200007</span></span>
+<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           NA           NA           NA     4.570773     4.598643     4.626514     4.626514     4.626514</span></span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2            1            1            1    91.969322    92.557472    93.089882    93.089882    93.034142</span></span>
+<span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3            1            1            1    93.427193    94.547752    94.603493    94.603493    93.538681</span></span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4            1            1            1    90.820892    91.857841    92.866920    92.866920    92.811172</span></span>
+<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5            1            1            1    87.314941    86.782532    85.717712    85.717712    84.652901</span></span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6           NA           NA           NA     0.000000     0.000000     0.000000     0.000000     0.000000</span></span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlwdy_200107 hlwdy_200207 hlwdy_200307 hlwdy_200407 hlwdy_200507 hlwdy_200607 hlwdy_200707 hlwdy_200807</span></span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     4.626514     4.654385     4.654385     4.682255     4.710125           NA     4.737996     4.710125</span></span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    93.006271    93.482941    93.482941    94.043213    94.603493     169.9005    95.219513    94.631363</span></span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    92.978401    91.857841    91.829971    92.362381    92.950531     167.9503    94.659233    93.566551</span></span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    92.250900    91.158211    90.597931    90.597931    91.718491     166.6518    93.959602    93.427193</span></span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    84.120491    83.588081    83.055672    83.055672    84.120491     160.0000    86.250122    86.250122</span></span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     0.000000     0.000000     0.000000     0.000000     0.000000           NA     0.000000     0.000000</span></span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlwdy_200907 hlwdy_201007 hlwdy_201107 hlwdy_201207 hlwdy_201307 hlwdy_201407 hlwdy_201507 hlwdy_201607</span></span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     4.682255     4.682255     4.682255     4.654385     4.682255     4.710125     4.765867     4.793737</span></span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    94.043213    93.987473    93.959602    93.455063    94.043213    94.659233    95.751923    96.312202</span></span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    92.418121    91.297562    90.709412    91.241821    92.334511    93.959602    94.547752    95.108032</span></span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    91.829971    90.793022    89.728210    89.728210    90.204880    90.653671    91.718491    92.223030</span></span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    86.250122    86.782532    86.782532    86.782532    85.717712    84.120491    84.120491    83.588081</span></span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000     0.000000</span></span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hlwdy_201707 hlwdy_201807 hlwdy_201907</span></span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     4.793737     4.821608     4.821608</span></span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    96.256462    96.760994    96.733124</span></span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    94.043213    93.510811    92.950531</span></span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    92.223030    92.195152    91.607010</span></span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    83.588081    83.055672    81.990860</span></span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     0.000000     0.000000     0.000000</span></span></code></pre></div>
 <p>The covariate table can be joined to the transect table to produce
 training samples for the statistical models with covariate
 information.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">transect_grid_cov</span> <span class="op">&lt;-</span> <span class="fu">fcn_join_transect_grid_covariates</span><span class="op">(</span><span class="va">transect_grid</span>, <span class="va">cov</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">transect_grid_cov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_transect_grid_covariates.html">fcn_transect_grid_covariates</a></span><span class="op">(</span><span class="va">transect_grid</span>, <span class="va">cov</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in FUN(X[[i]], ...): object 'state' not found</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_datematched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_master_covariate_df_match_date.html">fcn_master_covariate_df_match_date</a></span><span class="op">(</span><span class="va">transect_grid_cov</span>, chunk_size <span class="op">=</span> <span class="fl">1e6</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'transect_grid_cov' not found</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_datematched</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'df_datematched' not found</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

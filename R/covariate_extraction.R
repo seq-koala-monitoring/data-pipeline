@@ -247,7 +247,7 @@ fcn_cov_grid_df <- function(cov = NULL, buffer = c(0, 2500)) {
     return(df)
   })
 
-  df <- purrr::reduce(res_list, inner_join, by = 'GridID')
+  df <- purrr::reduce(res_list, dplyr::inner_join, by = 'GridID')
 
   return(df)
 }

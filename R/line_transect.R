@@ -4,7 +4,9 @@
 #' @export
 fcn_line_transect_table <- function(cols = c("TransectID","SiteID","Date","TrSiteID",
                                                  "Tlength","Number_Sightings","Number_Observers")) {
-  db_1996 <- fcn_line_transect_table_1996() %>% rename(TrSiteID = TransectNumber) %>% dplyr::select(cols)
+  db_1996 <- fcn_line_transect_table_1996() %>%
+    dplyr::rename(TrSiteID = TransectNumber) %>%
+    dplyr::select(cols)
   db_2020 <- fcn_line_transect_table_2020() %>% dplyr::select(cols)
   out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')

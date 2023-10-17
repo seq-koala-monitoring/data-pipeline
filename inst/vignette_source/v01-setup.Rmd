@@ -51,8 +51,8 @@ on the computer to a directory with the following files:
 This directory can be stored on anywhere on the computer.
 
 ```{r}
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 list.files(data_dir)
 ```

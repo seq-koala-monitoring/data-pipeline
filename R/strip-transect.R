@@ -8,11 +8,12 @@ fcn_strip_transect_table <- function(year) {
   result <- switch(
     as.character(year),
     '1996' = fcn_strip_transect_table_1996(),
+    '2015' = fcn_strip_transect_table_2015(),
     '2020' = fcn_strip_transect_table_2020()
   )
 }
 
-#' @title Extract perpendicular distances for all databases
+#' @title Extract perpendicular distances for all databases except for 2015
 #' @export
 fcn_strip_transect_all <- function() {
   db_1996 <- fcn_strip_transect_table_1996()
@@ -23,14 +24,21 @@ fcn_strip_transect_all <- function() {
   return(out_db)
 }
 
-#' @title Extract perpendicular distances for koala sightings for 1996 database
+#' @title Extract strip transects for 1996 database
 #' @export
 fcn_strip_transect_table_1996 <- function() {
   table <- fcn_sql_exec('1996', 'strip-transect')
   return(table)
 }
 
-#' @title Extract perpendicular distances for koala sightings for 2020 database
+#' @title Extract strip transects for 2015 database
+#' @export
+fcn_strip_transect_table_2015 <- function() {
+  table <- fcn_sql_exec('2015', 'strip-transect')
+  return(table)
+}
+
+#' @title Extract strip transects for 2020 database
 #' @export
 fcn_strip_transect_table_2020 <- function() {
   table <- fcn_sql_exec('2020', 'strip-transect')
@@ -66,7 +74,38 @@ fcn_strip_transect_sf_all <- function() {
   } else {
     message(sprintf("All line transects (%s records) successfully joined.\n", nrow(joined_table)))
   }
+
+  # Join with 2015 database
+  st_2015 <- fcn_strip_transect_sf_2015() %>%
+    dplyr::select(TransectID, SiteID, Date, TArea, Number_Sightings, Number_Observers, geometry)
+  joined_table <- rbind(joined_table, st_2015)
+
   return(joined_table)
 }
 
+#' Get the table in the 2015-2019 database to its spatial representation
+fcn_strip_transect_sf_2015 <- function() {
+  data <- fcn_strip_transect_table_2015()
+  state <- fcn_get_state()
+  data.poly <- data %>%
+    dplyr::group_by(TransectID) %>%
+    sf::st_as_sf(coords = c("Eastings", "Northings"), crs = state$crs) %>%
+    tidyr::nest() %>%
+    dplyr::mutate(geometry = purrr::map(data, ~ sf::st_convex_hull(sf::st_union(.x)))) %>%
+    dplyr::mutate(data = purrr::map(data, ~sf::st_drop_geometry(.x))) %>%
+    tidyr::unnest(cols = c(data, geometry),names_repair = "unique") %>%
+    dplyr::reframe(
+      TransectID = unique(TransectID),
+      SiteID = unique(SiteID),
+      Date = unique(Date),
+      TArea = unique(TArea),
+      Number_Sightings = unique(Number_Sightings),
+      Number_Observers = unique(Number_Observers),
+      geometry = unique(geometry)
+    )
+  data_sf <- data.poly %>%
+    sf::st_as_sf(crs = state$crs)
+  is_polygon <- sf::st_geometry_type(data_sf) == 'POLYGON'
+  return(data_sf[is_polygon,])
+}
 

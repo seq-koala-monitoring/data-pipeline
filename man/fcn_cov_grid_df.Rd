@@ -4,7 +4,7 @@
 \alias{fcn_cov_grid_df}
 \title{Extract covariate in data frame format with GridID}
 \usage{
-fcn_cov_grid_df(cov = NULL)
+fcn_cov_grid_df(cov = NULL, buffer = c(0, 2500))
 }
 \arguments{
 \item{cov:}{the output of fcn_extract_covariate_grid}

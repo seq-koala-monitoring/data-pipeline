@@ -24,8 +24,8 @@ Wrapper functions documented in the "Master data" section are designed to abstra
 
 We begin by extracting all tables as simple features.
 ```{r}
-data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100)
 master <- fcn_all_tables_sf()
@@ -65,8 +65,6 @@ Likewise, the covariate raster can be stored and extracted as (1) a multi-layer 
 ```{r}
 cov <- fcn_extract_covariate_grid()
 cov_df <- fcn_cov_grid_df(cov, buffer = c(0))
-saveRDS(cov_df, "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/cov_df.rds")
-data.table::fwrite(cov_df, "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/cov_df.csv")
 head(cov_df)
 ```
 
@@ -78,7 +76,5 @@ transect_grid_cov <- fcn_transect_grid_covariates(transect_grid, cov)
 
 ```{r}
 df_datematched <- fcn_master_covariate_df_match_date(transect_grid_cov, chunk_size = 1e6)
-fcn_write_list_csv(df_datematched, 
-                   path = "M:\\Users\\uqfcho/Documents/seq-koala-monitoring/data-pipeline-output/",
-                   prefix = "transect_date_matched_")
+head(df_datematched)
 ```

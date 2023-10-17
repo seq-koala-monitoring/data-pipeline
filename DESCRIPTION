@@ -20,7 +20,7 @@ Imports:
     lubridate,
     Matrix,
     exactextractr,
-    Rcpp
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,

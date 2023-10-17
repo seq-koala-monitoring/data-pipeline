@@ -16,8 +16,11 @@ fcn_perp_distance_table <- function(year) {
 #' @export
 fcn_perp_distance_all <- function() {
   db_1996 <- fcn_perp_distance_table_1996()
+  db_2015 <- fcn_perp_distance_table_2015()
   db_2020 <- fcn_perp_distance_table_2020()
-  out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
+  out_db <- list(`1996-2015` = db_1996,
+                 `2015-2019` = db_2015,
+                 `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
   return(out_db)
 }
@@ -41,7 +44,8 @@ fcn_perp_distance_table_2020 <- function() {
 #' @title Check whether transect ID exists in line transect tables
 #' @export
 fcn_check_transect_id <- function(db) {
-  comb_db <- fcn_line_transect_table()
+  comb_db <- fcn_line_transect_table() %>%
+    dplyr::select(TransectID)
   unmatched_rows <- dplyr::anti_join(db, comb_db, by = 'TransectID')
   if (nrow(unmatched_rows) > 0) {
     stop("TransectID not fully matched to TransectID in line transect table")

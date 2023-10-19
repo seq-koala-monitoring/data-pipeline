@@ -16,10 +16,8 @@ fcn_perp_distance_table <- function(year) {
 #' @export
 fcn_perp_distance_all <- function() {
   db_1996 <- fcn_perp_distance_table_1996()
-  db_2015 <- fcn_perp_distance_table_2015()
   db_2020 <- fcn_perp_distance_table_2020()
   out_db <- list(`1996-2015` = db_1996,
-                 `2015-2019` = db_2015,
                  `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
   return(out_db)

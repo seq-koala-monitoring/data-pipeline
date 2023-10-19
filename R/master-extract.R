@@ -56,7 +56,7 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
     return(res)
   })
 
-  master_grid$perp_distance <- fcn_strip_transect_all()
+  master_grid$perp_distance <- fcn_perp_distance_all()
   return(master_grid)
 }
 

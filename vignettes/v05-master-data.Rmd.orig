@@ -24,8 +24,8 @@ Wrapper functions documented in the "Master data" section are designed to abstra
 
 We begin by extracting all tables as simple features.
 ```{r}
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 fcn_set_grid_size(100)
 master <- fcn_all_tables_sf()

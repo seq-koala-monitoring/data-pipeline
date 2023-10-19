@@ -45,17 +45,22 @@ This directory can be stored on anywhere on the computer.
 
 
 ```r
-#data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
-data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
+data_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data"
+#data_dir <- "C:\\Users\\uqfcho\\Documents/seq-koala-monitoring/working_data"
 fcn_set_home_dir(data_dir)
 list.files(data_dir)
-#>  [1] "2015-2019 SEQKoalaDatabase DES.accdb"  "2015-2019 SEQKoalaDatabase DES.laccdb"
-#>  [3] "basedata.gdb"                          "final_covariates.gdb"                 
-#>  [5] "final_covariates_raster"               "koala_survey_data_ver2_0.gdb"         
-#>  [7] "KoalaSurveyData.gdb"                   "KoalaSurveyData.gdb.zip"              
-#>  [9] "KoalaSurveyData2020_cur.accdb"         "KoalaSurveySites"                     
-#> [11] "SEQkoalaData.accdb"                    "SEQkoalaData_info.pdf"                
-#> [13] "SEQkoalaQueries.accdb"                 "test_grid.gdb"
+#>  [1] "2015-2019 SEQKoalaDatabase DES.accdb"
+#>  [2] "basedata.gdb"                        
+#>  [3] "final_covariates.gdb"                
+#>  [4] "final_covariates_raster"             
+#>  [5] "final_covariates_raster_gda1994"     
+#>  [6] "koala_survey_data_ver2_0.gdb"        
+#>  [7] "KoalaSurveyData.gdb"                 
+#>  [8] "KoalaSurveyData.gdb.zip"             
+#>  [9] "KoalaSurveyData2020_cur.accdb"       
+#> [10] "KoalaSurveyData2020_cur.laccdb"      
+#> [11] "SEQkoalaData.accdb"                  
+#> [12] "SEQkoalaData_info.pdf"
 ```
 
 # Generate fishnet grid

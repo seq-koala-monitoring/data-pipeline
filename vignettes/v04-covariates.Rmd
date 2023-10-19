@@ -138,7 +138,7 @@ have a relatively small effect on the covariate extracted.
 
 ```r
 cov_sptemp_route_table <- fcn_route_table_raster(cov_sptemp, table_sf_2020)
-#> Error in eval(ei, envir): external pointer is not valid
+#> Error: external pointer is not valid
 ```
 
 The covariate value of the route event layer can be matched to the date
@@ -177,7 +177,7 @@ cov_sptemp_date_matched <- fcn_locate_feature_from_route(route_table_date_matche
 #> Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found
 ext <- terra::ext(bbox$xlim[1], bbox$xlim[2], bbox$ylim[1], bbox$ylim[2])
 cov_sptemp_crop <- terra::crop(cov_sptemp, ext)
-#> Error in eval(ei, envir): external pointer is not valid
+#> Error: external pointer is not valid
 limits <- terra::minmax(cov_sptemp_crop)
 #> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found
 rast_sptemp_plot <- ggplot() +

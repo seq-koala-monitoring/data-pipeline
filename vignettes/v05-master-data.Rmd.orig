@@ -67,14 +67,3 @@ cov <- fcn_extract_covariate_grid()
 cov_df <- fcn_cov_grid_df(cov, buffer = c(0))
 head(cov_df)
 ```
-
-The covariate table can be joined to the transect table to produce training samples for the statistical models with covariate information.
-
-```{r}
-transect_grid_cov <- fcn_transect_grid_covariates(transect_grid, cov)
-```
-
-```{r}
-df_datematched <- fcn_master_covariate_df_match_date(transect_grid_cov, chunk_size = 1e6)
-head(df_datematched)
-```

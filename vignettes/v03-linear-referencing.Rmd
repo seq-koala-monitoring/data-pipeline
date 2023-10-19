@@ -14,17 +14,6 @@ vignette: >
 library(SEQKoalaDataPipeline)
 library(ggplot2)
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following object is masked from 'package:filesstrings':
-#> 
-#>     all_equal
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 library(tidyterra)
 ```
 

@@ -13,11 +13,6 @@ vignette: >
 ```r
 library(SEQKoalaDataPipeline)
 library(tidyterra)
-#> 
-#> Attaching package: 'tidyterra'
-#> The following object is masked from 'package:stats':
-#> 
-#>     filter
 library(ggplot2)
 library(patchwork)
 ```
@@ -234,12 +229,6 @@ Summary statistics can be produced of the full table. For example, to count the 
 
 ```r
 summary_table <- fcn_summarise_sightings(c('LGA', 'Method', 'db'))
-#> Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.
-#> i The deprecated feature was likely used in the dplyr package.
-#>   Please report the issue at <https://github.com/tidyverse/dplyr/issues>.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 summary_table
 #> # A tibble: 27 x 4
 #> # Groups:   LGA, Method [26]

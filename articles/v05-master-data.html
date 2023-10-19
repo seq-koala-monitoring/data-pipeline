@@ -151,8 +151,7 @@ values by buffering each polygon and extracting its weights</p></li>
 <span><span class="co">#&gt; Warning in fcn_strip_transect_sf_all(): Strip Transect: attribute join incomplete. </span></span>
 <span><span class="co">#&gt; Joined uniquely: 916. </span></span>
 <span><span class="co">#&gt; Joined at the site level: 1726. </span></span>
-<span><span class="co">#&gt; Join failed: 0</span></span>
-<span><span class="co">#&gt; Error in fcn_perp_distance_table_2015(): could not find function "fcn_perp_distance_table_2015"</span></span></code></pre></div>
+<span><span class="co">#&gt; Join failed: 0</span></span></code></pre></div>
 <p>The end result is a list containing tables of line transects, strip
 transect, and all of area transects. The tables are in long format, so
 each row corresponds to one grid cell that has an overlap with the
@@ -166,7 +165,53 @@ which the transect overlaps with. Depending on the buffer, the
 respectively.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">transect_grid</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'transect_grid' not found</span></span></code></pre></div>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ line_transect :'data.frame':  80679 obs. of  14 variables:</span></span>
+<span><span class="co">#&gt;   ..$ db              : chr [1:80679] "1" "1" "1" "1" ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:80679] "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" "109.1_1_SOL.20110901" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : int [1:80679] 109 109 109 109 109 109 109 109 109 109 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:80679], format: "2011-09-01" ...</span></span>
+<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:80679] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Tlength         : num [1:80679] 278 278 278 278 278 275 275 275 275 275 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:80679] 2 2 2 2 2 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:80679] 2 2 2 2 2 3 3 3 3 3 ...</span></span>
+<span><span class="co">#&gt;   ..$ Start_Eastings  : num [1:80679] 495982 495982 495982 495982 495982 ...</span></span>
+<span><span class="co">#&gt;   ..$ Start_Northings : num [1:80679] 6984954 6984954 6984954 6984954 6984954 ...</span></span>
+<span><span class="co">#&gt;   ..$ End_Eastings    : num [1:80679] 495707 495707 495707 495707 495707 ...</span></span>
+<span><span class="co">#&gt;   ..$ End_Northings   : num [1:80679] 6984989 6984989 6984989 6984989 6984989 ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:80679] 903602 903601 902646 902645 902644 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:80679] 0.0204 0.2653 0.102 0.3469 0.2653 ...</span></span>
+<span><span class="co">#&gt;  $ strip_transect:'data.frame':  274043 obs. of  8 variables:</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:274043] "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" "1.1_3_ST.20101116" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : num [1:274043] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:274043], format: "2010-11-16" ...</span></span>
+<span><span class="co">#&gt;   ..$ TArea           : num [1:274043] 7.45 7.45 7.45 7.45 7.45 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: num [1:274043] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:274043] 5 5 5 5 5 5 5 5 5 5 ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:274043] 1439596 1439597 1439598 1439599 1439600 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:274043] 0.00753 0.07986 0.06464 0.04362 0.02261 ...</span></span>
+<span><span class="co">#&gt;  $ uaoa          :'data.frame':  12527 obs. of  16 variables:</span></span>
+<span><span class="co">#&gt;   ..$ SiteNumber      : int [1:12527] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
+<span><span class="co">#&gt;   ..$ Shape_Length    : num [1:12527] 5725 5725 5725 5725 5725 ...</span></span>
+<span><span class="co">#&gt;   ..$ Shape_Area      : num [1:12527] 1137144 1137144 1137144 1137144 1137144 ...</span></span>
+<span><span class="co">#&gt;   ..$ db              : chr [1:12527] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectID      : chr [1:12527] "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" "216.1_99_UAoA.20110417" ...</span></span>
+<span><span class="co">#&gt;   ..$ SiteID          : int [1:12527] 216 216 216 216 216 216 216 216 216 216 ...</span></span>
+<span><span class="co">#&gt;   ..$ Date            : POSIXct[1:12527], format: "2011-04-17" ...</span></span>
+<span><span class="co">#&gt;   ..$ TArea           : num [1:12527] 114 114 114 114 114 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Sightings: int [1:12527] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ Number_Observers: num [1:12527] NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectNumber  : int [1:12527] 99 99 99 99 99 99 99 99 99 99 ...</span></span>
+<span><span class="co">#&gt;   ..$ SurveyNumber    : int [1:12527] 21 21 21 21 21 21 21 21 21 21 ...</span></span>
+<span><span class="co">#&gt;   ..$ SubSurveyNumber : int [1:12527] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   ..$ TrSiteID        : num [1:12527] NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span><span class="co">#&gt;   ..$ GridID          : num [1:12527] 1372965 1372966 1372967 1372968 1372969 ...</span></span>
+<span><span class="co">#&gt;   ..$ fraction        : num [1:12527] 0.005845 0.005186 0.003696 0.002284 0.000751 ...</span></span>
+<span><span class="co">#&gt;  $ perp_distance :'data.frame':  585 obs. of  4 variables:</span></span>
+<span><span class="co">#&gt;   ..$ db        : chr [1:585] "1996-2015" "1996-2015" "1996-2015" "1996-2015" ...</span></span>
+<span><span class="co">#&gt;   ..$ TransectID: chr [1:585] "109.1_1_SOL.20010828" "109.1_1_SOL.20010828" "109.1_1_SOL.20010828" "109.1_1_SOL.20010828" ...</span></span>
+<span><span class="co">#&gt;   ..$ SightingID: chr [1:585] "109.1_1_SOL.20010828.1" "109.1_1_SOL.20010828.2" "109.1_1_SOL.20010828.3" "109.1_1_SOL.20010828.4" ...</span></span>
+<span><span class="co">#&gt;   ..$ Perp_Dist : num [1:585] 67 67 59 56 13 2 2 18 15 19 ...</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="master-extraction-of-covariate-grid">Master extraction of covariate grid<a class="anchor" aria-label="anchor" href="#master-extraction-of-covariate-grid"></a>
@@ -386,17 +431,6 @@ covariate values.</p>
 <span><span class="co">#&gt; 4    94.572540    94.547302    93.947670</span></span>
 <span><span class="co">#&gt; 5    86.216324    85.667175    84.568878</span></span>
 <span><span class="co">#&gt; 6     0.000000     0.000000     0.000000</span></span></code></pre></div>
-<p>The covariate table can be joined to the transect table to produce
-training samples for the statistical models with covariate
-information.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">transect_grid_cov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_transect_grid_covariates.html">fcn_transect_grid_covariates</a></span><span class="op">(</span><span class="va">transect_grid</span>, <span class="va">cov</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in FUN(X[[i]], ...): object 'state' not found</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_datematched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_master_covariate_df_match_date.html">fcn_master_covariate_df_match_date</a></span><span class="op">(</span><span class="va">transect_grid_cov</span>, chunk_size <span class="op">=</span> <span class="fl">1e6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'transect_grid_cov' not found</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_datematched</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'df_datematched' not found</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

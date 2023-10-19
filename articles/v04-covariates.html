@@ -188,7 +188,7 @@ expected to have a relatively small effect on the covariate
 extracted.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cov_sptemp_route_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fcn_route_table_raster.html">fcn_route_table_raster</a></span><span class="op">(</span><span class="va">cov_sptemp</span>, <span class="va">table_sf_2020</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(ei, envir): external pointer is not valid</span></span></code></pre></div>
+<span><span class="co">#&gt; Error: external pointer is not valid</span></span></code></pre></div>
 <p>The covariate value of the route event layer can be matched to the
 date of the survey. The covariate value representative of the date which
 the transect is surveyed can be interpolated by the following
@@ -220,7 +220,7 @@ raster.</p>
 <span><span class="co">#&gt; Error in eval(expr, envir, enclos): object 'route_table_date_matched' not found</span></span>
 <span><span class="va">ext</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">$</span><span class="va">xlim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">xlim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">ylim</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">$</span><span class="va">ylim</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">cov_sptemp_crop</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">cov_sptemp</span>, <span class="va">ext</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in eval(ei, envir): external pointer is not valid</span></span>
+<span><span class="co">#&gt; Error: external pointer is not valid</span></span>
 <span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/minmax.html" class="external-link">minmax</a></span><span class="op">(</span><span class="va">cov_sptemp_crop</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'minmax': object 'cov_sptemp_crop' not found</span></span>
 <span><span class="va">rast_sptemp_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>

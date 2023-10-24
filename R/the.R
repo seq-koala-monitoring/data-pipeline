@@ -21,7 +21,7 @@ the$grid_size <- 100
 the$study_area <- list(dsn = "basedata.gdb", layer = "seqrp_study_area_2017_mga56")
 
 the$raster_path <- list(
-  covariates = "final_covariates_raster"
+  covariates = "final_covariates_output"
 )
 
 # Standardized projection system (GDA2020 / MGA zone 56 as default)
@@ -221,5 +221,19 @@ fcn_get_cov_raster <- function() {
 fcn_set_covariate_time_match <- function(obj) {
   old <- the$covariate_time_match
   the$covariate_time_match <- val
+  invisible(old)
+}
+
+fcn_get_covariate_df <- function() {
+  if (is.null(the$covariate_df)) {
+    fcn_set_covariate_df()
+  }
+  return(the$covariate_df)
+}
+
+fcn_set_covariate_df <- function() {
+  cov_layer_df <- fcn_covariate_layer_df()
+  old <- the$covariate_df
+  the$covariate_df <- cov_layer_df
   invisible(old)
 }

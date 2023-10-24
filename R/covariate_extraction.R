@@ -12,15 +12,27 @@ fcn_list_covariate_layers <- function() {
 #' @export
 fcn_list_covariate_layers_constant <- function() {
   rastList <- fcn_list_covariate_layers()
-  return(rastList[grep("^[[:alnum:]]{5}\\.tif$", rastList)])
+  return(rastList[grep(".*\\d{6}.tif$", rastList, invert =T)])
 }
 
 #' @title List temporally-variant covariate layers
 #' @export
 fcn_list_covariate_layers_temporal <- function() {
   rastList <- fcn_list_covariate_layers()
-  return(rastList[grep("^[[:alnum:]]{5}_\\d{6}\\.tif$", rastList)])
+  return(rastList[grep(".*\\d{6}.tif$", rastList)])
 }
+
+#' @title Extract name from string containing dates
+fcn_get_covariate_name <- function(input) {
+  pattern <- ".*\\d{6}.tif$"
+  if (grepl(pattern, input)) {
+    output <- gsub("\\d{6}.tif$", "", input)
+  } else {
+    output <- gsub(".tif$", "", input)
+  }
+  return(output)
+}
+
 
 #' @title List covariate layers as a df
 #' @export
@@ -29,12 +41,23 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   match_method <- state$covariate_time_match
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
-  df <- dplyr::bind_rows(list(constant = constant_covariates, temporal = temporal_covariates), .id = 'type') %>%
-    dplyr::mutate(name = substr(filename, 1, 5)) %>%
-    dplyr::mutate(date = as.numeric(gsub("\\D", "", filename))) %>%
+  df <- dplyr::bind_rows(list(constant = constant_covariates,
+                              temporal = temporal_covariates),
+                         .id = 'type') %>%
+    dplyr::mutate(name = sapply(filename, fcn_get_covariate_name)) %>%
+    dplyr::mutate(date = as.numeric(as.numeric(gsub(".*[^0-9]([0-9]{6})[^0-9]*", "\\1", filename)))) %>%
     dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date))) %>%
     dplyr::mutate(fullname = sub('\\.tif$', '', filename)) %>%
     dplyr::mutate(match_method = ifelse(type == 'temporal',match_method[name] , NA))
+
+  # Exclude files that have a processing error, less than 100 bytes
+  file_sizes <- file.info(paste0(state$home_dir, "\\", state$raster_path,'\\', df$filename))$size
+  low_filesize <- 100
+  if (any(file_sizes < low_filesize)) {
+    invalid_files <- df$filename[file_sizes < low_filesize]
+      warning(sprintf("Raster(s) %s appears to be less than 100bytes and therefore removed.", paste(invalid_files, collapse=", ")))
+    df <- df[file_sizes > low_filesize,]
+  }
 
   if (!is.null(layer)) {
     df <- df %>%
@@ -49,7 +72,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 #' @export
 fcn_covariate_raster_load <- function(covariate = "htele") {
   raster_path <- fcn_get_raster_path()$covariates
-  covariate_df <- fcn_covariate_layer_df() %>%
+  covariate_df <- fcn_get_covariate_df() %>%
     dplyr::filter(name == covariate)
   covariate_files <- purrr::map_chr(covariate_df$filename, function(x) file.path(raster_path, x))
   if (length(covariate_files)>1) {
@@ -127,7 +150,7 @@ fcn_covariate_match_date <- function(route_table, col_names, method = 'bilinear'
 #' @title Match date for a dataframe with transect Dates and multi-temporal covariate layers
 #' @export
 fcn_covariate_df_match_date <- function(df) {
-  cov_info <- fcn_covariate_layer_df()
+  cov_info <- fcn_get_covariate_df()
   cov_temp <- cov_info %>%
     dplyr::filter(type == 'temporal')
   cov_temp_names <- unique(cov_temp$name)
@@ -196,22 +219,24 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
 }
 
 #' @title Extract all covariate by fishnet grid
+#' filename_list: list of covariates by filenames, if unspecified extracts all files
 #' @export
-fcn_extract_covariate_grid <- function() {
+fcn_extract_covariate_grid <- function(filename_list = NULL) {
   fishnet <- fcn_get_grid()
+  covariates <- fcn_get_covariate_df()
+  if (is.null(filename_list)) filename_list <- covariates$filename
   study_area <- fcn_get_study_area()
-  covariates <- fcn_covariate_layer_df()
-  covariate_raster <- lapply(covariates$filename, function(n) {
+  covariate_raster <- lapply(filename_list, function(n) {
     print(sprintf("Reading raster: %s", n))
     path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
     r <- terra::rast(path)
-    resampled <- terra::resample(r, fishnet, method = 'bilinear', threads = 8)
+    resampled <- terra::resample(r, fishnet, method = 'mode', threads = 8)
     resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1], upper = terra::minmax(r)[2], values = F)
   })
   covariate_raster$GridID <- fishnet
   covariate_raster_resampled <- terra::rast(covariate_raster)
   covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area))
-  names(covariate_raster_cropped) <- c(covariates$fullname, 'GridID')
+  names(covariate_raster_cropped) <- c(sub(".tif$", "", filename_list), 'GridID')
   return(covariate_raster_cropped)
 }
 
@@ -223,7 +248,7 @@ fcn_terra_get_nodata_value <- function(path) {
 #' @title Extract covariate in data frame format with GridID
 #' @param cov: the output of fcn_extract_covariate_grid
 #' @export
-fcn_cov_grid_df <- function(cov = NULL, buffer = c(0, 2500)) {
+fcn_cov_grid_df <- function(cov = NULL, buffer = c(0)) {
   if (is.null(cov)) {
     cov <- fcn_get_cov_raster()
   }
@@ -251,3 +276,5 @@ fcn_cov_grid_df <- function(cov = NULL, buffer = c(0, 2500)) {
 
   return(df)
 }
+
+

@@ -128,6 +128,11 @@
         <dd>Coordinate to SF</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_cov_array.html">fcn_cov_array()</a></code> 
+        </dt>
+        <dd>Extract covariate in array format, with dimensions: GridID, Covariate, Time</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_cov_grid_df.html">fcn_cov_grid_df()</a></code> 
         </dt>
         <dd>Extract covariate in data frame format with GridID</dd>
@@ -136,6 +141,11 @@
           <code><a href="fcn_covariate_df_match_date.html">fcn_covariate_df_match_date()</a></code> 
         </dt>
         <dd>Match date for a dataframe with transect Dates and multi-temporal covariate layers</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_covariate_interval_mean.html">fcn_covariate_interval_mean()</a></code> 
+        </dt>
+        <dd>Get mean values of each Grid cell given the name of covariate and a single date</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_covariate_layer_df.html">fcn_covariate_layer_df()</a></code> 
@@ -173,6 +183,11 @@
         <dd>Get a matrix of date difference from a vector of reference dates with data</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_date_intervals.html">fcn_date_intervals()</a></code> 
+        </dt>
+        <dd>Get dates from start to end in an interval format</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_date_weights_nearest_date.html">fcn_date_weights_nearest_date()</a></code> 
         </dt>
         <dd>Convert date difference matrix to sparse matrix of nearest dates</dd>
@@ -185,7 +200,8 @@
           
           <code><a href="fcn_extract_covariate_grid.html">fcn_extract_covariate_grid()</a></code> 
         </dt>
-        <dd>Extract all covariate by fishnet grid</dd>
+        <dd>Extract all covariate by fishnet grid
+filename_list: list of covariates by filenames, if unspecified extracts all files</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_extract_raster_buffer.html">fcn_extract_raster_buffer()</a></code> 
@@ -203,6 +219,11 @@
         <dd>Generate grid fishnet with an input spatial feature class</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_get_covariate_name.html">fcn_get_covariate_name()</a></code> 
+        </dt>
+        <dd>Extract name from string containing dates</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_get_db_path.html">fcn_get_db_path()</a></code> 
         </dt>
         <dd>Report database paths</dd>
@@ -211,11 +232,6 @@
           <code><a href="fcn_get_gdb_path.html">fcn_get_gdb_path()</a></code> 
         </dt>
         <dd>Get GDB object path</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fcn_get_grid_raster.html">fcn_get_grid_raster()</a></code> 
-        </dt>
-        <dd>Get rasterized fishnet</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_get_lga.html">fcn_get_lga()</a></code> 
@@ -382,6 +398,11 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
         <dd>Set home directory path</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_set_raster_path.html">fcn_set_raster_path()</a></code> 
+        </dt>
+        <dd>Set raster directory</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_set_resample_to_grid.html">fcn_set_resample_to_grid()</a></code> 
         </dt>
         <dd>Set parameter: resample to grid</dd>
@@ -392,6 +413,11 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
         <dd>Get start and end coordinate columns in SF objects with line/ multilinestring objects</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_shift_months.html">fcn_shift_months()</a></code> 
+        </dt>
+        <dd>Shift date intervals object by months</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_sql_exec.html">fcn_sql_exec()</a></code> 
         </dt>
         <dd>SQL extract table by database year and script name</dd>
@@ -399,7 +425,12 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
           
           <code><a href="fcn_strip_transect_all.html">fcn_strip_transect_all()</a></code> 
         </dt>
-        <dd>Extract perpendicular distances for all databases</dd>
+        <dd>Extract perpendicular distances for all databases except for 2015</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_strip_transect_sf_2015.html">fcn_strip_transect_sf_2015()</a></code> 
+        </dt>
+        <dd>Get the table in the 2015-2019 database to its spatial representation</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_strip_transect_sf_all.html">fcn_strip_transect_sf_all()</a></code> 
@@ -414,12 +445,17 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
           
           <code><a href="fcn_strip_transect_table_1996.html">fcn_strip_transect_table_1996()</a></code> 
         </dt>
-        <dd>Extract perpendicular distances for koala sightings for 1996 database</dd>
+        <dd>Extract strip transects for 1996 database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_strip_transect_table_2015.html">fcn_strip_transect_table_2015()</a></code> 
+        </dt>
+        <dd>Extract strip transects for 2015 database</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_strip_transect_table_2020.html">fcn_strip_transect_table_2020()</a></code> 
         </dt>
-        <dd>Extract perpendicular distances for koala sightings for 2020 database</dd>
+        <dd>Extract strip transects for 2020 database</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_transect_grid_covariates.html">fcn_transect_grid_covariates()</a></code> 

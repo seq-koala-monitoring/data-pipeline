@@ -51,8 +51,7 @@ The function `fcn_all_transect_grid_fractions` abstracts away from that. In one 
 transect_grid <- fcn_all_transect_grid_fractions(buffer = c(0))
 ```
 The end result is a list containing tables of line transects, strip transect, and all of area transects. The tables are in long format, so each row corresponds to one grid cell that has an overlap with the transect. Each transect is identified uniquely by its TransectID.
-
-Particularly the Line Transect, Strip Transect and UAoA tables contain the "GridID" and "fraction" column that contains the Grid cell that it overlaps with, and the "fraction" columns showing the fraction which the transect overlaps with. Depending on the buffer, the "fraction" is different; here we illustrate a no-buffer (0) and 2.5km (2500) buffer, in the columns 'fraction_0' and 'fraction_2500' respectively.
+grid_rasterParticularly the Line Transect, Strip Transect and UAoA tables contain the "GridID" and "fraction" column that contains the Grid cell that it overlaps with, and the "fraction" columns showing the fraction which the transect overlaps with. Depending on the buffer, the "fraction" is different; here we illustrate a no-buffer (0) and 2.5km (2500) buffer, in the columns 'fraction_0' and 'fraction_2500' respectively.
 
 ```{r}
 dplyr::glimpse(transect_grid)

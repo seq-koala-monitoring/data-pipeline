@@ -47,16 +47,3 @@ fcn_new_grid <- function(option = 'raster', buffer = 0) {
   fcn_set_grid(fishnet)
   return(fishnet)
 }
-
-#' Get rasterized fishnet
-#' @export
-fcn_get_grid_raster <- function() {
-  grid <- fcn_get_grid()
-  if (is.null(grid)) {
-    warning("Fishnet grid not found in environment. Generating new grid.")
-    grid <- fcn_new_grid()
-  }
-  base_layer <- fcn_covariate_raster_load()
-  grid_spatvector <- terra::vect(grid)
-  grid_raster <- terra::rasterize(grid_spatvector, base_layer, "GridID")
-}

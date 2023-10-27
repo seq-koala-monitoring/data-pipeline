@@ -2,10 +2,10 @@
 % Please edit documentation in R/strip-transect.R
 \name{fcn_strip_transect_all}
 \alias{fcn_strip_transect_all}
-\title{Extract perpendicular distances for all databases}
+\title{Extract perpendicular distances for all databases except for 2015}
 \usage{
 fcn_strip_transect_all()
 }
 \description{
-Extract perpendicular distances for all databases
+Extract perpendicular distances for all databases except for 2015
 }

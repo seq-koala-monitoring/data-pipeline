@@ -183,6 +183,7 @@ fcn_set_gdb_path <- function(db_path, obj = NULL) {
 }
 
 #' Get raster directories
+#' @export
 fcn_get_raster_path <- function() {
   state <- fcn_get_state()
   home_dir <- state$home_dir
@@ -193,6 +194,13 @@ fcn_get_raster_path <- function() {
     path
   })
   return(full_path)
+}
+
+#' Set raster directory
+fcn_set_raster_path <- function(val) {
+  old <- the$raster_path
+  the$raster_path <- val
+  invisible(old)
 }
 
 #' @title Set parameter: resample to grid
@@ -235,5 +243,23 @@ fcn_set_covariate_df <- function() {
   cov_layer_df <- fcn_covariate_layer_df()
   old <- the$covariate_df
   the$covariate_df <- cov_layer_df
+  invisible(old)
+}
+
+fcn_get_date_intervals <- function() {
+  state <- fcn_get_state()
+  if(is.null(state$date_intervals)) {
+    fcn_set_date_intervals()
+  }
+  return(the$date_intervals)
+}
+
+fcn_set_date_intervals <- function(val = NULL) {
+  old <- the$date_intervals
+  if (is.null(val)) {
+    the$date_intervals <- fcn_date_intervals()
+  } else {
+    the$date_intervals <- val
+  }
   invisible(old)
 }

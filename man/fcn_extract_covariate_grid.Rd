@@ -2,10 +2,12 @@
 % Please edit documentation in R/covariate_extraction.R
 \name{fcn_extract_covariate_grid}
 \alias{fcn_extract_covariate_grid}
-\title{Extract all covariate by fishnet grid}
+\title{Extract all covariate by fishnet grid
+filename_list: list of covariates by filenames, if unspecified extracts all files}
 \usage{
-fcn_extract_covariate_grid()
+fcn_extract_covariate_grid(filename_list = NULL)
 }
 \description{
 Extract all covariate by fishnet grid
+filename_list: list of covariates by filenames, if unspecified extracts all files
 }

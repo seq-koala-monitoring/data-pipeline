@@ -10,6 +10,7 @@ fcn_all_tables <- function(table_names = c('line_transect', 'perp_distance', 'st
   if ('strip_transect' %in% table_names) master$strip_transect = fcn_strip_transect_all()
   if ('uaoa' %in% table_names) master$uaoa = fcn_all_of_area_all()
 
+  master <- lapply(master, fcn_add_date_interval)
   return(master)
 }
 
@@ -21,21 +22,20 @@ fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect',
   if ('line_transect' %in% table_names) master$line_transect = fcn_line_transect_sf_all()
   if ('strip_transect' %in% table_names) master$strip_transect = fcn_strip_transect_sf_all()
   if ('uaoa' %in% table_names) master$uaoa = fcn_all_of_area_sf_all()
-
+  master <- lapply(master, fcn_add_date_interval)
   return(master)
 }
 
 #' @title Extract transect information with grid fractions
 #' @param buffer: a vector of polygon buffer sizes to extract,
+#' @param keep_all: if TRUE, keep all columns from transect. if FALSE, keeps only the TransectID, GridID and Fractions
 #' @export
-fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
+fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE) {
   fishnet <- fcn_get_grid()
   master <- fcn_all_tables_sf()
   buffer <- sort(buffer)
 
   master_grid <- lapply(master, function(df) {
-    df <- df %>%
-      dplyr::select(TransectID)
     res <- fcn_extract_raster_buffer(df, fishnet, 0)
     if (length(buffer) == 1) {
       var_name <- c('fraction')
@@ -55,10 +55,13 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
       res <- res %>%
         dplyr::mutate_at(var_name, ~replace(., is.na(.), 0))
     }
+
+    if (!keep_all) {
+      res <- res %>%
+        dplyr::select('TransectID', 'GridID', dplyr::all_of(var_name))
+    }
     return(res)
   })
-
-  master_grid$perp_distance <- fcn_perp_distance_all()
   return(master_grid)
 }
 

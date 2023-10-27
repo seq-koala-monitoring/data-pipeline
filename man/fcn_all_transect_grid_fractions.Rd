@@ -4,10 +4,12 @@
 \alias{fcn_all_transect_grid_fractions}
 \title{Extract transect information with grid fractions}
 \usage{
-fcn_all_transect_grid_fractions(buffer = c(0))
+fcn_all_transect_grid_fractions(buffer = c(0), keep_all = FALSE)
 }
 \arguments{
 \item{buffer:}{a vector of polygon buffer sizes to extract,}
+
+\item{keep_all:}{if TRUE, keep all columns from transect. if FALSE, keeps only the TransectID, GridID and Fractions}
 }
 \description{
 Extract transect information with grid fractions

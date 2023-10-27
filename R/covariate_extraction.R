@@ -41,14 +41,17 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   match_method <- state$covariate_time_match
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
+  temporal_covariates <- temporal_covariates %>%
+    dplyr::mutate(date = as.numeric(as.numeric(gsub(".*[^0-9]([0-9]{6})[^0-9]*", "\\1", filename)))) %>%
+    dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date))) %>%
+    dplyr::mutate(fullname = sub('\\.tif$', '', filename))
+
   df <- dplyr::bind_rows(list(constant = constant_covariates,
                               temporal = temporal_covariates),
                          .id = 'type') %>%
     dplyr::mutate(name = sapply(filename, fcn_get_covariate_name)) %>%
-    dplyr::mutate(date = as.numeric(as.numeric(gsub(".*[^0-9]([0-9]{6})[^0-9]*", "\\1", filename)))) %>%
-    dplyr::mutate(date = ifelse(is.na(date), NA, paste0("X", date))) %>%
-    dplyr::mutate(fullname = sub('\\.tif$', '', filename)) %>%
-    dplyr::mutate(match_method = ifelse(type == 'temporal',match_method[name] , NA))
+    dplyr::mutate(match_method = match_method[name]) %>%
+    dplyr::mutate(fullname = sub('\\.tif$', '', filename))
 
   # Exclude files that have a processing error, less than 100 bytes
   file_sizes <- file.info(paste0(state$home_dir, "\\", state$raster_path,'\\', df$filename))$size

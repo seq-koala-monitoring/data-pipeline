@@ -25,7 +25,7 @@ fcn_line_transect_sf_all <- function(cols = c("TransectID","SiteID","Date","TrSi
     dplyr::select(cols)
   db_2020 <- fcn_line_transect_sf_2020() %>% dplyr::select(cols)
 
-  out_db <- list(db_1996, db_2020) %>%
+  out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
   return(out_db)
 }

@@ -2,10 +2,10 @@
 % Please edit documentation in R/strip-transect.R
 \name{fcn_strip_transect_table_1996}
 \alias{fcn_strip_transect_table_1996}
-\title{Extract perpendicular distances for koala sightings for 1996 database}
+\title{Extract strip transects for 1996 database}
 \usage{
 fcn_strip_transect_table_1996()
 }
 \description{
-Extract perpendicular distances for koala sightings for 1996 database
+Extract strip transects for 1996 database
 }

@@ -36,12 +36,29 @@ fcn_cov_array <- function(cov_type = "both", dates = NULL, time_lag = NULL) {
       unique()
 
     # Apply function for each of the dates
-    cov_temporal <- purrr::map(dates, function(d) {
+    fcn_extract_cov_date <- function(d) {
       print(sprintf("Processing covariates for date starting %s", d$start_date))
       # Apply for each of the covariate names
       covs <- purrr::map(cov_temporal_names, ~ fcn_covariate_interval_mean(d, .))
       cov_comb <- purrr::reduce(covs, dplyr::inner_join, by = "GridID")
-    })
+
+      # Compute lagged variables and join back to the dataframe
+      if (!is.null(time_lag)) {
+        for (lag in time_lag) {
+          d_lag <- fcn_shift_months(d, -lag) # date object lagged
+          covs_lag <- purrr::map(cov_temporal_names, ~ fcn_covariate_interval_mean(d_lag, .))
+          cov_lag_comb <- purrr::reduce(covs_lag, dplyr::inner_join, by = "GridID")
+          colnames(cov_lag_comb)[2:ncol(cov_lag_comb)] <- paste0(colnames(cov_lag_comb)[2:ncol(cov_lag_comb)],
+                                                              "_",
+                                                              lag, "mths")
+          cov_comb <- dplyr::inner_join(cov_comb, cov_lag_comb, by = "GridID")
+        }
+      }
+      return(cov_comb)
+    }
+
+    # Loop over all dates
+    cov_temporal <- purrr::map(dates, fcn_extract_cov_date)
 
     # Combine output
     cov_temporal_df <- abind::abind(cov_temporal)
@@ -111,15 +128,40 @@ fcn_date_intervals <- function(start_date = "1994-10-01", end_date = NULL, inter
   intervals <- list()
   for (i in 1:length(interval_starts)) {
     interval_i <- lubridate::interval(interval_starts[i], interval_ends[i])
+    start_date_fmt <- format(interval_starts[i], "%Y%m")
+    end_date_fmt <- format(interval_ends[i], "%Y%m")
+    id = paste0(start_date_fmt, "_", end_date_fmt)
     intervals[[i]] <- list(
+      id = id,
       interval = interval_i,
       start_date = interval_starts[i],
       end_date = interval_ends[i],
       middle_date = as.Date(interval_starts[i] + as.duration(lubridate::time_length(interval_i) / 2))
     )
+    names(intervals)[i] <- id
   }
 
   return(intervals)
 }
 
-
+#' @title Shift date intervals object by months
+#' @param date_interval: date_interval object from `fcn_date_intervals`
+#' @param n_months: number of months to shift forward or backwards (lag). By default computes a 6 month time lag (-6)
+#' @export
+fcn_shift_months <- function(date_interval, n_months = -6) {
+  fcn_shift_month_obj <- function(d) {
+    o <- d
+    o$start_date = d$start_date %m+% months(n_months)
+    o$end_date = d$end_date %m+% months(n_months)
+    o$interval = lubridate::interval(d$start_date %m+% months(n_months),
+                                     d$end_date %m+% months(n_months))
+    o$middle_date <- d$middle_date %m+% months(n_months)
+    return(o)
+  }
+  if (all(sapply(date_interval, is.list))) {
+    out <- purrr::map(date_interval, fcn_shift_month_obj)
+  } else {
+    out <- fcn_shift_month_obj(date_interval)
+  }
+  return(out)
+}

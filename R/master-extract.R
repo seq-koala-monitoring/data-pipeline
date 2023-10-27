@@ -34,6 +34,8 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0)) {
   buffer <- sort(buffer)
 
   master_grid <- lapply(master, function(df) {
+    df <- df %>%
+      dplyr::select(TransectID)
     res <- fcn_extract_raster_buffer(df, fishnet, 0)
     if (length(buffer) == 1) {
       var_name <- c('fraction')

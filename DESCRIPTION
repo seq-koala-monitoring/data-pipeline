@@ -21,8 +21,7 @@ Imports:
     Matrix,
     exactextractr,
     tidyr,
-    abind,
-    parallel
+    abind
 Suggests: 
     knitr,
     rmarkdown,

@@ -17,6 +17,7 @@ fcn_strip_transect_table <- function(year) {
 #' @export
 fcn_strip_transect_all <- function() {
   db_1996 <- fcn_strip_transect_table_1996()
+  db_2015 <- fcn_strip_transect_table_2015()
   db_2020 <- fcn_strip_transect_table_2020() %>%
     dplyr::mutate(Date = as.POSIXct(Date))
   out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
@@ -35,6 +36,7 @@ fcn_strip_transect_table_1996 <- function() {
 #' @export
 fcn_strip_transect_table_2015 <- function() {
   table <- fcn_sql_exec('2015', 'strip-transect')
+  table$Date <- lubridate::ymd(table$Date)
   return(table)
 }
 
@@ -106,6 +108,8 @@ fcn_strip_transect_sf_2015 <- function() {
   data_sf <- data.poly %>%
     sf::st_as_sf(crs = state$crs)
   is_polygon <- sf::st_geometry_type(data_sf) == 'POLYGON'
-  return(data_sf[is_polygon,])
+  data_sf_polygon <- data_sf[is_polygon,]
+  fcn_check_transect_id_unique(data_sf_polygon)
+  return(data_sf_polygon)
 }
 

@@ -230,11 +230,17 @@ fcn_extract_covariate_grid <- function(filename_list = NULL) {
   if (is.null(filename_list)) filename_list <- covariates$filename
   study_area <- fcn_get_study_area()
   covariate_raster <- lapply(filename_list, function(n) {
+    cov <- fcn_get_cov_raster(n)
+    if (!is.null(cov)) {
+      return(cov)
+    }
     print(sprintf("Reading raster: %s", n))
     path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
     r <- terra::rast(path)
     resampled <- terra::resample(r, fishnet, method = 'mode', threads = 8)
     resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1], upper = terra::minmax(r)[2], values = F)
+    fcn_set_cov_raster(resampled, n)
+    return(resampled)
   })
   covariate_raster$GridID <- fishnet
   covariate_raster_resampled <- terra::rast(covariate_raster)

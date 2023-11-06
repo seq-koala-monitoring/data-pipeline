@@ -112,8 +112,8 @@ fcn_date_intervals <- function(start_date = "1994-10-01", end_date = NULL, inter
   start_date <- lubridate::ymd(start_date, tz = Sys.timezone())
 
   # Get the current date
-  if (is.null(end_date)) {
-    end_date <- lubridate::ymd(Sys.Date() + months(interval_months) - days(1), tz = Sys.timezone())
+  if (is.null(end_date) || is.na(end_date)) {
+    end_date <- lubridate::ymd(Sys.Date() %m+% months(interval_months) %m-% days(1), tz = Sys.timezone())
   }
 
   # Create a sequence of 6-month intervals

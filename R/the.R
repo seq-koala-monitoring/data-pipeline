@@ -38,6 +38,8 @@ the$covariate_time_match = list(
   hlwdy = 'bilinear'
 )
 
+the$cov_raster <- list()
+
 #' Get the whole state, or elements of the state if a second argument is specified
 #' @export
 fcn_get_state <- function(elem = NULL) {
@@ -84,8 +86,9 @@ fcn_get_db_path <- function() {
 #' Set database paths
 #' @export
 fcn_set_db_path <- function(db_path, obj = NULL) {
+  state <- fcn_get_state()
+  home_dir <- state$home_dir
   if (!is.null(obj)) {
-    state <- fcn_get_state()
     db_path_name <- db_path
     # Only set property for that key
     db_path <- state$db_path
@@ -163,8 +166,9 @@ fcn_get_gdb_path <- function() {
 #' Set GDB paths
 #' @export
 fcn_set_gdb_path <- function(db_path, obj = NULL) {
+  state <- fcn_get_state()
+  home_dir <- state$home_dir
   if (!is.null(obj)) {
-    state <- fcn_get_state()
     db_path_name <- db_path
     # Only set property for that key
     db_path <- state$gdb_path
@@ -211,17 +215,20 @@ fcn_set_resample_to_grid <- function(val) {
   invisible(old)
 }
 
-fcn_set_cov_raster <- function(val) {
+fcn_set_cov_raster <- function(val, name) {
+  name <- sub("\\..*$", "", name)
   old <- the$cov_raster
-  the$cov_raster <- val
+  old[name] <- val
+  the$cov_raster <- old
   invisible(old)
 }
 
-fcn_get_cov_raster <- function() {
-  if (is.null(the$cov_raster)) {
-    fcn_set_cov_raster(fcn_extract_covariate_grid())
+fcn_get_cov_raster <- function(name) {
+  name <- sub("\\..*$", "", name)
+  if (is.null(the$cov_raster[[name]])) {
+    return(NULL)
   } else {
-    cov <- the$cov_raster
+    cov <- the$cov_raster[name]
   }
   return(cov)
 }

@@ -31,7 +31,7 @@ fcn_db_disconnect <- function(conn) {
 fcn_sql_exec <- function(year, script_name) {
   query_path <- fs::path_package("sql", sprintf("%s/%s.sql", year, script_name), package='SEQKoalaDataPipeline')
   if (!file.exists(query_path)) {
-    error(sprintf("SQL script does not exist in path %s", query_path))
+    stop(sprintf("SQL script does not exist in path %s", query_path))
   }
   query <- readr::read_file(query_path)
   conn <- fcn_db_connect_table(as.numeric(year))

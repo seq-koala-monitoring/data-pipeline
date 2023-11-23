@@ -58,7 +58,9 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE) {
 
     if (!keep_all) {
       res <- res %>%
-        dplyr::select('TransectID', 'GridID', dplyr::all_of(var_name))
+        dplyr::select('TransectID', 'GridID', 'Date', dplyr::all_of(var_name))
+
+      res <- fcn_add_date_interval(res)
     }
     return(res)
   })

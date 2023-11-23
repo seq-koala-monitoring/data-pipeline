@@ -103,7 +103,7 @@ fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, pro
     }
 
     # Allowing default resampling - nearest if categorical, bilinear if continuous
-    covariate_raster <- terra::resample(covariate_raster, grid)
+    covariate_raster <- terra::resample(covariate_raster, grid, threads = TRUE)
   }
 
   if (all(!is.na(covariate_names) & (length(names(covariate_raster)) == length(covariate_names)))) {
@@ -229,7 +229,7 @@ fcn_extract_covariate_grid <- function(filename_list = NULL) {
   covariates <- fcn_get_covariate_df()
   if (is.null(filename_list)) filename_list <- covariates$filename
   study_area <- fcn_get_study_area()
-  covariate_raster <- lapply(filename_list, function(n) {
+  covariate_raster <- lapply(as.list(filename_list), function(n) {
     cov <- fcn_get_cov_raster(n)
     if (!is.null(cov)) {
       return(cov)
@@ -237,16 +237,16 @@ fcn_extract_covariate_grid <- function(filename_list = NULL) {
     print(sprintf("Reading raster: %s", n))
     path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
     r <- terra::rast(path)
-    resampled <- terra::resample(r, fishnet, method = 'mode', threads = 8)
+    resampled <- terra::resample(r, fishnet, method = 'mode', threads = TRUE)
     resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1], upper = terra::minmax(r)[2], values = F)
     fcn_set_cov_raster(resampled, n)
     return(resampled)
   })
-  covariate_raster$GridID <- fishnet
   covariate_raster_resampled <- terra::rast(covariate_raster)
   covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area))
-  names(covariate_raster_cropped) <- c(sub(".tif$", "", filename_list), 'GridID')
-  return(covariate_raster_cropped)
+  names(covariate_raster_cropped) <- sub(".tif$", "", filename_list)
+  covariate_raster_combined <- c(fishnet, covariate_raster_cropped)
+  return(covariate_raster_combined)
 }
 
 fcn_terra_get_nodata_value <- function(path) {
@@ -286,4 +286,42 @@ fcn_cov_grid_df <- function(cov = NULL, buffer = c(0)) {
   return(df)
 }
 
+#' Get all covariates as raster stacks
+fcn_covariate_raster_stack <- function(date_interval = NULL, by_date = TRUE) {
+  cov_raster_list <- list()
+  cov_df <- fcn_covariate_layer_df()
+  if (is.null(date_interval)) date_interval <- fcn_get_date_intervals()
+  cov_constant <- cov_df %>%
+    dplyr::filter(type == 'constant')
+  cov_temporal <- cov_df %>%
+    dplyr::filter(type == 'temporal')
+  cov_constant_name <- unique(cov_constant$filename)
+  cov_constant_raster <- fcn_extract_covariate_grid(cov_constant_name)
 
+  cov_temporal_name <- unique(cov_temporal$name)
+  if (by_date) {
+    for (d in date_interval) {
+      cov_d <- lapply(cov_temporal_name, \(x) fcn_covariate_interval_mean(d, x, get_df = FALSE)[[x]])
+      cov_raster_list[d$id] <- c(cov_constant_raster, terra::rast(cov_d))
+    }
+  } else {
+    for (cov in cov_temporal_name) {
+      cov_raster_list[cov] <- fcn_covariate_temporal_raster_stack(cov, date_interval)
+    }
+    cov_raster_list$constant <- cov_constant_raster
+  }
+
+  return(cov_raster_list)
+}
+
+#' Get temporal covariates as raster stacks
+fcn_covariate_temporal_raster_stack <- function(cov_name = NULL, date_interval = NULL) {
+  if (is.null(date_interval)) {
+    date_interval <- fcn_get_date_intervals()
+  }
+  rasters <- lapply(date_interval, function(x) {
+    r <- fcn_covariate_interval_mean(x, cov_name, get_df = FALSE)
+    return(r[[1]]) # Return the layer without GridID
+  })
+  return(rasters)
+}

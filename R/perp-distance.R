@@ -2,7 +2,7 @@
 
 fcn_perp_distance_table <- function(year) {
   if (!(year %in% c(1996,2020))) {
-    error("Year is invalid or not yet available.")
+    stop("Year is invalid or not yet available.")
   }
 
   result <- switch(

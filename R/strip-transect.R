@@ -2,7 +2,7 @@
 
 fcn_strip_transect_table <- function(year) {
   if (!(year %in% c(1996,2020))) {
-    error("Year is invalid or not yet available.")
+    stop("Year is invalid or not yet available.")
   }
 
   result <- switch(
@@ -36,7 +36,8 @@ fcn_strip_transect_table_1996 <- function() {
 #' @export
 fcn_strip_transect_table_2015 <- function() {
   table <- fcn_sql_exec('2015', 'strip-transect')
-  table$Date <- lubridate::ymd(table$Date)
+  table$Date <- lubridate::ymd(table$date_ymd)
+  table$date_ymd <- NULL
   return(table)
 }
 
@@ -101,7 +102,7 @@ fcn_strip_transect_sf_2015 <- function() {
       SiteID = unique(SiteID),
       Date = unique(Date),
       TArea = unique(TArea),
-      Number_Sightings = unique(Number_Sightings),
+      Number_Sightings = max(Number_Sightings),
       Number_Observers = unique(Number_Observers),
       geometry = unique(geometry)
     )

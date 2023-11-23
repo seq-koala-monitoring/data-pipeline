@@ -63,3 +63,13 @@ fcn_interpolation_weight <- function(v) {
   out_vec[sorted_v$ix[1:2]] <- weights
   return(out_vec)
 }
+
+#' Get lookup table of date intervals object
+#' @export
+fcn_date_interval_lookup <- function() {
+  date_interval <- fcn_get_date_intervals()
+  df <- dplyr::bind_rows(date_interval)
+  df %>%
+    dplyr::select(time_period_id, id, start_date, end_date, middle_date) %>%
+    dplyr::rename(TimePeriodID = time_period_id, name = id)
+}

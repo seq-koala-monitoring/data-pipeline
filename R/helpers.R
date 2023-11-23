@@ -28,19 +28,19 @@ fcn_write_list_csv <- function(write_list, path, prefix) {
 #' @title Add date interval id to all of the dates
 #' @param df: dataframe with column Date
 #' @export
-fcn_add_date_interval <- function(df) {
+fcn_add_date_interval <- function(df, name_field = 'time_period_id') {
   date_intervals <- fcn_get_date_intervals()
   dates <- df$Date
   intervals <- purrr::map(date_intervals, \(x) x$interval)
-  interval_names <- names(intervals)
+  interval_names <- sapply(date_intervals, \(x) x[[name_field]])
   which_intv <- intervals %>%
     purrr::map(\(intv) which(dates %within% intv))
   date_idx <- rep(NA, length(dates))
   for (i in 1:length(which_intv)) {
-    date_idx[which_intv[[i]]] <- interval_names[i]
+    if (length(which_intv[[i]]) > 0) date_idx[which_intv[[i]]] <- interval_names[i]
   }
 
-  df$date_idx <- date_idx
+  df$TimePeriodID <- date_idx
   if (sum(is.na(date_idx)) > 0) {
     warning(sprintf("%s dates do not fall within interval period. Returning NAs.", sum(is.na(date_idx))))
   }

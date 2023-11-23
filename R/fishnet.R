@@ -17,16 +17,24 @@ fcn_fishnet <- function(feature_class) {
   return(fishnet_intersect)
 }
 
-fcn_fishnet_raster <- function(feature_class) {
+#' @param feature_class An SF object of the spatial extent of the fishnet
+#' @export
+fcn_fishnet_raster <- function(feature_class, grid_size = NULL, mask = T) {
   state <- fcn_get_state()
-  grid_size <- state$grid_size
+  if (is.null(grid_size)) grid_size <- state$grid_size
   feature_class_vect <- terra::vect(feature_class)
   fishnet <- terra::rast(feature_class_vect, res = grid_size, vals = 1)
   names(fishnet) <- "GridID"
-  fishnet_masked <- terra::mask(fishnet, feature_class_vect)
-  grid_id <- 1:length(fishnet_masked[fishnet_masked==1])
-  fishnet_masked[fishnet_masked == 1] <- grid_id
-  return(fishnet_masked)
+  if (mask) {
+    fishnet_masked <- terra::mask(fishnet, feature_class_vect)
+    grid_id <- 1:length(fishnet_masked[fishnet_masked==1])
+    fishnet_masked[fishnet_masked == 1] <- grid_id
+    return(fishnet_masked)
+  } else {
+    grid_id <- 1:length(fishnet[])
+    fishnet[] <- grid_id
+    return(fishnet)
+  }
 }
 
 #' @title Generate new grid based on grid_size

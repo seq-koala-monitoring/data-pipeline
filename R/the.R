@@ -201,6 +201,7 @@ fcn_get_raster_path <- function() {
 }
 
 #' Set raster directory
+#' @export
 fcn_set_raster_path <- function(val) {
   old <- the$raster_path
   the$raster_path <- val
@@ -218,7 +219,7 @@ fcn_set_resample_to_grid <- function(val) {
 fcn_set_cov_raster <- function(val, name) {
   name <- sub("\\..*$", "", name)
   old <- the$cov_raster
-  old[name] <- val
+  old[[name]] <- val
   the$cov_raster <- old
   invisible(old)
 }
@@ -228,7 +229,7 @@ fcn_get_cov_raster <- function(name) {
   if (is.null(the$cov_raster[[name]])) {
     return(NULL)
   } else {
-    cov <- the$cov_raster[name]
+    cov <- the$cov_raster[[name]]
   }
   return(cov)
 }
@@ -253,6 +254,7 @@ fcn_set_covariate_df <- function() {
   invisible(old)
 }
 
+#' @export
 fcn_get_date_intervals <- function() {
   state <- fcn_get_state()
   if(is.null(state$date_intervals)) {

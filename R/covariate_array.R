@@ -13,7 +13,7 @@ fcn_cov_array <- function(cov_type = "both", dates = NULL, time_lag = NULL) {
 
   # Get date interval list object
   if (is.null(dates)) {
-    dates <- fcn_date_intervals()
+    dates <- fcn_get_date_intervals()
   }
 
   # Output list object
@@ -73,8 +73,9 @@ fcn_cov_array <- function(cov_type = "both", dates = NULL, time_lag = NULL) {
 #' @title Get mean values of each Grid cell given the name of covariate and a single date
 #' @param date: a list object from `fcn_date_intervals` containing: interval, start_date, end_date, middle_date
 #' @param cov_name: name of the covariate (excluding dates of the covariate layer)
+#' @param get_df: if TRUE then returns a DataFrame with GridID and the covariate value. If FALSE, returns the covariate raster.
 #' @export
-fcn_covariate_interval_mean <- function(date, cov_name) {
+fcn_covariate_interval_mean <- function(date, cov_name, get_df = TRUE) {
   cov_layer_df <- fcn_get_covariate_df()
   cov_layer_df_name <- cov_layer_df[cov_layer_df$name == cov_name,]
   cov_dates <- cov_layer_df_name$date
@@ -90,14 +91,18 @@ fcn_covariate_interval_mean <- function(date, cov_name) {
     cov_layer_list <- cov_layer_df_name[nearest_date,'filename']
   }
   cov_temporal <- fcn_extract_covariate_grid(cov_layer_list)
-  cov_temporal_df <- fcn_cov_grid_df(cov_temporal)
-  cov_temporal_mean <- cov_temporal_df[,2:ncol(cov_temporal_df)]
-  if (ncol(cov_temporal_df) > 2) {
-    cov_temporal_mean <- rowMeans(cov_temporal_mean)
+  if (length(cov_layer_list) > 1) {
+    # Get mean of multiple layers
+    cov_temporal_mean <- terra::mean(cov_temporal[[2:terra::nlyr(cov_temporal)]])
+    cov_temporal <- c(cov_temporal['GridID'], cov_temporal_mean)
   }
-  cov_df_output <- data.frame(GridID = cov_temporal_df$GridID)
-  cov_df_output[cov_name] <- cov_temporal_mean
-  return(cov_df_output)
+  names(cov_temporal) <- c('GridID', cov_name)
+  if (get_df) {
+    cov_temporal_df <- fcn_cov_grid_df(cov_temporal)
+    return(cov_temporal_df)
+  } else {
+    return(cov_temporal)
+  }
 }
 
 #' @title Get dates from start to end in an interval format
@@ -133,6 +138,7 @@ fcn_date_intervals <- function(start_date = "1994-10-01", end_date = NULL, inter
     id = paste0(start_date_fmt, "_", end_date_fmt)
     intervals[[i]] <- list(
       id = id,
+      time_period_id = i,
       interval = interval_i,
       start_date = interval_starts[i],
       end_date = interval_ends[i],

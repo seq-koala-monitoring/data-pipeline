@@ -43,7 +43,7 @@ perpDists <- left_join(perpDistTable, sightings_table, by = c('TransectID', 'Sig
   select(TransectID, SightingNo, PerpDist, NumKoalas)
 
 if (length(unique(solObservations$SightingID)) != nrow(solObservations)) {
-  error("Sighting ID does not uniquely identify koala observations")
+  stop("Sighting ID does not uniquely identify koala observations")
 }
 
 

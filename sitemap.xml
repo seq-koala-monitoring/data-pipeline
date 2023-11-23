@@ -34,6 +34,9 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/index.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_add_date_interval.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_all_of_area_all.html</loc>
   </url>
   <url>
@@ -107,6 +110,9 @@
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_date_diff_matrix.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_date_interval_lookup.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_date_intervals.html</loc>

@@ -4,15 +4,19 @@
 #' @export
 fcn_adj_matrix <- function(secondary_grid_size = 2000, directions = "queen") {
   grid_raster <- fcn_get_grid()
-  study_area <- fcn_get_study_area()
+  study_area <- fcn_get_study_area() %>%
+    sf::st_buffer(2000)
   study_area_vect <- terra::vect(study_area)
 
   # Generate secondary grid
-  grid_raster_sp <- fcn_fishnet_raster(study_area, secondary_grid_size, F)
+  grid_raster_sp <- fcn_fishnet_raster(study_area, secondary_grid_size, T)
   names(grid_raster_sp) <- "SpGridID"
   grid_raster_comb <- c(grid_raster, terra::resample(grid_raster_sp, grid_raster, method = 'near'))
   grid_raster_lookup <- grid_raster_comb[]
   colnames(grid_raster_lookup) <- names(grid_raster_comb)
+  # Select only non-NA values in GridID
+  grid_raster_lookup <- as.data.frame(grid_raster_lookup) %>%
+    dplyr::filter(!is.na(GridID))
   all_included <- sum(is.na(grid_raster_lookup[!is.na(grid_raster_lookup[,1]),2])) == 0
   if (!all_included) {
     stop("Larger grid does not fully cover the smaller grid")

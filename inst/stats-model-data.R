@@ -80,4 +80,7 @@ write.csv(cov_layer_df[,1:5], paste0(out_dir, '\\covariate_info.csv'))
 
 ## 9. Produce and save the adjacency matrix
 adj_data <- fcn_adj_matrix()
-saveRDS(adj_data, paste0(out_dir, "\\adj_data.rds"))
+saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
+
+adj_data <- fcn_adj_matrix(directions = 'rook')
+saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))

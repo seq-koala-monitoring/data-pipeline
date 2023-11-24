@@ -287,6 +287,7 @@ fcn_cov_grid_df <- function(cov = NULL, buffer = c(0)) {
 }
 
 #' Get all covariates as raster stacks
+#' @export
 fcn_covariate_raster_stack <- function(date_interval = NULL, by_date = TRUE) {
   cov_raster_list <- list()
   cov_df <- fcn_covariate_layer_df()

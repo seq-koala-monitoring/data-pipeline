@@ -25,11 +25,12 @@ seq_grid_bbox <- lapply(seq_grid, \(x) st_bbox(x))
 print(paste("Number of downloads per time slice:", length(seq_grid)))
 
 # Download script
+path <- "C:/Users/uqfcho/Documents/seq-koala-monitoring/time_cadastre"
 
 fcn_extract_api <- function(bbox,
                             date,
                             grid_size = 20000,
-                            path_to_write = "C:/Users/uqfcho/Documents/seq-koala-monitoring/time_cadastre",
+                            path_to_write = path,
                             lotplan_only = TRUE) {
   req_code <- sprintf("date_%s_size_%s", date, grid_size)
   request <- request('https://uat-spatial-gis.information.qld.gov.au/arcgis/rest/services/PlanningCadastre/LandParcelPropertyFrameworkFeature_TimeAware/MapServer/0/query') %>%
@@ -88,7 +89,10 @@ fcn_extract_api <- function(bbox,
   sf_obj_lotplan <- sf_obj %>%
     dplyr::filter(!is.na(lotplan))
   if (lotplan_only) {
-    st_write(sf_obj_lotplan, dsn = paste0(path_to_write, '/cadastre_', req_code, '_lotplan.shp'), update = T)
+    st_write(sf_obj_lotplan,
+             dsn = paste0(path_to_write, '/cadastre_', req_code, '_lotplan.shp'),
+             append = FALSE,
+             quiet = TRUE)
     return (sf_obj_lotplan)
   } else {
     st_write(sf_obj, dsn = paste0(path_to_write, '/cadastre_', req_code, '_full.shp'), update = T)
@@ -99,5 +103,8 @@ fcn_extract_api <- function(bbox,
 # Execute in parallel
 plan(multisession)
 lapply(dates, function (d) {
-  future.apply::future_lapply(seq_grid_bbox, function(b) fcn_extract_api(b, d))
+  out <- lapply(seq_grid_bbox[1:2], function(b) fcn_extract_api(b, d))
+  dissolved <- dplyr::bind_rows(out) %>% dplyr::group_by(lotplan) %>% dplyr::summarise()
+  st_write(dissolved, sprintf('%s/cadastre_dissolved_%s.shp', path, d))
+  return(dissolved)
 })

@@ -6,7 +6,8 @@ the$home_dir <- getwd()
 the$db_path <- list(
   `1996` = 'SEQkoalaData.accdb',
   `2015` = '2015-2019 SEQKoalaDatabase DES.accdb',
-  `2020` = 'KoalaSurveyData2020_cur.accdb'
+  `2020` = 'KoalaSurveyData2020_cur.accdb',
+  `integrated` = 'Database_Spatial_v240206/1996 - 2023 SEQKoalaDatabase DES_Modelling_v2402061.accdb'
 )
 
 the$gdb_path <- list(
@@ -39,6 +40,9 @@ the$covariate_time_match = list(
 )
 
 the$cov_raster <- list()
+
+# Whether to save covariate rasters to memory (speeds up computation by avoiding re-computation but uses more RAM)
+the$save_cov_raster_memory <- FALSE
 
 #' Get the whole state, or elements of the state if a second argument is specified
 #' @export
@@ -217,11 +221,14 @@ fcn_set_resample_to_grid <- function(val) {
 }
 
 fcn_set_cov_raster <- function(val, name) {
-  name <- sub("\\..*$", "", name)
-  old <- the$cov_raster
-  old[[name]] <- val
-  the$cov_raster <- old
-  invisible(old)
+  state <- fcn_get_state()
+  if (state$save_cov_raster_memory) {
+    name <- sub("\\..*$", "", name)
+    old <- the$cov_raster
+    old[[name]] <- val
+    the$cov_raster <- old
+    invisible(old)
+  }
 }
 
 fcn_get_cov_raster <- function(name) {
@@ -232,6 +239,12 @@ fcn_get_cov_raster <- function(name) {
     cov <- the$cov_raster[[name]]
   }
   return(cov)
+}
+
+fcn_set_save_cov_raster_memory <- function(value) {
+  old <- the$save_cov_raster_memory
+  the$save_cov_raster_memory <- value
+  invisible(old)
 }
 
 fcn_set_covariate_time_match <- function(obj) {

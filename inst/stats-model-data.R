@@ -1,5 +1,6 @@
 # Run data pipeline for inputs to the statistical model
 rm(list=ls())
+gc()
 
 ## 1. Install the R package and load libraries -----------------------------
 #library(devtools)
@@ -8,20 +9,21 @@ library(SEQKoalaDataPipeline)
 
 ## 2. Set global variables -------------------------------------------------
 # Data directory
-fcn_set_home_dir("M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\working_data")
+fcn_set_home_dir(r"(C:\Users\chof\Documents\seq-koala-monitor\working_data)")
 
 ## Set db path
 fcn_set_db_path(list(
   `1996` = 'SEQkoalaData.accdb',
   `2015` = '2015-2019 SEQKoalaDatabase DES_20231027.accdb',
-  `2020` = 'KoalaSurveyData2020_cur.accdb'
+  `2020` = 'KoalaSurveyData2020_cur.accdb',
+  `integrated` = 'Database_Spatial_v240206/1996 - 2023 SEQKoalaDatabase DES_Modelling_v2402061.accdb'
 ))
 
 # Grid size (in meters) - default 100m
 fcn_set_grid_size(100)
 
 # Output path
-target_dir <- "M:\\Users\\uqfcho\\Documents\\seq-koala-monitoring\\output"
+target_dir <- r"(C:\Users\chof\Documents\seq-koala-monitor\output)"
 current_date <- format(Sys.Date(), format="%Y%m%d")
 out_dir <- paste0(target_dir, '\\', current_date)
 if (!dir.exists(out_dir)) dir.create(out_dir)
@@ -29,6 +31,12 @@ if (!dir.exists(paste0(out_dir, '\\cov_raster'))) dir.create(paste0(out_dir, '\\
 if (!dir.exists(paste0(out_dir, '\\cov_csv'))) dir.create(paste0(out_dir, '\\cov_csv'))
 
 ## 3. Retrieve grid generated as a raster file (for plotting if needed) ----
+# Check whether the directory for where covariates are stored is correct
+print(fcn_get_raster_path()$covariates)
+
+# If it is incorrect, specify the correct path
+fcn_set_raster_path(list(covariates = 'covariates/output'))
+
 grid_raster <- fcn_get_grid()
 terra::writeRaster(grid_raster, paste0(out_dir, "\\grid_raster.tif"), overwrite = T)
 
@@ -36,27 +44,23 @@ terra::writeRaster(grid_raster, paste0(out_dir, "\\grid_raster.tif"), overwrite 
 master <- fcn_all_tables()
 saveRDS(master, paste0(out_dir, '\\master.rds'))
 
-## 5. Load grid fractions as tables-----------------------------------------
-grid_fractions <- fcn_all_transect_grid_fractions()
-grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
-saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
-data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
-
-## 6. Load covariates from the directory -----------------------------------
-# Check whether the directory for where covariates are stored is correct
-print(fcn_get_raster_path()$covariates)
-
-# If it is incorrect, specify the correct path
-fcn_set_raster_path(list(covariates = 'final_covariates_output'))
+## 5. Load covariates from the directory -----------------------------------
 
 # Extract covariates
-cov_all <- fcn_cov_array()
+cov_all <- fcn_cov_array(write_path = out_dir)
 cov_constant_array <- cov_all$cov_constant
 cov_temporal_array <- abind::abind(cov_all$cov_temporal, along=3)
 #saveRDS(cov_all, paste0(out_dir, '\\covariates.rds'))
 saveRDS(cov_constant_array, paste0(out_dir, "\\cov_constant_array.rds"))
 saveRDS(cov_temporal_array, paste0(out_dir, '\\cov_temporal_array.rds'))
 
+## 6. Load grid fractions as tables-----------------------------------------
+grid_fractions <- fcn_all_transect_grid_fractions()
+grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
+saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
+data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
+
+# Extract and save only those in surveylocations as a separate file
 cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb$GridID,,]
 cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb$GridID,,]
 

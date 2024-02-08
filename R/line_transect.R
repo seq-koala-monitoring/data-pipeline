@@ -53,6 +53,17 @@ fcn_line_transect_table_2020 <- function() {
 }
 
 #' @export
+fcn_line_transect_table_integrated <- function() {
+  state <- fcn_get_state()
+  table < fcn_sql_exec("integrated", "line-transect")
+
+  # Check if the transect ID uniquely identifies the line transects
+  fcn_check_transect_id_unique(table)
+
+  return(table)
+}
+
+#' @export
 fcn_line_transect_sf_1996 <- function() {
   state <- fcn_get_state()
   koala_survey_data_path <- fcn_get_gdb_path()$koala_survey_data
@@ -89,6 +100,7 @@ fcn_line_transect_sf_1996 <- function() {
 
   return(joined_table)
 }
+
 
 #' @title Get start and end coordinate columns in SF objects with line/ multilinestring objects
 #' @export

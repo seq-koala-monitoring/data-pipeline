@@ -39,6 +39,12 @@ fcn_get_covariate_name <- function(input) {
 fcn_covariate_layer_df <- function(layer = NULL) {
   state <- fcn_get_state()
   match_method <- state$covariate_time_match
+  covariate_description <- paste0(fcn_get_raster_path()$covariates, "\\covariate_descriptions.csv") %>%
+    readr::read_csv(col_types = NULL) %>%
+    dplyr::mutate(name = substr(Code, 0, 5)) %>%
+    dplyr::rename(static_dynamic = `Static/Dynamic`, continuous_discrete = `Continuous/Discrete`) %>%
+    dplyr::select(name, static_dynamic, continuous_discrete)
+
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
   temporal_covariates <- temporal_covariates %>%
@@ -66,6 +72,11 @@ fcn_covariate_layer_df <- function(layer = NULL) {
     df <- df %>%
       filter(name == layer)
   }
+
+  df <- df %>%
+    dplyr::mutate(join_name = substr(name, 0, 5)) %>%
+    dplyr::left_join(covariate_description, by = c('join_name' = 'name')) %>%
+    dplyr::select(-join_name)
 
   return(df)
 }

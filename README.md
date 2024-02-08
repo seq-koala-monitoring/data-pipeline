@@ -45,6 +45,8 @@ If `devtools` is installed on the local machine, the package can be installed us
 devtools::install_github("seq-koala-monitoring/data-pipeline")
 ```
 
+The user will also need to install the latest version of the Microsoft Access Database Engine 2016 Redistributable from the Microsoft website so that the Microsoft Access ODBC Driver can be used: [link](https://www.microsoft.com/en-us/download/details.aspx?id=54920)
+
 # Data Structure
 
 This package produces table inputs for the statistical model, with the possibility to export auxiliary columns of the processed survey data on demand. The data structure for the inputs are as follows.

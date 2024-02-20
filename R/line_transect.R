@@ -4,6 +4,12 @@
 #' @export
 fcn_line_transect_table <- function(cols = c("TransectID","SiteID","Date","TrSiteID",
                                                  "Tlength","Number_Sightings","Number_Observers")) {
+  state <- fcn_get_state()
+  if (state$use_integrated_db) {
+    db <- fcn_line_transect_table_integrated()
+    return(db)
+  }
+
   db_1996 <- fcn_line_transect_table_1996() %>%
     dplyr::rename(TrSiteID = TransectNumber) %>%
     dplyr::select(cols)
@@ -19,11 +25,17 @@ fcn_line_transect_sf_all <- function(cols = c("TransectID","SiteID","Date","TrSi
                                               "Tlength","Number_Sightings","Number_Observers",
                                               "Start_Eastings","Start_Northings","End_Eastings",
                                               "End_Northings","geometry")) {
+  state <- fcn_get_state()
+  if (state$use_integrated_db) {
+    db <- fcn_line_transect_sf_integrated()
+    return(db)
+  }
 
   db_1996 <- fcn_line_transect_sf_1996() %>%
     dplyr::rename(TrSiteID = TransectNumber) %>%
     dplyr::select(cols)
-  db_2020 <- fcn_line_transect_sf_2020() %>% dplyr::select(cols)
+  db_2020 <- fcn_line_transect_sf_2020() %>%
+    dplyr::select(cols)
 
   out_db <- list(`1996-2015` = db_1996, `2020-cur` = db_2020) %>%
     dplyr::bind_rows(.id = 'db')
@@ -55,11 +67,11 @@ fcn_line_transect_table_2020 <- function() {
 #' @export
 fcn_line_transect_table_integrated <- function() {
   state <- fcn_get_state()
-  table < fcn_sql_exec("integrated", "line-transect")
+  table <- fcn_sql_exec("integrated", "line-transect")
 
   # Check if the transect ID uniquely identifies the line transects
   fcn_check_transect_id_unique(table)
-
+  table <- fcn_db_to_date(table)
   return(table)
 }
 
@@ -101,6 +113,34 @@ fcn_line_transect_sf_1996 <- function() {
   return(joined_table)
 }
 
+fcn_line_transect_sf_integrated <- function() {
+  db_original <- fcn_line_transect_table_integrated()
+  sp <- fcn_get_integrated_db_sf()
+  db_joined <- sp %>%
+    dplyr::inner_join(db_original, by = "TransectID")
+  db_not_joined <- dplyr::anti_join(db_original, sp, by = "TransectID")
+
+  # Create spatial representation if the db is not joined
+  db_coords_present <- db_not_joined %>%
+    dplyr::filter(!is.na(Start_Eastings) & !is.na(Start_Northings) & !is.na(End_Eastings) & !is.na(End_Northings))
+
+  db_coords_absent <- dplyr::filter(db_not_joined, !(TransectID %in% db_coords_present))
+
+  line_transect <- fcn_line_transect_sf(db_coords_present)
+  line_transect_buffer <- sf::st_buffer(line_transect, endCapStyle = "FLAT", dist = 60)
+  db <- rbind(db_joined, line_transect_buffer)
+
+  # Recover unjoined records to join at the site level
+  site_join_results <- fcn_join_koala_survey_sites(db_coords_absent)
+  db <- rbind(db, site_join_results$joined_table)
+  unjoined_table <- site_join_results$unjoined_table
+
+  if (nrow(db) != nrow(db_original)) {
+    warning(sprintf("Integrated DB line transects (total=%s): %s joined with total shp, %s created with coordinates, %s joined with site information, %s not joined. Final result: %s records", nrow(db_original), nrow(db_joined), nrow(db_coords_present), nrow(site_join_results$joined_table), nrow(db_original) - nrow(db), nrow(db)))
+  }
+
+  return(db)
+}
 
 #' @title Get start and end coordinate columns in SF objects with line/ multilinestring objects
 #' @export

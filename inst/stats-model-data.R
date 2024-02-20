@@ -9,7 +9,7 @@ library(SEQKoalaDataPipeline)
 
 ## 2. Set global variables -------------------------------------------------
 # Data directory
-fcn_set_home_dir(r"(C:\Users\chof\Documents\seq-koala-monitor\working_data)")
+fcn_set_home_dir(r"(H:\seq-koala-monitor\working_data)")
 
 ## Set db path
 fcn_set_db_path(list(
@@ -19,16 +19,27 @@ fcn_set_db_path(list(
   `integrated` = 'Database_Spatial_v240206/1996 - 2023 SEQKoalaDatabase DES_Modelling_v2402061.accdb'
 ))
 
+# Set gdb path
+fcn_set_gdb_path(list(
+  koala_survey_data="KoalaSurveyData.gdb",
+  total_db="Database_Spatial_v240206/Total_v240209.shp",
+  koala_survey_sites="KoalaSurveySites_231108/KoalaSurveySites_231108.shp"
+))
+
 # Grid size (in meters) - default 100m
 fcn_set_grid_size(100)
 
 # Output path
-target_dir <- r"(C:\Users\chof\Documents\seq-koala-monitor\output)"
+target_dir <- r"(H:\seq-koala-monitor\output)"
 current_date <- format(Sys.Date(), format="%Y%m%d")
+current_date <- "20240213" # for debugging
 out_dir <- paste0(target_dir, '\\', current_date)
 if (!dir.exists(out_dir)) dir.create(out_dir)
 if (!dir.exists(paste0(out_dir, '\\cov_raster'))) dir.create(paste0(out_dir, '\\cov_raster'))
 if (!dir.exists(paste0(out_dir, '\\cov_csv'))) dir.create(paste0(out_dir, '\\cov_csv'))
+
+# Run covariate extraction algorithm; if not, read from disc in the output folder (computationally intensive, 30 minute run)
+run_cov_extraction <- FALSE
 
 ## 3. Retrieve grid generated as a raster file (for plotting if needed) ----
 # Check whether the directory for where covariates are stored is correct
@@ -47,12 +58,11 @@ saveRDS(master, paste0(out_dir, '\\master.rds'))
 ## 5. Load covariates from the directory -----------------------------------
 
 # Extract covariates
-cov_all <- fcn_cov_array(write_path = out_dir)
-cov_constant_array <- cov_all$cov_constant
-cov_temporal_array <- abind::abind(cov_all$cov_temporal, along=3)
-#saveRDS(cov_all, paste0(out_dir, '\\covariates.rds'))
-saveRDS(cov_constant_array, paste0(out_dir, "\\cov_constant_array.rds"))
-saveRDS(cov_temporal_array, paste0(out_dir, '\\cov_temporal_array.rds'))
+if (run_cov_extraction) {
+  cov_all <- fcn_cov_array(write_path = out_dir) # Writes the outputs to the output folder
+  cov_temporal <- fcn_temporal_covariate_rds_array(out_dir = out_dir)
+  cov_constant <- cov_all$cov_constant
+}
 
 ## 6. Load grid fractions as tables-----------------------------------------
 grid_fractions <- fcn_all_transect_grid_fractions()
@@ -61,23 +71,19 @@ saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
 data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
 
 # Extract and save only those in surveylocations as a separate file
+if (!run_cov_extraction) {
+  # Read results back from disk (output folder)
+  cov_constant_array <- readRDS(paste0(out_dir, "\\cov_constant_array.rds"))
+  cov_temporal_array <- readRDS(paste0(out_dir, "\\cov_temporal_array.rds"))
+}
+
 cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb$GridID,,]
 cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb$GridID,,]
 
 saveRDS(cov_constant_array_surveylocations, paste0(out_dir, "\\cov_constant_array_surveylocations.rds"))
 saveRDS(cov_temporal_array_surveylocations, paste0(out_dir, '\\cov_temporal_array_surveylocations.rds'))
 
-## 7. Write covariates as RasterStack ----------------------------------
-# Default: 6 month intervals from Oct 1994 to current time
-dates <- fcn_date_intervals()
-raster_stack_list <- fcn_covariate_raster_stack(dates, by_date = TRUE)
-lapply(seq_along(raster_stack_list), function(i) {
-  r <- raster_stack_list[[i]]
-  terra::writeRaster(r, paste0(out_dir, '\\cov_raster\\cov_',names(raster_stack_list)[i] , '.tif'), overwrite = T)
-  return()
-})
-
-## 8. Produce date interval lookup table -------------------------------
+## 7. Produce date interval lookup table -------------------------------
 write.csv(fcn_date_interval_lookup(), paste0(out_dir, "\\date_interval_lookup.csv"))
 cov_layer_df <- fcn_covariate_layer_df()
 write.csv(cov_layer_df[,1:5], paste0(out_dir, '\\covariate_info.csv'))
@@ -88,3 +94,15 @@ saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
 
 adj_data <- fcn_adj_matrix(directions = 'rook')
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
+
+## 8. Write covariates as RasterStack ----------------------------------
+# Default: 6 month intervals from Oct 1994 to current time
+if (run_cov_extraction) {
+  dates <- fcn_date_intervals()
+  raster_stack_list <- fcn_covariate_raster_stack(dates, by_date = TRUE)
+  lapply(seq_along(raster_stack_list), function(i) {
+    r <- raster_stack_list[[i]]
+    terra::writeRaster(r, paste0(out_dir, '\\cov_raster\\cov_',names(raster_stack_list)[i] , '.tif'), overwrite = T)
+    return()
+  })
+}

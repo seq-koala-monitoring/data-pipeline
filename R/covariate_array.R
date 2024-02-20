@@ -209,3 +209,32 @@ fcn_shift_months <- function(date_interval, n_months = -6) {
   }
   return(out)
 }
+
+#' @title Convert RDS of date covariates into a 3-d matrix
+#' @param out_dir: directory where the RDS are stored
+#'
+fcn_temporal_covariate_rds_array <- function(out_dir = NULL, dates = NULL) {
+  out_dir_files <- list.files(out_dir, pattern = "cov_temporal_\\d{6}_\\d{6}.rds")
+  if (is.null(dates)) {
+    dates <- fcn_get_date_intervals()
+  }
+  for (i in 1:length(dates)) {
+    date <- dates[[i]]
+    print(paste("Processing covariate date: ", date$id))
+    file <- paste0("cov_temporal_", date$id, ".rds")
+    if (!(file %in% out_dir_files)) {
+      stop(paste("Date", date$id, "does not exist in out_dir."))
+    }
+    cov <- readRDS(file.path(out_dir, file))
+    if (i==1) {
+      out <- cov
+    } else {
+      out <- abind::abind(out, cov)
+    }
+    rm(cov)
+    gc()
+  }
+  return(out)
+}
+
+

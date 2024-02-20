@@ -15,7 +15,6 @@ Imports:
     dplyr,
     readr,
     units,
-    purrr,
     magrittr,
     lubridate,
     Matrix,

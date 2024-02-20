@@ -21,3 +21,10 @@ fcn_check_fractions <- function(df) {
     stop(sprintf("%i TransectIDs detected with fractions unequal to 1", sum(not_one)))
   }
 }
+
+#' @title Convert date in the integrated database to a date object
+#' @param df data frame
+fcn_db_to_date <- function(df, fmt = "%d/%m/%Y") {
+  df %>%
+    dplyr::mutate(Date = as.Date(Date, format = fmt))
+}

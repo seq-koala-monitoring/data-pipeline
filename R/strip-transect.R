@@ -16,6 +16,12 @@ fcn_strip_transect_table <- function(year) {
 #' @title Extract perpendicular distances for all databases except for 2015
 #' @export
 fcn_strip_transect_all <- function() {
+  state <- fcn_get_state()
+  if (state$use_integrated_db) {
+    db <- fcn_strip_transect_table_integrated()
+    return(db)
+  }
+
   db_1996 <- fcn_strip_transect_table_1996()
   db_2015 <- fcn_strip_transect_table_2015()
   db_2020 <- fcn_strip_transect_table_2020() %>%
@@ -48,12 +54,42 @@ fcn_strip_transect_table_2020 <- function() {
   return(table)
 }
 
+#' @title Extract strip transects for integrated database
+#' @export
+fcn_strip_transect_table_integrated <- function() {
+  table <- fcn_sql_exec('integrated', 'strip-transect')
+  fcn_check_transect_id_unique(table)
+  table <- fcn_db_to_date(table)
+  return(table)
+}
+
 #' @title Extract strip transects with spatial representation in polygons
 #' @export
 fcn_strip_transect_sf_all <- function() {
   state <- fcn_get_state()
-  koala_survey_data_path <- fcn_get_gdb_path()$koala_survey_data
   strip_transects <- fcn_strip_transect_all()
+
+  if (state$use_integrated_db) {
+    transect_sf <- fcn_get_integrated_db_sf()
+    joined_table <- dplyr::inner_join(transect_sf, strip_transects, by = c('TransectID'))
+    unjoined_table <- dplyr::anti_join(strip_transects, transect_sf, by = c('TransectID'))
+
+    # Recover unjoined records to join at the site level
+    site_join_results <- fcn_join_koala_survey_sites(unjoined_table)
+    joined_table <- rbind(joined_table, site_join_results$joined_table)
+    unjoined_table <- site_join_results$unjoined_table
+
+    if (nrow(site_join_results$joined_table) > 0) {
+      warning(sprintf("Strip Transect: attribute join incomplete, %s transects joined at the site level", nrow(site_join_results$joined_table)))
+    }
+
+    if (nrow(unjoined_table) > 0) {
+      warning(sprintf("Strip Transect: attribute join incomplete, with %s transects dropped.", nrow(unjoined_table)))
+    }
+    return(joined_table)
+  }
+
+  koala_survey_data_path <- fcn_get_gdb_path()$koala_survey_data
   transect_sf <- sf::st_read(koala_survey_data_path, layer = "KoalaSurveyTransects", quiet = TRUE) %>%
     sf::st_transform(state$crs) %>%
     dplyr::rename(SiteNumber=Site, TransectNumber=Transect, SurveyNumber=Survey)
@@ -87,6 +123,7 @@ fcn_strip_transect_sf_all <- function() {
 }
 
 #' Get the table in the 2015-2019 database to its spatial representation
+#' @export
 fcn_strip_transect_sf_2015 <- function() {
   data <- fcn_strip_transect_table_2015()
   state <- fcn_get_state()
@@ -112,5 +149,33 @@ fcn_strip_transect_sf_2015 <- function() {
   data_sf_polygon <- data_sf[is_polygon,]
   fcn_check_transect_id_unique(data_sf_polygon)
   return(data_sf_polygon)
+}
+
+#' Join any table with the KoalaSurveySites to get spatial representation
+#' @export
+fcn_join_koala_survey_sites <- function(table, site_id_col = "SiteID") {
+  table <- dplyr::filter(table, !is.na(!!site_id_col))
+  unjoined_table <- dplyr::filter(table, is.na(!!site_id_col))
+  table_cols <- colnames(table)
+  koala_survey_site_path <- fcn_get_gdb_path()$koala_survey_sites
+  koala_survey_site <- sf::st_read(koala_survey_site_path, quiet = TRUE)
+  joined_table <- dplyr::inner_join(koala_survey_site, table, by = dplyr::join_by("Site" == (!!site_id_col))) %>%
+    dplyr::mutate(!!site_id_col := Site) %>%
+    dplyr::mutate(Year_diff = lubridate::year(Date) - Survey_Yr) %>%
+    dplyr::group_by(TransectID) %>%
+    dplyr::filter(Year_diff >= 0) %>%
+    dplyr::group_by(TransectID, !!as.symbol(site_id_col)) %>%
+    dplyr::top_n(1, -abs(Year_diff)) %>%
+    dplyr::select(c(table_cols, "geometry"))
+  unjoined_table <- rbind(unjoined_table, dplyr::anti_join(table, koala_survey_site, by = dplyr::join_by((!!site_id_col) == "Site")))
+  if (nrow(table) != nrow(joined_table)) {
+    if (nrow(unjoined_table) > 0) {
+      warning(sprintf("%s records not joined using Site Information", nrow(unjoined_table)))
+    } else {
+      warning(sprintf("%s records removed due to NA site id", nrow(table) - nrow(joined_table)))
+    }
+  }
+
+  return(list(joined_table = joined_table, unjoined_table = unjoined_table))
 }
 

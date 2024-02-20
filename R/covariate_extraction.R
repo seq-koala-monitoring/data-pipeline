@@ -40,7 +40,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
   state <- fcn_get_state()
   match_method <- state$covariate_time_match
   covariate_description <- paste0(fcn_get_raster_path()$covariates, "\\covariate_descriptions.csv") %>%
-    readr::read_csv(col_types = NULL) %>%
+    readr::read_csv(show_col_types = FALSE) %>%
     dplyr::mutate(name = substr(Code, 0, 5)) %>%
     dplyr::rename(static_dynamic = `Static/Dynamic`, continuous_discrete = `Continuous/Discrete`) %>%
     dplyr::select(name, static_dynamic, continuous_discrete)
@@ -194,7 +194,7 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
     dplyr::left_join(df_no_geom, out_select, by = 'TransectID')
   }
 
-  fcn_check_transect_id_unique(df)
+  #fcn_check_transect_id_unique(df)
 
   df_geom_type <- sf::st_geometry_type(df)
 

@@ -13,7 +13,9 @@ the$db_path <- list(
 the$gdb_path <- list(
   seq_koala_survey_database="koala_survey_data_ver2_0.gdb",
   koala_survey_data="KoalaSurveyData.gdb",
-  covariates="final_covariates.gdb"
+  covariates="final_covariates.gdb",
+  total_db="Database_Spatial_v240206/Total_v240209.shp",
+  koala_survey_sites="KoalaSurveySites/KoalaSurveySites.shp"
 )
 
 # Grid size in meters (default: 100 meters)
@@ -30,6 +32,9 @@ the$crs <- 7856
 
 # Boolean for whether raster files should be resampled to the generated grid
 the$resample_to_grid <- TRUE
+
+# Boolean - whether to use the integrated 1996-2023 datase
+the$use_integrated_db <- TRUE
 
 # Covariate time-matching algorithm
 the$covariate_time_match = list(
@@ -186,7 +191,7 @@ fcn_set_gdb_path <- function(db_path, obj = NULL) {
   })
 
   old <- the$db_path
-  the$db_path <- db_path
+  the$gdb_path <- db_path
   invisible(old)
 }
 
@@ -284,4 +289,38 @@ fcn_set_date_intervals <- function(val = NULL) {
     the$date_intervals <- val
   }
   invisible(old)
+}
+
+fcn_set_use_integrated_db <- function(val) {
+  old <- the$use_integrated_db
+  the$use_integrated_db <- val
+  invisible(old)
+}
+
+fcn_get_integrated_db_sf <- function() {
+
+  if (is.null(the$integrated_db_sf)) {
+    db <- fcn_set_integrated_db_sf()
+    return(db)
+  } else {
+    return(the$integrated_db_sf)
+  }
+}
+
+fcn_set_integrated_db_sf <- function() {
+  if(!the$use_integrated_db) {
+    stop("use_integrated_db must be set to TRUE to get integrated db in SF format")
+  }
+  db <- sf::st_read(file.path(the$home_dir, the$gdb_path$total_db), quiet = T) %>%
+    dplyr::mutate(TransectID = ifelse(is.na(TrnscID), Trns_ID, TrnscID)) %>%
+    dplyr::select(TransectID)
+  if (anyDuplicated(db$TransectID)) {
+    warning(sprintf("Number of records with duplicate TransectID detected in %s: %s. Dropping duplicates", the$gdb_path$total_db, sum(duplicated(db$TransectID))))
+    db <- db[!duplicated(db$TransectID),]
+  }
+
+  old <- the$integrated_db_sf
+  the$integrated_db_sf <- db
+  invisible(old)
+  return(the$integrated_db_sf)
 }

@@ -15,6 +15,12 @@ fcn_perp_distance_table <- function(year) {
 #' @title Extract perpendicular distances for all databases
 #' @export
 fcn_perp_distance_all <- function() {
+  state <- fcn_get_state()
+  if (state$use_integrated_db) {
+    db <- fcn_perp_distance_table_integrated()
+    db <- fcn_db_to_date(db)
+    return(db)
+  }
   db_1996 <- fcn_perp_distance_table_1996()
   db_2020 <- fcn_perp_distance_table_2020()
   out_db <- list(`1996-2015` = db_1996,
@@ -35,6 +41,14 @@ fcn_perp_distance_table_1996 <- function() {
 #' @export
 fcn_perp_distance_table_2020 <- function() {
   table <- fcn_sql_exec('2020', 'perp-distance')
+  fcn_check_transect_id(table)
+  return(table)
+}
+
+#' @title Extract perpendicular distances for koala sightings for 2020 database
+#' @export
+fcn_perp_distance_table_integrated <- function() {
+  table <- fcn_sql_exec('integrated', 'perp-distance')
   fcn_check_transect_id(table)
   return(table)
 }

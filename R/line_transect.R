@@ -127,7 +127,8 @@ fcn_line_transect_sf_integrated <- function() {
   db_coords_absent <- dplyr::filter(db_not_joined, !(TransectID %in% db_coords_present))
 
   line_transect <- fcn_line_transect_sf(db_coords_present)
-  line_transect_buffer <- sf::st_buffer(line_transect, endCapStyle = "FLAT", dist = 60)
+  buffer_width <- fcn_get_line_transect_buffer()
+  line_transect_buffer <- sf::st_buffer(line_transect, endCapStyle = "FLAT", dist = buffer_width)
   db <- rbind(db_joined, line_transect_buffer)
 
   # Recover unjoined records to join at the site level

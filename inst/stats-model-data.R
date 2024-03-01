@@ -29,17 +29,19 @@ fcn_set_gdb_path(list(
 # Grid size (in meters) - default 100m
 fcn_set_grid_size(100)
 
+# Set line transect buffer width in meters (if generating transects using start and end coordinate information)
+fcn_set_line_transect_buffer(28.7)
+
 # Output path
 target_dir <- r"(H:\seq-koala-monitor\output)"
 current_date <- format(Sys.Date(), format="%Y%m%d")
-current_date <- "20240213" # for debugging
 out_dir <- paste0(target_dir, '\\', current_date)
 if (!dir.exists(out_dir)) dir.create(out_dir)
 if (!dir.exists(paste0(out_dir, '\\cov_raster'))) dir.create(paste0(out_dir, '\\cov_raster'))
 if (!dir.exists(paste0(out_dir, '\\cov_csv'))) dir.create(paste0(out_dir, '\\cov_csv'))
 
 # Run covariate extraction algorithm; if not, read from disc in the output folder (computationally intensive, 30 minute run)
-run_cov_extraction <- FALSE
+run_cov_extraction <- F
 
 ## 3. Retrieve grid generated as a raster file (for plotting if needed) ----
 # Check whether the directory for where covariates are stored is correct
@@ -59,8 +61,8 @@ saveRDS(master, paste0(out_dir, '\\master.rds'))
 
 # Extract covariates
 if (run_cov_extraction) {
-  cov_all <- fcn_cov_array(write_path = out_dir) # Writes the outputs to the output folder
-  cov_temporal <- fcn_temporal_covariate_rds_array(out_dir = out_dir)
+  cov_all <- fcn_cov_array(write_path = paste0(out_dir, "\\cov_raster")) # Writes the outputs to the output folder
+  #cov_temporal <- fcn_temporal_covariate_rds_array(out_dir = paste0(out_dir, "\\cov_raster"))
   cov_constant <- cov_all$cov_constant
 }
 
@@ -69,6 +71,10 @@ grid_fractions <- fcn_all_transect_grid_fractions()
 grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
 saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
 data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
+
+## Run cov_temporal_array on a HPC (or a computer with 128GB RAM) here----------------
+
+## Save cov_temporal_array in a separate file here ---
 
 # Extract and save only those in surveylocations as a separate file
 if (!run_cov_extraction) {

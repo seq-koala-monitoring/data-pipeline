@@ -49,6 +49,9 @@ the$cov_raster <- list()
 # Whether to save covariate rasters to memory (speeds up computation by avoiding re-computation but uses more RAM)
 the$save_cov_raster_memory <- FALSE
 
+# Line transect buffer width (meters)
+the$line_transect_buffer <- 28.7
+
 #' Get the whole state, or elements of the state if a second argument is specified
 #' @export
 fcn_get_state <- function(elem = NULL) {
@@ -281,6 +284,7 @@ fcn_get_date_intervals <- function() {
   return(the$date_intervals)
 }
 
+#' @export
 fcn_set_date_intervals <- function(val = NULL) {
   old <- the$date_intervals
   if (is.null(val)) {
@@ -291,6 +295,7 @@ fcn_set_date_intervals <- function(val = NULL) {
   invisible(old)
 }
 
+#' @export
 fcn_set_use_integrated_db <- function(val) {
   old <- the$use_integrated_db
   the$use_integrated_db <- val
@@ -307,6 +312,7 @@ fcn_get_integrated_db_sf <- function() {
   }
 }
 
+#' @export
 fcn_set_integrated_db_sf <- function() {
   if(!the$use_integrated_db) {
     stop("use_integrated_db must be set to TRUE to get integrated db in SF format")
@@ -323,4 +329,16 @@ fcn_set_integrated_db_sf <- function() {
   the$integrated_db_sf <- db
   invisible(old)
   return(the$integrated_db_sf)
+}
+
+#' @export
+fcn_set_line_transect_buffer <- function(width) {
+  old <- the$line_transect_buffer
+  the$line_transect_buffer <- width
+  invisible(old)
+  return()
+}
+
+fcn_get_line_transect_buffer <- function() {
+  return(the$line_transect_buffer)
 }

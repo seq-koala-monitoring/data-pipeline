@@ -1,5 +1,7 @@
 # Stand-alone to write the list of RDS objects into a three-dimensional array on the QUT linux HPC
 
+out_dir <- "output/20240301"
+
 fcn_temporal_covariate_rds_array <- function(out_dir = NULL) {
   out_dir_files <- list.files(out_dir, pattern = "cov_temporal_\\d{6}_\\d{6}.rds")
   pattern <- "(\\d{6}_\\d{6})"
@@ -24,6 +26,6 @@ fcn_temporal_covariate_rds_array <- function(out_dir = NULL) {
   return(out)
 }
 
-out_dir <- "output/20240213"
-output <- fcn_temporal_covariate_rds_array(out_dir)
+
+output <- fcn_temporal_covariate_rds_array(paste0(out_dir,'/cov_raster'))
 saveRDS(output, file.path(out_dir, "cov_temporal_array.rds"))

@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -8,7 +8,7 @@ articles:
   v03-linear-referencing: v03-linear-referencing.html
   v04-covariates: v04-covariates.html
   v05-master-data: v05-master-data.html
-last_built: 2024-02-20T03:43Z
+last_built: 2024-03-01T05:30Z
 urls:
   reference: https://seq-koala-monitoring.github.io/data-pipeline/reference
   article: https://seq-koala-monitoring.github.io/data-pipeline/articles

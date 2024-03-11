@@ -339,6 +339,7 @@ fcn_set_line_transect_buffer <- function(width) {
   return()
 }
 
+#' @export
 fcn_get_line_transect_buffer <- function() {
   return(the$line_transect_buffer)
 }

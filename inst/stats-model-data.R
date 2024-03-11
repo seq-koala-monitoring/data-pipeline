@@ -6,6 +6,7 @@ gc()
 #library(devtools)
 #devtools::install_github('seq-koala-monitoring/data-pipeline') # only if needed
 library(SEQKoalaDataPipeline)
+library(readr)
 
 ## 2. Set global variables -------------------------------------------------
 # Data directory
@@ -66,12 +67,6 @@ if (run_cov_extraction) {
   cov_constant <- cov_all$cov_constant
 }
 
-## 6. Load grid fractions as tables-----------------------------------------
-grid_fractions <- fcn_all_transect_grid_fractions()
-grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
-saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
-data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
-
 ## Run cov_temporal_array on a HPC (or a computer with 128GB RAM) here----------------
 
 ## Save cov_temporal_array in a separate file here ---
@@ -83,25 +78,56 @@ if (!run_cov_extraction) {
   cov_temporal_array <- readRDS(paste0(out_dir, "\\cov_temporal_array.rds"))
 }
 
+## 6. Load grid fractions as tables-----------------------------------------
+grid_fractions <- fcn_all_transect_grid_fractions()
+grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
+saveRDS(grid_fractions_comb, paste0(out_dir, '\\grid_fractions.rds'))
+data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions.csv"))
+
+## 7. Save grid cells in survey locations separately-----------------------------
 cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb$GridID,,]
 cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb$GridID,,]
 
-saveRDS(cov_constant_array_surveylocations, paste0(out_dir, "\\cov_constant_array_surveylocations.rds"))
-saveRDS(cov_temporal_array_surveylocations, paste0(out_dir, '\\cov_temporal_array_surveylocations.rds'))
+readr::write_rds(cov_constant_array_surveylocations, paste0(out_dir, "\\cov_constant_array_surveylocations.rds"))
+readr::write_rds(cov_temporal_array_surveylocations, paste0(out_dir, '\\cov_temporal_array_surveylocations.rds'))
 
-## 7. Produce date interval lookup table -------------------------------
+## 8. Resave grid fractions for the subset with complete covariate information -------
+grid_id_non_na <- fcn_complete_grid_id(cov_constant_array, cov_temporal_array) # Get GridID index with non-NA covariates
+grid_fractions <- fcn_all_transect_grid_fractions(grid_id_vec = grid_id_non_na)
+grid_fractions_comb <- dplyr::bind_rows(grid_fractions, .id = 'transect')
+readr::write_rds(grid_fractions_comb, paste0(out_dir, '\\grid_fractions_complete_cov.rds'))
+data.table::fwrite(grid_fractions_comb, paste0(out_dir, "\\grid_fractions_complete_cov.csv"))
+
+## 7. Save grid cells in survey locations separately with non-NA covariate information-----------------------------
+cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb$GridID ,,]
+cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb$GridID,,]
+
+# Save full arrays
+cov_constant_array[cov_constant_array[,1] %in% grid_id_non_na,,] %>%
+  readr::write_rds(paste0(out_dir, '\\cov_constant_array_complete_cov.rds'))
+cov_temporal_array[cov_temporal_array[,1,1] %in% grid_id_non_na,,] %>%
+  readr::write_rds(paste0(out_dir, '\\cov_temporal_array_complete_cov.rds'))
+
+# Check for complete cases (any missing values)
+fcn_complete_cases_check(cov_constant_array_surveylocations)
+fcn_complete_cases_check(cov_temporal_array_surveylocations)
+
+readr::write_rds(cov_constant_array_surveylocations, paste0(out_dir, "\\cov_constant_array_complete_cov_surveylocations.rds"))
+readr::write_rds(cov_temporal_array_surveylocations, paste0(out_dir, '\\cov_temporal_array_complete_cov_surveylocations.rds'))
+
+## 9. Produce date interval lookup table -------------------------------
 write.csv(fcn_date_interval_lookup(), paste0(out_dir, "\\date_interval_lookup.csv"))
 cov_layer_df <- fcn_covariate_layer_df()
 write.csv(cov_layer_df[,1:5], paste0(out_dir, '\\covariate_info.csv'))
 
-## 9. Produce and save the adjacency matrix
+## 10. Produce and save the adjacency matrix
 adj_data <- fcn_adj_matrix()
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
 
 adj_data <- fcn_adj_matrix(directions = 'rook')
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
 
-## 8. Write covariates as RasterStack ----------------------------------
+## 11. Write covariates as RasterStack ----------------------------------
 # Default: 6 month intervals from Oct 1994 to current time
 if (run_cov_extraction) {
   dates <- fcn_date_intervals()

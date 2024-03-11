@@ -29,14 +29,25 @@ fcn_all_tables_sf <- function(table_names = c('line_transect', 'strip_transect',
 #' @title Extract transect information with grid fractions
 #' @param buffer: a vector of polygon buffer sizes to extract,
 #' @param keep_all: if TRUE, keep all columns from transect. if FALSE, keeps only the TransectID, GridID and Fractions
+#' @param grid_id_vec: if NULL, then keep all grids in the fishnet. Otherwise, specify a vector of GridID to keep. All grid fractions will still sum to 1 even if some grid cells are dropped.
 #' @export
-fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE) {
+fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE, grid_id_vec = NULL) {
   fishnet <- fcn_get_grid()
   master <- fcn_all_tables_sf()
   buffer <- sort(buffer)
 
   master_grid <- lapply(master, function(df) {
     res <- fcn_extract_raster_buffer(df, fishnet, 0)
+
+    if (!is.null(grid_id_vec)) {
+      # GridID vector specified: select only grid cells in the list and rescale weights to sum to 1
+      res <- res %>%
+        dplyr::filter(GridID %in% grid_id_vec) %>%
+        dplyr::group_by(GridID) %>%
+        dplyr::mutate(fraction = fraction / sum(fraction)) %>%
+        dplyr::ungroup()
+    }
+
     if (length(buffer) == 1) {
       var_name <- c('fraction')
     } else {
@@ -44,17 +55,17 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE) {
     }
     res <- res %>% dplyr::rename(!!var_name[1] := fraction)
     if (length(buffer) > 1) {
-    for (i in 2:length(buffer)) {
-        res_buffer <- fcn_extract_raster_buffer(df, fishnet, buffer[i]) %>%
-          dplyr::rename(!!var_name[i] := fraction)
+      for (i in 2:length(buffer)) {
+          res_buffer <- fcn_extract_raster_buffer(df, fishnet, buffer[i]) %>%
+            dplyr::rename(!!var_name[i] := fraction)
+          res <- res %>%
+            dplyr::select(TransectID, GridID, dplyr::all_of(var_name[1:(i-1)])) %>%
+            dplyr::right_join(res_buffer, by = c('TransectID', 'GridID'))
+        }
+        # Fill up empty weights with zeros
         res <- res %>%
-          dplyr::select(TransectID, GridID, dplyr::all_of(var_name[1:(i-1)])) %>%
-          dplyr::right_join(res_buffer, by = c('TransectID', 'GridID'))
+          dplyr::mutate_at(var_name, ~replace(., is.na(.), 0))
       }
-      # Fill up empty weights with zeros
-      res <- res %>%
-        dplyr::mutate_at(var_name, ~replace(., is.na(.), 0))
-    }
 
     if (!keep_all) {
       res <- res %>%

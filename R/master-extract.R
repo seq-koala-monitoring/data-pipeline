@@ -43,7 +43,7 @@ fcn_all_transect_grid_fractions <- function(buffer = c(0), keep_all = FALSE, gri
       # GridID vector specified: select only grid cells in the list and rescale weights to sum to 1
       res <- res %>%
         dplyr::filter(GridID %in% grid_id_vec) %>%
-        dplyr::group_by(GridID) %>%
+        dplyr::group_by(TransectID) %>%
         dplyr::mutate(fraction = fraction / sum(fraction)) %>%
         dplyr::ungroup()
     }

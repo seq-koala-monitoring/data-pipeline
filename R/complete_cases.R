@@ -2,14 +2,23 @@
 
 #' Get indices of GridID with complete covariate data
 #' @export
-fcn_complete_grid_id <- function(cov_constant_array, cov_temporal_array) {
+fcn_complete_grid_id <- function(cov_constant_array=NULL, cov_temporal_array=NULL) {
   constant_array_idx <- complete.cases(cov_constant_array)
+  if (is.null(cov_temporal_array)) {
+    return(cov_constant_array$GridID[constant_array_idx])
+  }
+
   temporal_array <- lapply(1:dim(cov_temporal_array)[3], function(i) {
     return(complete.cases(cov_temporal_array[,,i]))
   })
 
   temporal_array_idx <- do.call(cbind, temporal_array) %>%
     apply(1, all)
+
+  if (is.null(cov_constant_array)) {
+    return(cov_temporal_array[temporal_array_idx,1,1])
+  }
+
   idx <- cbind(constant_array_idx, temporal_array_idx) %>%
     apply(1, all)
   return(cov_constant_array$GridID[idx])

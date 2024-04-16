@@ -4,12 +4,14 @@
 \alias{fcn_covariate_interval_mean}
 \title{Get mean values of each Grid cell given the name of covariate and a single date}
 \usage{
-fcn_covariate_interval_mean(date, cov_name)
+fcn_covariate_interval_mean(date, cov_name, get_df = TRUE, fishnet = NULL)
 }
 \arguments{
 \item{date:}{a list object from \code{fcn_date_intervals} containing: interval, start_date, end_date, middle_date}
 
 \item{cov_name:}{name of the covariate (excluding dates of the covariate layer)}
+
+\item{get_df:}{if TRUE then returns a DataFrame with GridID and the covariate value. If FALSE, returns the covariate raster.}
 }
 \description{
 Get mean values of each Grid cell given the name of covariate and a single date

@@ -53,17 +53,20 @@ fcn_cov_array <- function(cov_type = "both", dates = NULL, time_lag = NULL, writ
 
     if (!is.null(write_path)) {
 
-      for (d in dates) {
+      lapply(dates, \(d) {
         cov_temporal <- fcn_extract_cov_date(d, time_lag=NULL)
-        saveRDS(cov_temporal, file = paste0(write_path, "\\cov_temporal_", d$id, ".rds"))
+        readr::write_rds(cov_temporal, file = paste0(write_path, "\\cov_temporal_", d$id, ".rds"))
         rm(cov_temporal)
-      }
+      })
 
     } else {
 
-      cov_temporal <- purrr::map(dates, \(x) fcn_extract_cov_date(x, time_lag=NULL))
-      # Set the output to the list
-      output$cov_temporal <- cov_temporal
+      cov_temporal <- lapply(dates, \(d) {
+        fcn_extract_cov_date(d, time_lag=NULL)
+      })
+      cov_temporal_array <- do.call(abind::abind, c(cov_temporal, list(along=3)))
+      # the output to the list
+      output$cov_temporal <- cov_temporal_array
     }
   }
 
@@ -72,15 +75,15 @@ fcn_cov_array <- function(cov_type = "both", dates = NULL, time_lag = NULL, writ
 
 #' Extract covariates for a particular date object
 #' @param d date object
-fcn_extract_cov_date <- function(d, time_lag = NULL) {
+fcn_extract_cov_date <- function(d, time_lag = NULLL) {
   cov_layer_df <- fcn_get_covariate_df()
   cov_temporal_names <- cov_layer_df[cov_layer_df$type == 'temporal','name'] %>%
     unique()
 
   print(sprintf("Processing covariates for date starting %s", d$start_date))
   # Apply for each of the covariate names
-  covs <- purrr::map(cov_temporal_names, ~ fcn_covariate_interval_mean(d, .))
-  cov_comb <- purrr::reduce(covs, dplyr::inner_join, by = "GridID")
+  covs <- purrr::map(cov_temporal_names, \(x) fcn_covariate_interval_mean(d, x))
+  cov_comb <- purrr::reduce(covs, dplyr::full_join, by = "GridID")
 
   # Compute lagged variables and join back to the dataframe
   if (!is.null(time_lag)) {
@@ -110,7 +113,7 @@ fcn_covariate_interval_mean <- function(date, cov_name, get_df = TRUE) {
   cov_dates_num <- gsub(".*[^0-9]([0-9]{6})[^0-9]*", "\\1", cov_dates) %>%
     as.numeric() %>%
     lubridate::ym()
-  within_interval <- cov_dates_num %within% date$interval
+  within_interval <- lubridate::`%within%`(cov_dates_num, date$interval)
   if (sum(within_interval) > 0) {
     cov_layer_list <- cov_layer_df_name[within_interval,'filename']
   } else {
@@ -118,6 +121,7 @@ fcn_covariate_interval_mean <- function(date, cov_name, get_df = TRUE) {
     nearest_date <- which.min(abs(cov_dates_num - date$middle_date))
     cov_layer_list <- cov_layer_df_name[nearest_date,'filename']
   }
+
   cov_temporal <- fcn_extract_covariate_grid(cov_layer_list)
   if (length(cov_layer_list) > 1) {
     # Get mean of multiple layers, if continuous
@@ -237,4 +241,25 @@ fcn_temporal_covariate_rds_array <- function(out_dir = NULL, dates = NULL) {
   return(out)
 }
 
-
+#' @title Impute missing temporal covariates
+#' @param cov: Covariate array
+#' @export
+fcn_impute_temporal_cov <- function(cov) {
+	for (j in 1:ncol(cov)) {
+	  complete_cases_cov <- complete.cases(cov[,j,])
+	  for (i in which(!complete_cases_cov)) {
+		for (k in which(is.na(cov[i,j,]))) {
+		  if (all(is.na(cov[i,j,]))) next
+		  non_na_id <- (k - 1:dim(cov)[3])[!is.na(cov[i,j,])]
+		  idx <- (1:dim(cov)[3])[!is.na(cov[i,j,])]
+		  if (any(non_na_id > 0)) {
+			kk <- idx[abs(non_na_id) == min(abs(non_na_id[non_na_id > 0]))][1]
+		  } else {
+			kk <- idx[abs(non_na_id) == min(abs(non_na_id))][1]
+		  }
+		  cov[i,j,k] = cov[i,j,kk]
+		}
+	  }
+	}
+  return(cov)
+}

@@ -92,6 +92,11 @@ fcn_all_of_area_sf_all <- function() {
     warning(paste0("Number of rows not joined: ", nrow(unjoined_table)))
   }
 
+  # Clip by study area
+  study_area <- fcn_get_study_area()
+  joined_table <- sf::st_intersection(joined_table, study_area) %>%
+    dplyr::select(-AREA_HA, SHAPE_Length, SHAPE_Area)
+
   return(joined_table)
 }
 

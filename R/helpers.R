@@ -34,7 +34,7 @@ fcn_add_date_interval <- function(df, name_field = 'time_period_id') {
   intervals <- purrr::map(date_intervals, \(x) x$interval)
   interval_names <- sapply(date_intervals, \(x) x[[name_field]])
   which_intv <- intervals %>%
-    purrr::map(\(intv) which(dates %within% intv))
+    purrr::map(\(intv) which(lubridate::`%within%`(dates, intv)))
   date_idx <- rep(NA, length(dates))
   for (i in 1:length(which_intv)) {
     if (length(which_intv[[i]]) > 0) date_idx[which_intv[[i]]] <- interval_names[i]

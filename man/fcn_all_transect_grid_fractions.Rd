@@ -4,12 +4,18 @@
 \alias{fcn_all_transect_grid_fractions}
 \title{Extract transect information with grid fractions}
 \usage{
-fcn_all_transect_grid_fractions(buffer = c(0), keep_all = FALSE)
+fcn_all_transect_grid_fractions(
+  buffer = c(0),
+  keep_all = FALSE,
+  grid_id_vec = NULL
+)
 }
 \arguments{
 \item{buffer:}{a vector of polygon buffer sizes to extract,}
 
 \item{keep_all:}{if TRUE, keep all columns from transect. if FALSE, keeps only the TransectID, GridID and Fractions}
+
+\item{grid_id_vec:}{if NULL, then keep all grids in the fishnet. Otherwise, specify a vector of GridID to keep. All grid fractions will still sum to 1 even if some grid cells are dropped.}
 }
 \description{
 Extract transect information with grid fractions

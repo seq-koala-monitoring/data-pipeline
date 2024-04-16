@@ -5,7 +5,7 @@
 \title{Extract all covariate by fishnet grid
 filename_list: list of covariates by filenames, if unspecified extracts all files}
 \usage{
-fcn_extract_covariate_grid(filename_list = NULL)
+fcn_extract_covariate_grid(filename_list = NULL, fishnet = NULL)
 }
 \description{
 Extract all covariate by fishnet grid

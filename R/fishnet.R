@@ -17,6 +17,7 @@ fcn_fishnet <- function(feature_class) {
   return(fishnet_intersect)
 }
 
+#' Get fishnet in raster format
 #' @param feature_class An SF object of the spatial extent of the fishnet
 #' @export
 fcn_fishnet_raster <- function(feature_class, grid_size = NULL, mask = T) {
@@ -26,8 +27,9 @@ fcn_fishnet_raster <- function(feature_class, grid_size = NULL, mask = T) {
   fishnet <- terra::rast(feature_class_vect, res = grid_size, vals = 1)
   names(fishnet) <- "GridID"
   if (mask) {
-    fishnet_masked <- terra::mask(fishnet, feature_class_vect)
-    grid_id <- 1:length(fishnet_masked[fishnet_masked==1])
+    inv_mask <- terra::mask(fishnet, feature_class_vect, inverse = T)
+    fishnet_masked <- terra::mask(fishnet, inv_mask, inverse = T)
+    grid_id <- 1:length(fishnet_masked[!is.na(fishnet_masked)])
     fishnet_masked[fishnet_masked == 1] <- grid_id
     return(fishnet_masked)
   } else {
@@ -41,8 +43,13 @@ fcn_fishnet_raster <- function(feature_class, grid_size = NULL, mask = T) {
 #' @param option: 'raster', or 'vector', denotes the format of the fishnet grid
 #' @param buffer: buffer around the study area for grid generation, in meters
 #' @export
-fcn_new_grid <- function(option = 'raster', buffer = 0) {
+fcn_new_grid <- function(option = 'raster', buffer = NULL) {
+  state <- fcn_get_state()
   study_area <- fcn_get_study_area()
+  if (is.null(buffer)) {
+    buffer <- state$study_area_buffer
+  }
+
   if (buffer > 0) {
     study_area <- sf::st_buffer(study_area, buffer)
   }

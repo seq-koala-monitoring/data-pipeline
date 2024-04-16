@@ -55,12 +55,35 @@ fcn_perp_distance_table_integrated <- function() {
 
 #' @title Check whether transect ID exists in line transect tables
 #' @export
-fcn_check_transect_id <- function(db) {
-  comb_db <- fcn_line_transect_table() %>%
+fcn_check_transect_id <- function(db, perp_dist = FALSE) {
+  line_transect_table <- fcn_line_transect_table()
+  comb_db <- line_transect_table %>%
     dplyr::select(TransectID)
   unmatched_rows <- dplyr::anti_join(db, comb_db, by = 'TransectID')
   if (nrow(unmatched_rows) > 0) {
     stop("TransectID not fully matched to TransectID in line transect table")
+  }
+
+  # Conduct additional checks if the table is a perpendicular distance table
+  if (perp_dist) {
+    fcn_check_perp_distances_in_line_transect(line_transect_table, db)
+  }
+
+  return()
+}
+
+#' @title Check if all sightings in the line transect is represented in the perpendicular transects table
+fcn_check_perp_distances_in_line_transect <- function(line_transect_table, perp_dist_table) {
+  # Perpendicular distance not in line transect table
+  in_line_transect <- perp_dist_table$TransectID %in% line_transect_table$TransectID
+  if (any(!in_line_transect)) {
+    stop(sprintf("%s transects in perpendicular distances table not in line transect table"), sum(!in_line_transect))
+  }
+
+  # Check line transect IDs in perp distance table
+  in_perp_distance <- line_transect_table[line_transect_table$Number_Sightings>0,"TransectID"] %in% perp_dist_table$TransectID
+  if (any(!in_perp_distance)) {
+    stop(sprintf("%s transects in line transects table not in perpendicular distances table"), sum(!in_line_transect))
   }
   return()
 }

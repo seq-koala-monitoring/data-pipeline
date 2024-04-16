@@ -8,6 +8,8 @@ fcn_covariate_raster_load(covariate = "htele")
 }
 \arguments{
 \item{covariate}{name of covariate (string)}
+
+\item{categorical}{if TRUE then covariate is categorical, otherwise it is continuous}
 }
 \description{
 Load covariate layer to SpatRaster by name

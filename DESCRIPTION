@@ -8,9 +8,10 @@ Description: Data processing pipeline for koala monitoring data analysis project
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports:
     sf,
+    terra,
     RODBC,
     dplyr,
     readr,
@@ -20,7 +21,9 @@ Imports:
     Matrix,
     exactextractr,
     tidyr,
-    abind
+    abind,
+    future,
+    future.apply
 Suggests: 
     knitr,
     rmarkdown,

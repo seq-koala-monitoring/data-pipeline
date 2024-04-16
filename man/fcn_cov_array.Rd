@@ -4,7 +4,12 @@
 \alias{fcn_cov_array}
 \title{Extract covariate in array format, with dimensions: GridID, Covariate, Time}
 \usage{
-fcn_cov_array(cov_type = "both", dates = NULL, time_lag = NULL)
+fcn_cov_array(
+  cov_type = "both",
+  dates = NULL,
+  time_lag = NULL,
+  write_path = NULL
+)
 }
 \arguments{
 \item{cov_type:}{covariate types, either "constant", "temporal" or "both". "both" by default}

@@ -1,13 +1,13 @@
 #' Sets environment for storing state and functions for modifying the state
 
 the <- new.env(parent = emptyenv())
-the$home_dir <- getwd()
+the$home_dir <- r"(H:\seq-koala-monitor\working_data)"
 
 the$db_path <- list(
   `1996` = 'SEQkoalaData.accdb',
   `2015` = '2015-2019 SEQKoalaDatabase DES.accdb',
   `2020` = 'KoalaSurveyData2020_cur.accdb',
-  `integrated` = 'Database_Spatial_v240206/1996 - 2023 SEQKoalaDatabase DES_Modelling_v2402061.accdb'
+  `integrated` = '1996 - 2023 SEQKoalaDatabase DES_Modelling_v240410.accdb'
 )
 
 the$gdb_path <- list(
@@ -23,8 +23,10 @@ the$grid_size <- 100
 
 the$study_area <- list(dsn = "basedata.gdb", layer = "seqrp_study_area_2017_mga56")
 
+the$study_area_buffer <- 0
+
 the$raster_path <- list(
-  covariates = "final_covariates_output"
+  covariates = 'covariates_impute/output'
 )
 
 # Standardized projection system (GDA2020 / MGA zone 56 as default)
@@ -52,13 +54,18 @@ the$save_cov_raster_memory <- FALSE
 # Line transect buffer width (meters)
 the$line_transect_buffer <- 28.7
 
+# Impute missing covariates using the mean/ mode of a circular buffer, specified by distance in m. 0 implies no imputation, whereas 500 implies that NA values in the covariates are imputed with the focal mean (continuous) or mode (categorical) of values within a 500m radius.
+the$cov_impute_buffer <- 0
+
 #' Get the whole state, or elements of the state if a second argument is specified
+#'
 #' @export
 fcn_get_state <- function(elem = NULL) {
   return(the)
 }
 
 #' Set home directory path
+#'
 #' @export
 fcn_set_home_dir <- function(dir) {
   old <- the$home_dir
@@ -78,6 +85,9 @@ fcn_get_study_area <- function() {
   study_area_args$quiet <- TRUE # silence the call
   study_area <- do.call(sf::st_read, study_area_args)
   study_area_transformed <- sf::st_transform(study_area, state$crs)
+  if (state$study_area_buffer > 0) {
+    study_area_transformed <- sf::st_buffer(study_area_transformed, state$study_area_buffer)
+  }
   return(study_area_transformed)
 }
 
@@ -213,6 +223,7 @@ fcn_get_raster_path <- function() {
 }
 
 #' Set raster directory
+#'
 #' @export
 fcn_set_raster_path <- function(val) {
   old <- the$raster_path
@@ -220,7 +231,8 @@ fcn_set_raster_path <- function(val) {
   invisible(old)
 }
 
-#' @title Set parameter: resample to grid
+#' Set parameter: resample to grid
+#'
 #' @export
 fcn_set_resample_to_grid <- function(val) {
   old <- the$resample_to_grid
@@ -342,4 +354,27 @@ fcn_set_line_transect_buffer <- function(width) {
 #' @export
 fcn_get_line_transect_buffer <- function() {
   return(the$line_transect_buffer)
+}
+
+#' @export
+fcn_get_cov_impute_buffer <- function() {
+  return(the$cov_impute_buffer)
+}
+
+#' @export
+fcn_set_cov_impute_buffer <- function(buffer_radius) {
+  old <- the$cov_impute_buffer
+  the$cov_impute_buffer <- buffer_radius
+  invisible(old)
+  return()
+}
+
+#' Set study area buffer in meters
+#' @export
+fcn_set_study_area_buffer <- function(value) {
+  old <- the$study_area_buffer
+  the$study_area_buffer <- value
+  invisible(old)
+  fcn_new_grid()
+  return()
 }

@@ -4,7 +4,7 @@
 \alias{fcn_check_transect_id}
 \title{Check whether transect ID exists in line transect tables}
 \usage{
-fcn_check_transect_id(db)
+fcn_check_transect_id(db, perp_dist = FALSE)
 }
 \description{
 Check whether transect ID exists in line transect tables

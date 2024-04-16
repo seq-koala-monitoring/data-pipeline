@@ -45,6 +45,8 @@ fcn_covariate_layer_df <- function(layer = NULL) {
     dplyr::rename(static_dynamic = `Static/Dynamic`, continuous_discrete = `Continuous/Discrete`) %>%
     dplyr::select(name, static_dynamic, continuous_discrete)
 
+  covariate_description <- covariate_description[!duplicated(covariate_description$name),]
+
   constant_covariates <- data.frame(filename = fcn_list_covariate_layers_constant())
   temporal_covariates <- data.frame(filename = fcn_list_covariate_layers_temporal())
   temporal_covariates <- temporal_covariates %>%
@@ -75,7 +77,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 
   df <- df %>%
     dplyr::mutate(join_name = substr(name, 0, 5)) %>%
-    dplyr::left_join(covariate_description, by = c('join_name' = 'name')) %>%
+    dplyr::inner_join(covariate_description, by = dplyr::join_by('join_name' == 'name')) %>%
     dplyr::select(-join_name)
 
   return(df)
@@ -83,6 +85,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
 
 #' Load covariate layer to SpatRaster by name
 #' @param covariate name of covariate (string)
+#' @param categorical if TRUE then covariate is categorical, otherwise it is continuous
 #' @export
 fcn_covariate_raster_load <- function(covariate = "htele") {
   raster_path <- fcn_get_raster_path()$covariates
@@ -104,7 +107,12 @@ fcn_covariate_raster_load <- function(covariate = "htele") {
 fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, project = T, resample_to_grid = T) {
 
   state <- fcn_get_state()
+  covariate_df <- fcn_get_covariate_df() %>%
+    dplyr::filter(name == covariate_names)
+
   covariate_raster <- terra::rast(covariate_files)
+
+  covariate_raster <- fcn_impute_raster(covariate_raster, covariate_names)
 
   if (resample_to_grid) {
     # Resample to fishnet grid
@@ -235,8 +243,8 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
 #' @title Extract all covariate by fishnet grid
 #' filename_list: list of covariates by filenames, if unspecified extracts all files
 #' @export
-fcn_extract_covariate_grid <- function(filename_list = NULL) {
-  fishnet <- fcn_get_grid()
+fcn_extract_covariate_grid <- function(filename_list = NULL, fishnet = NULL) {
+  if (is.null(fishnet)) fishnet <- fcn_get_grid()
   covariates <- fcn_get_covariate_df()
   if (is.null(filename_list)) filename_list <- covariates$filename
   study_area <- fcn_get_study_area()
@@ -248,8 +256,10 @@ fcn_extract_covariate_grid <- function(filename_list = NULL) {
     print(sprintf("Reading raster: %s", n))
     path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
     r <- terra::rast(path)
+    r <- fcn_impute_raster(r, n)
+
     resampled <- terra::resample(r, fishnet, method = 'mode', threads = TRUE)
-    resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1], upper = terra::minmax(r)[2], values = F)
+    resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1]-1, upper = terra::minmax(r)[2]+1, values = F)
     fcn_set_cov_raster(resampled, n)
     return(resampled)
   })
@@ -336,4 +346,25 @@ fcn_covariate_temporal_raster_stack <- function(cov_name = NULL, date_interval =
     return(r[[1]]) # Return the layer without GridID
   })
   return(rasters)
+}
+
+#' Impute rasters based on the focal value
+#' @export
+fcn_impute_raster <- function(raster_file, name = NA){
+  cov_impute_buffer <- fcn_get_cov_impute_buffer()
+  cov_df <- fcn_get_covariate_df()
+  categorical <- cov_df[cov_df$filename == name,'continuous_discrete'][1] == 'Categorical'
+
+  any_missing <- any(is.na(raster_file[]))
+  if (!any_missing | cov_impute_buffer <= 0) {
+    return(raster_file)
+  }
+  buffer_mat <- terra::focalMat(raster_file, cov_impute_buffer, 'circle')
+  print(paste("Imputing missing values in", name))
+  if (categorical) {
+    res <- terra::focal(raster_file, buffer_mat, na.policy = "only", fun = 'modal')
+  } else {
+    res <- terra::focal(raster_file, buffer_mat, na.policy = "only", fun = 'mean')
+  }
+  return(res)
 }

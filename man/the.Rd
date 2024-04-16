@@ -5,7 +5,7 @@
 \alias{the}
 \title{Sets environment for storing state and functions for modifying the state}
 \format{
-An object of class \code{environment} of length 10.
+An object of class \code{environment} of length 15.
 }
 \usage{
 the

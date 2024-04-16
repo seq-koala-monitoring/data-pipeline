@@ -4,7 +4,7 @@
 \alias{fcn_sql_exec}
 \title{SQL extract table by database year and script name}
 \usage{
-fcn_sql_exec(year, script_name)
+fcn_sql_exec(db_name, script_name)
 }
 \description{
 SQL extract table by database year and script name

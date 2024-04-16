@@ -6,7 +6,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">SEQKoalaDataPipeline</a>
 
@@ -63,6 +63,11 @@
         <dd>Add date interval id to all of the dates</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_adj_matrix.html">fcn_adj_matrix()</a></code> 
+        </dt>
+        <dd>Generate adjacency matrix for spatial autocorrelation using a secondary grid, and lookup table from primary grid to secondary grid</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_all_of_area_all.html">fcn_all_of_area_all()</a></code> 
         </dt>
         <dd>Extract perpendicular distances for all databases</dd>
@@ -86,6 +91,11 @@
           <code><a href="fcn_all_of_area_table_2020.html">fcn_all_of_area_table_2020()</a></code> 
         </dt>
         <dd>Extract perpendicular distances for koala sightings for 2020 database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_all_of_area_table_integrated.html">fcn_all_of_area_table_integrated()</a></code> 
+        </dt>
+        <dd>Extract perpendicular distances for koala sightings for integrated database</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_all_tables.html">fcn_all_tables()</a></code> 
@@ -113,6 +123,11 @@
         <dd>Helper functions</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_check_perp_distances_in_line_transect.html">fcn_check_perp_distances_in_line_transect()</a></code> 
+        </dt>
+        <dd>Check if all sightings in the line transect is represented in the perpendicular transects table</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_check_transect_id.html">fcn_check_transect_id()</a></code> 
         </dt>
         <dd>Check whether transect ID exists in line transect tables</dd>
@@ -121,6 +136,16 @@
           <code><a href="fcn_check_transect_id_unique.html">fcn_check_transect_id_unique()</a></code> 
         </dt>
         <dd>Check for duplicate TransectID</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_complete_cases_check.html">fcn_complete_cases_check()</a></code> 
+        </dt>
+        <dd>Check for complete cases for 2-D and 3-D matrices/ data.frames</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_complete_grid_id.html">fcn_complete_grid_id()</a></code> 
+        </dt>
+        <dd>Get indices of GridID with complete covariate data</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_coord_to_linestring.html">fcn_coord_to_linestring()</a></code> 
@@ -168,9 +193,19 @@
         <dd>Load covariate layer to SpatRaster by name</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_covariate_raster_stack.html">fcn_covariate_raster_stack()</a></code> 
+        </dt>
+        <dd>Get all covariates as raster stacks</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_covariate_read_raster.html">fcn_covariate_read_raster()</a></code> 
         </dt>
         <dd>Read raster</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_covariate_temporal_raster_stack.html">fcn_covariate_temporal_raster_stack()</a></code> 
+        </dt>
+        <dd>Get temporal covariates as raster stacks</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_date_bilinear_interpolation_date.html">fcn_date_bilinear_interpolation_date()</a></code> 
@@ -208,10 +243,19 @@
         <dd>Generate a database connection</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_db_to_date.html">fcn_db_to_date()</a></code> 
+        </dt>
+        <dd>Convert date in the integrated database to a date object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_extract_cov_date.html">fcn_extract_cov_date()</a></code> 
+        </dt>
+        <dd>Extract covariates for a particular date object</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_extract_covariate_grid.html">fcn_extract_covariate_grid()</a></code> 
         </dt>
-        <dd>Extract all covariate by fishnet grid
-filename_list: list of covariates by filenames, if unspecified extracts all files</dd>
+        <dd>Extract all covariate by fishnet grid filename_list: list of covariates by filenames, if unspecified extracts all files</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_extract_raster_buffer.html">fcn_extract_raster_buffer()</a></code> 
@@ -227,6 +271,11 @@ filename_list: list of covariates by filenames, if unspecified extracts all file
           <code><a href="fcn_fishnet.html">fcn_fishnet()</a></code> 
         </dt>
         <dd>Generate grid fishnet with an input spatial feature class</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_fishnet_raster.html">fcn_fishnet_raster()</a></code> 
+        </dt>
+        <dd>Get fishnet in raster format</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_get_covariate_name.html">fcn_get_covariate_name()</a></code> 
@@ -264,9 +313,19 @@ filename_list: list of covariates by filenames, if unspecified extracts all file
         <dd>Get study area in SF format</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_impute_raster.html">fcn_impute_raster()</a></code> 
+        </dt>
+        <dd>Impute rasters based on the focal value</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_interpolation_weight.html">fcn_interpolation_weight()</a></code> 
         </dt>
         <dd>Given a vector of date differences, find interpolation weight of the n values smallest in the vector</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_join_koala_survey_sites.html">fcn_join_koala_survey_sites()</a></code> 
+        </dt>
+        <dd>Join any table with the KoalaSurveySites to get spatial representation</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_keep_distinct.html">fcn_keep_distinct()</a></code> 
@@ -276,8 +335,7 @@ filename_list: list of covariates by filenames, if unspecified extracts all file
           
           <code><a href="fcn_line_sample_extract_raster.html">fcn_line_sample_extract_raster()</a></code> 
         </dt>
-        <dd>Generate reference points and extract covariates
-#' @param input_raster Input raster (SpatRaster)</dd>
+        <dd>Generate reference points and extract covariates #' @param input_raster Input raster (SpatRaster)</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_line_transect_sf.html">fcn_line_transect_sf()</a></code> 
@@ -292,8 +350,7 @@ filename_list: list of covariates by filenames, if unspecified extracts all file
           
           <code><a href="fcn_line_transect_table.html">fcn_line_transect_table()</a></code> 
         </dt>
-        <dd>Extract Line transect tables
-Wrapper function for generating line transect tables</dd>
+        <dd>Extract Line transect tables Wrapper function for generating line transect tables</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_list_covariate_layers.html">fcn_list_covariate_layers()</a></code> 
@@ -313,8 +370,7 @@ Wrapper function for generating line transect tables</dd>
           
           <code><a href="fcn_locate_feature_from_route.html">fcn_locate_feature_from_route()</a></code> 
         </dt>
-        <dd>Route event layer to SF linestrings
-Converts Route event layer (from fcn_route_table) to lines</dd>
+        <dd>Route event layer to SF linestrings Converts Route event layer (from fcn_route_table) to lines</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_master_covariate_df_match_date.html">fcn_master_covariate_df_match_date()</a></code> 
@@ -352,6 +408,11 @@ Converts Route event layer (from fcn_route_table) to lines</dd>
         <dd>Extract perpendicular distances for koala sightings for 2020 database</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_perp_distance_table_integrated.html">fcn_perp_distance_table_integrated()</a></code> 
+        </dt>
+        <dd>Extract perpendicular distances for koala sightings for 2020 database</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_polygon_extract_raster.html">fcn_polygon_extract_raster()</a></code> 
         </dt>
         <dd>Extract raster values from polygon</dd>
@@ -364,8 +425,7 @@ Converts Route event layer (from fcn_route_table) to lines</dd>
           
           <code><a href="fcn_route_table.html">fcn_route_table()</a></code> 
         </dt>
-        <dd>Linear referencing / dynamic segmentation functions
-Provides functions to perform linear referencing and dynamic segmentation of line transects.</dd>
+        <dd>Linear referencing / dynamic segmentation functions Provides functions to perform linear referencing and dynamic segmentation of line transects.</dd>
       </dl><dl><dt>
           
           <code><a href="fcn_route_table_raster.html">fcn_route_table_raster()</a></code> 
@@ -418,6 +478,11 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
         <dd>Set parameter: resample to grid</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_set_study_area_buffer.html">fcn_set_study_area_buffer()</a></code> 
+        </dt>
+        <dd>Set study area buffer in meters</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_sf_start_end_coord.html">fcn_sf_start_end_coord()</a></code> 
         </dt>
         <dd>Get start and end coordinate columns in SF objects with line/ multilinestring objects</dd>
@@ -468,6 +533,16 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
         <dd>Extract strip transects for 2020 database</dd>
       </dl><dl><dt>
           
+          <code><a href="fcn_strip_transect_table_integrated.html">fcn_strip_transect_table_integrated()</a></code> 
+        </dt>
+        <dd>Extract strip transects for integrated database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fcn_temporal_covariate_rds_array.html">fcn_temporal_covariate_rds_array()</a></code> 
+        </dt>
+        <dd>Convert RDS of date covariates into a 3-d matrix</dd>
+      </dl><dl><dt>
+          
           <code><a href="fcn_transect_grid_covariates.html">fcn_transect_grid_covariates()</a></code> 
         </dt>
         <dd>Join transect grid with covariate based on GridID</dd>
@@ -495,7 +570,7 @@ Provides functions to perform linear referencing and dynamic segmentation of lin
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>

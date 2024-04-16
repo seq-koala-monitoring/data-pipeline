@@ -37,6 +37,9 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_add_date_interval.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_adj_matrix.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_all_of_area_all.html</loc>
   </url>
   <url>
@@ -50,6 +53,9 @@
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_all_of_area_table_2020.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_all_of_area_table_integrated.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_all_tables.html</loc>
@@ -67,10 +73,19 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_check_paths.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_check_perp_distances_in_line_transect.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_check_transect_id.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_check_transect_id_unique.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_complete_cases_check.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_complete_grid_id.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_coord_to_linestring.html</loc>
@@ -100,7 +115,13 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_covariate_raster_load.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_covariate_raster_stack.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_covariate_read_raster.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_covariate_temporal_raster_stack.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_date_bilinear_interpolation_date.html</loc>
@@ -124,6 +145,12 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_db_connect.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_db_to_date.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_extract_cov_date.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_extract_covariate_grid.html</loc>
   </url>
   <url>
@@ -134,6 +161,9 @@
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_fishnet.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_fishnet_raster.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_covariate_name.html</loc>
@@ -157,7 +187,13 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_study_area.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_impute_raster.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_interpolation_weight.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_join_koala_survey_sites.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_keep_distinct.html</loc>
@@ -208,6 +244,9 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_perp_distance_table_2020.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_perp_distance_table_integrated.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_polygon_extract_raster.html</loc>
   </url>
   <url>
@@ -247,6 +286,9 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_set_resample_to_grid.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_set_study_area_buffer.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_sf_start_end_coord.html</loc>
   </url>
   <url>
@@ -275,6 +317,12 @@
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_strip_transect_table_2020.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_strip_transect_table_integrated.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_temporal_covariate_rds_array.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_transect_grid_covariates.html</loc>

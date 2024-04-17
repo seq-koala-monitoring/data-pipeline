@@ -1,8 +1,6 @@
 # Stand-alone to write the list of RDS objects into a three-dimensional array on the QUT linux HPC
 
-rm(list=ls())
-gc()
-out_dir <- "output/20240412_500_1000"
+source('inst/set_params.R')
 
 use_large_ram = TRUE
 
@@ -43,6 +41,5 @@ fcn_temporal_covariate_rds_array <- function(out_dir = NULL) {
   return(out)
 }
 
-
-output <- fcn_temporal_covariate_rds_array(paste0(out_dir,'/cov_raster'))
-readr::write_rds(output, file.path(out_dir, "cov_temporal_array.rds"))
+cov_temporal_array <- fcn_temporal_covariate_rds_array(paste0(out_dir,'/cov_raster'))
+readr::write_rds(cov_temporal_array, file.path(out_dir, "cov_temporal_array.rds"))

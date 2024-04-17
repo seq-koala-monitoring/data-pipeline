@@ -1,6 +1,6 @@
 # Run data pipeline for inputs to the statistical model
-rm(list=ls())
-gc()
+#rm(list=ls())
+#gc()
 
 library(SEQKoalaDataPipeline)
 library(rstudioapi)
@@ -10,7 +10,7 @@ source('inst/set_params.R')
 
 dates <- fcn_get_date_intervals()
 
-cov_constant <- fcn_cov_array('constant', write_path = paste0(out_dir, "\\cov_raster"))
+cov_constant_array <- fcn_cov_array('constant', write_path = out_dir)
 
 for (i in 1:length(dates)) {
   d <- dates[[i]]
@@ -25,5 +25,4 @@ for (i in 1:length(dates)) {
   )
   if (i %% 8 == 0) Sys.sleep(240)
 }
-
-
+Sys.sleep(300)

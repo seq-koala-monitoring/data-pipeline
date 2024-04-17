@@ -136,9 +136,23 @@ fcn_covariate_interval_mean <- function(date, cov_name, get_df = TRUE) {
     cov_temporal <- c(cov_temporal['GridID'], cov_temporal_mean)
   }
 
-
-
   names(cov_temporal) <- c('GridID', cov_name)
+
+  calc_proportion <- any(cov_layer_df[cov_layer_df$name == cov_name,'Proportions'] == "Yes")
+
+  # Calculate proportions on top of mean/ mode calculations
+  if (calc_proportion) {
+    cov_temporal_prop <- fcn_extract_covariate_grid(cov_layer_list, proportion = TRUE)
+    name_list <- names(cov_temporal_prop[[2:terra::nlyr(cov_temporal_prop)]])
+    cov_lyr_names <- stringr::str_split_i(name_list, '_', 1)
+    cov_values <- stringr::str_split_i(name_list, '_', 2)
+
+    cov_temporal_mean <- lapply(unique(cov_values), \(x) terra::mean(cov_temporal_prop[name_list[x==cov_values]])) %>%
+      terra::rast()
+    names(cov_temporal_mean) <- paste(cov_name, unique(cov_values), sep="_")
+    cov_temporal <- c(cov_temporal, cov_temporal_mean)
+  }
+
   if (get_df) {
     cov_temporal_df <- fcn_cov_grid_df(cov_temporal)
     return(cov_temporal_df)

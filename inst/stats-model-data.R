@@ -27,11 +27,13 @@ lapply(seq_along(master_sf), \(i) sf::st_write(master_sf[[i]], paste0(out_dir, '
 
 # Extract covariates
 if (run_cov_extraction) {
-  cov_all <- fcn_cov_array(write_path = paste0(out_dir, "\\cov_raster")) # Writes the outputs to the output folder
-  cov_constant_array <- cov_all$cov_constant
-  cov_temporal_array <- cov_all$cov_temporal
-  readr::write_rds(cov_constant_array, paste0(out_dir, "\\cov_constant_array.rds"))
-  readr::write_rds(cov_temporal_array, paste0(out_dir, "\\cov_temporal_array.rds"))
+  source('inst/cov_temporal_parallel.R')
+  source('inst/cov_temporal_array.R')
+  #cov_all <- fcn_cov_array(write_path = paste0(out_dir, "")) # Writes the outputs to the output folder
+  #cov_constant_array <- cov_all$cov_constant
+  #cov_temporal_array <- cov_all$cov_temporal
+  #readr::write_rds(cov_constant_array, paste0(out_dir, "\\cov_constant_array.rds"))
+  #readr::write_rds(cov_temporal_array, paste0(out_dir, "\\cov_temporal_array.rds"))
 }
 
 ## Run cov_temporal_array on a HPC (or a computer with 128GB RAM) here----------------
@@ -39,11 +41,9 @@ if (run_cov_extraction) {
 ## Save cov_temporal_array in a separate file here ---
 
 # Extract and save only those in surveylocations as a separate file
-if (!run_cov_extraction) {
-  # Read results back from disk (output folder)
-  cov_constant_array <- readr::read_rds(paste0(out_dir, "\\cov_constant_array.rds"))
-  cov_temporal_array <- readr::read_rds(paste0(out_dir, "\\cov_temporal_array.rds"))
-}
+# Read results back from disk (output folder)
+cov_constant_array <- readr::read_rds(paste0(out_dir, "\\cov_constant_array.rds"))
+cov_temporal_array <- readr::read_rds(paste0(out_dir, "\\cov_temporal_array.rds"))
 
 cov_temporal_array <- fcn_impute_temporal_cov(cov_temporal_array)
 

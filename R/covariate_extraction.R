@@ -43,7 +43,7 @@ fcn_covariate_layer_df <- function(layer = NULL) {
     readr::read_csv(show_col_types = FALSE) %>%
     dplyr::mutate(name = substr(Code, 0, 5)) %>%
     dplyr::rename(static_dynamic = `Static/Dynamic`, continuous_discrete = `Continuous/Discrete`) %>%
-    dplyr::select(name, static_dynamic, continuous_discrete)
+    dplyr::select(name, static_dynamic, continuous_discrete, Proportions )
 
   covariate_description <- covariate_description[!duplicated(covariate_description$name),]
 
@@ -112,6 +112,7 @@ fcn_covariate_read_raster <- function(covariate_files, covariate_names = NA, pro
 
   covariate_raster <- terra::rast(covariate_files)
 
+  # If imputation is needed at this stage, do it. By default it does not impute.
   covariate_raster <- fcn_impute_raster(covariate_raster, covariate_names)
 
   if (resample_to_grid) {
@@ -241,33 +242,72 @@ fcn_mixed_extract_raster <- function(input_raster, df) {
 }
 
 #' @title Extract all covariate by fishnet grid
-#' filename_list: list of covariates by filenames, if unspecified extracts all files
+#' @param filename_list: list of covariates by filenames, if unspecified extracts all files
+#' @param proportion: whether to calculate proportions of categorical variable rather than mode
 #' @export
-fcn_extract_covariate_grid <- function(filename_list = NULL, fishnet = NULL) {
+fcn_extract_covariate_grid <- function(filename_list = NULL, fishnet = NULL, proportion = FALSE) {
   if (is.null(fishnet)) fishnet <- fcn_get_grid()
   covariates <- fcn_get_covariate_df()
   if (is.null(filename_list)) filename_list <- covariates$filename
   study_area <- fcn_get_study_area()
-  covariate_raster <- lapply(as.list(filename_list), function(n) {
-    cov <- fcn_get_cov_raster(n)
-    if (!is.null(cov)) {
-      return(cov)
-    }
-    print(sprintf("Reading raster: %s", n))
-    path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
-    r <- terra::rast(path)
-    r <- fcn_impute_raster(r, n)
-
-    resampled <- terra::resample(r, fishnet, method = 'mode', threads = TRUE)
-    resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1]-1, upper = terra::minmax(r)[2]+1, values = F)
-    fcn_set_cov_raster(resampled, n)
-    return(resampled)
-  })
+  if (proportion) {
+    covariate_raster <- lapply(as.list(filename_list), fcn_read_resample_covariate_proportion, fishnet = fishnet)
+  } else {
+    covariate_raster <- lapply(as.list(filename_list), fcn_read_resample_covariate, fishnet = fishnet)
+  }
   covariate_raster_resampled <- terra::rast(covariate_raster)
-  covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area))
-  names(covariate_raster_cropped) <- sub(".tif$", "", filename_list)
+  covariate_raster_cropped <- terra::mask(covariate_raster_resampled, terra::vect(study_area), touches = TRUE)
+  if (!proportion) names(covariate_raster_cropped) <- sub(".tif$", "", filename_list)
   covariate_raster_combined <- c(fishnet, covariate_raster_cropped)
   return(covariate_raster_combined)
+}
+
+#' @title Calculate covariates by resampling by mode
+#' @param n: name of covariate
+#' @export
+fcn_read_resample_covariate <- function(n, fishnet) {
+  cov <- fcn_get_cov_raster(n)
+  if (!is.null(cov)) {
+    return(cov)
+  }
+  print(sprintf("Reading raster: %s", n))
+  path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
+  r <- terra::rast(path)
+  r <- fcn_impute_raster(r, n)
+
+  resampled <- terra::resample(r, fishnet, method = 'mode', threads = TRUE)
+  resampled <- terra::clamp(resampled, lower = terra::minmax(r)[1]-1, upper = terra::minmax(r)[2]+1, values = F)
+  fcn_set_cov_raster(resampled, n)
+  return(resampled)
+}
+
+#' @title Calculate covariates by proportions of categorical values
+#' @param n: name of covariate
+#' @param fishnet: grid raster
+#' @export
+fcn_read_resample_covariate_proportion <- function(n, fishnet = fishnet) {
+  cov <- fcn_get_cov_raster(n)
+  if (!is.null(cov)) {
+    return(cov)
+  }
+  print(sprintf("Reading raster: %s - calculating proportions", n))
+  path <- paste0(fcn_get_raster_path()$covariates, '\\', n)
+  r <- terra::rast(path)
+  r <- fcn_impute_raster(r, n)
+  unique_values <- terra::unique(r)[,1]
+  if (length(unique_values) > 10) {
+    warning("Calculating proportion rasters for more than 10 categories, may take a while.")
+  }
+  # Get a binary raster file and use "average" to find the proportion, save as multidimensional raster
+  proportion_rasters <- lapply(unique_values, function(v) {
+    rcl <- matrix(c(v, 1, NA, NA), nrow = 2, ncol = 2, byrow = T)
+    binary_raster <- terra::classify(r, rcl, others=0)
+    terra::resample(binary_raster, fishnet, method = 'average', threads = TRUE)
+  })
+  proportion_rasters <- terra::rast(proportion_rasters)
+  names(proportion_rasters) <- paste(sub(".tif$", "", n), unique_values, sep = '_')
+  fcn_set_cov_raster(proportion_rasters, paste0(n, "_prop"))
+  proportion_rasters
 }
 
 fcn_terra_get_nodata_value <- function(path) {

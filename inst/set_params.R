@@ -24,7 +24,7 @@ fcn_set_grid_size(500)
 # Set line transect buffer width in meters (if generating transects using start and end coordinate information)
 fcn_set_line_transect_buffer(28.7)
 
-# Set covariate impute buffer distance
+# Set covariate impute buffer distance (within the data pipeline)
 fcn_set_cov_impute_buffer(0)
 
 # Set study area buffer
@@ -34,20 +34,19 @@ fcn_set_study_area_buffer(0)
 state <- fcn_get_state()
 target_dir <- r"(H:\seq-koala-monitor\output)"
 current_date <- format(Sys.Date(), format="%Y%m%d")
-current_date <- "20240412"
 
-out_dir <- paste0(target_dir, '\\', paste0(current_date, "_", state$grid_size,  '_', 1000))
+out_dir <- paste0(target_dir, '\\', paste0(current_date, "_", state$grid_size,  '_', 0))
 
 if (!dir.exists(out_dir)) dir.create(out_dir)
 if (!dir.exists(paste0(out_dir, '\\cov_raster'))) dir.create(paste0(out_dir, '\\cov_raster'))
 if (!dir.exists(paste0(out_dir, '\\cov_csv'))) dir.create(paste0(out_dir, '\\cov_csv'))
 
 # Run covariate extraction algorithm; if not, read from disc in the output folder (computationally intensive, 30 minute run)
-run_cov_extraction <- F
+run_cov_extraction <- TRUE
 
 ## 3. Retrieve grid generated as a raster file (for plotting if needed) ----
 # Check whether the directory for where covariates are stored is correct
 print(fcn_get_raster_path()$covariates)
 
 # If it is incorrect, specify the correct path
-fcn_set_raster_path(list(covariates = 'covariates_impute/output'))
+fcn_set_raster_path(list(covariates = 'covariates/output'))

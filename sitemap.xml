@@ -175,6 +175,9 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_gdb_path.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_home_dir.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_lga.html</loc>
   </url>
   <url>
@@ -187,7 +190,13 @@
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_get_study_area.html</loc>
   </url>
   <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_grid_intersect_feature.html</loc>
+  </url>
+  <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_impute_raster.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_impute_temporal_cov.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_interpolation_weight.html</loc>
@@ -251,6 +260,12 @@
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_project_raster.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_read_resample_covariate.html</loc>
+  </url>
+  <url>
+    <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_read_resample_covariate_proportion.html</loc>
   </url>
   <url>
     <loc>https://seq-koala-monitoring.github.io/data-pipeline/reference/fcn_route_table.html</loc>

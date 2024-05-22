@@ -408,3 +408,28 @@ fcn_impute_raster <- function(raster_file, name = NA){
   }
   return(res)
 }
+
+#' Given a Shapefile (in R sf format), return the GridID intersection with the feature class
+#' @param feature_class: a shapefile (in R sf format)
+#' @param field: field in the feature class to use in the lookup table
+#' @param impute_buffer: buffer to impute cells without polygon overlap with. Useful for cases where the polygon does not cover the whole study area fully. If 0, there will be no imputation (default), and if >0, then it is the distance of the moving window used for imputation.
+#' @export
+fcn_grid_intersect_feature <- function(feature_class, field = NULL, impute_buffer = 0) {
+  fields <- names(feature_class)
+  if (is.null(field)) field <- fields[1]
+  grid <- fcn_get_grid()
+
+  feature_class_rast <- terra::rasterize(terra::vect(feature_class), grid, field = field, touches = TRUE)
+
+  # Fill NA values with within impute buffer, such that cells that are not covered are filled with modal values
+  if (impute_buffer > 0) {
+    buffer_mat <- terra::focalMat(feature_class_rast, impute_buffer, 'circle', fillNA=TRUE)
+    buffer_mat[!is.na(buffer_mat)] <- 1
+    feature_class_rast <- terra::focal(feature_class_rast, buffer_mat, na.policy = "only", fun = 'modal', na.rm = TRUE)
+  }
+
+  lookup_table <- cbind(grid[], feature_class_rast[])
+  colnames(lookup_table) <- c("GridID", field)
+  lookup_table <- lookup_table[!is.na(lookup_table[,"GridID"]),]
+  return(lookup_table)
+}

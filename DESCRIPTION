@@ -22,8 +22,7 @@ Imports:
     exactextractr,
     tidyr,
     abind,
-    future,
-    future.apply
+    rstudioapi
 Suggests: 
     knitr,
     rmarkdown,

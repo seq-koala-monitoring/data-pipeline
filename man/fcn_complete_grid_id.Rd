@@ -4,7 +4,7 @@
 \alias{fcn_complete_grid_id}
 \title{Get indices of GridID with complete covariate data}
 \usage{
-fcn_complete_grid_id(cov_constant_array, cov_temporal_array)
+fcn_complete_grid_id(cov_constant_array = NULL, cov_temporal_array = NULL)
 }
 \description{
 Get indices of GridID with complete covariate data

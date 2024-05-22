@@ -74,6 +74,11 @@ fcn_set_home_dir <- function(dir) {
   invisible(old)
 }
 
+#' Get home directory
+fcn_get_home_dir <- function() {
+  return(the$home_dir)
+}
+
 #' Get study area in SF format
 #' @export
 fcn_get_study_area <- function() {

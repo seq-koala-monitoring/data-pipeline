@@ -7,7 +7,6 @@ gc()
 #devtools::install_github('seq-koala-monitoring/data-pipeline') # only if needed
 library(SEQKoalaDataPipeline)
 library(readr)
-library(future)
 
 ## 2. Set global variables -------------------------------------------------
 source('inst/set_params.R')
@@ -15,6 +14,8 @@ source('inst/set_params.R')
 # Write to grid
 grid_raster <- fcn_get_grid()
 terra::writeRaster(grid_raster, paste0(out_dir, "\\grid_raster.tif"), overwrite = T)
+grid_vector <- terra::as.polygons(grid_raster)
+terra::writeVector(grid_vector, paste0(out_dir, "\\grid_vec.shp"), overwrite = T)
 
 ## 4. Load the survey data as tables ---------------------------------------
 master <- fcn_all_tables()
@@ -36,16 +37,12 @@ if (run_cov_extraction) {
   #readr::write_rds(cov_temporal_array, paste0(out_dir, "\\cov_temporal_array.rds"))
 }
 
-## Run cov_temporal_array on a HPC (or a computer with 128GB RAM) here----------------
-
-## Save cov_temporal_array in a separate file here ---
-
 # Extract and save only those in surveylocations as a separate file
 # Read results back from disk (output folder)
 cov_constant_array <- readr::read_rds(paste0(out_dir, "\\cov_constant_array.rds"))
 cov_temporal_array <- readr::read_rds(paste0(out_dir, "\\cov_temporal_array.rds"))
 
-cov_temporal_array <- fcn_impute_temporal_cov(cov_temporal_array)
+if (use_imputation) cov_temporal_array <- fcn_impute_temporal_cov(cov_temporal_array)
 
 ## 6. Load grid fractions as tables-----------------------------------------
 grid_fractions <- fcn_all_transect_grid_fractions()
@@ -76,8 +73,8 @@ print(transects_missing)
 GridID_missing <- grid_fractions_comb[grid_fractions_comb$TransectID %in% transects_missing,]$GridID
 
 ## 7. Save grid cells in survey locations separately with non-NA covariate information-----------------------------
-cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb$GridID ,,]
-cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb$GridID,,]
+cov_constant_array_surveylocations <- cov_constant_array[cov_constant_array[,1] %in% grid_fractions_comb_complete_cov$GridID ,,]
+cov_temporal_array_surveylocations <- cov_temporal_array[cov_temporal_array[,1,1] %in% grid_fractions_comb_complete_cov$GridID,,]
 
 # Save full arrays
 cov_constant_array[cov_constant_array[,1] %in% grid_id_non_na,,] %>%
@@ -98,25 +95,17 @@ cov_layer_df <- fcn_covariate_layer_df()
 write.csv(cov_layer_df[,1:5], paste0(out_dir, '\\covariate_info.csv'))
 
 ## 10. Produce and save the adjacency matrix
-adj_data <- fcn_adj_matrix(secondary_grid_size = 5000)
+adj_data <- fcn_adj_matrix(secondary_grid_size = secondary_grid_size)
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
+terra::writeRaster(adj_data$grid_raster_sp, paste0(out_dir, "\\grid_raster_secondary.tif"), overwrite = T)
+
+grid_vec_sp <- terra::as.polygons(adj_data$grid_raster_sp)
+terra::writeVector(grid_vec_sp, paste0(out_dir, "\\grid_vec_sp.shp"))
 
 adj_data <- fcn_adj_matrix(directions = 'rook')
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
 
-## 11. Write covariates as RasterStack ----------------------------------
-# Default: 6 month intervals from Oct 1994 to current time
-if (run_cov_extraction) {
-  library(future)
-  library(future.apply)
-  dates <- fcn_date_intervals()
-  raster_stack_list <- fcn_covariate_raster_stack(dates, by_date = TRUE)
-
-  plan(multisession)
-  future_lapply(seq_along(raster_stack_list), function(i) {
-    r <- raster_stack_list[[i]]
-    terra::writeRaster(r, paste0(out_dir, '\\cov_raster\\cov_',names(raster_stack_list)[i] , '.tif'), overwrite = T)
-    return()
-  })
-}
-
+## 11. Write lookup table of GridID to genetic populations
+gen_pop_file <- sf::st_read(paste0(working_data_dir, '/', gen_pop_file_path))
+gen_pop_lookup <- fcn_grid_intersect_feature(gen_pop_file, field = 'GENPOP_ID')
+saveRDS(gen_pop_lookup, paste0(out_dir, "\\gen_pop_lookup.rds"))

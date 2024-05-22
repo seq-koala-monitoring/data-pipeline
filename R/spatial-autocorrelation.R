@@ -38,7 +38,8 @@ fcn_adj_matrix <- function(secondary_grid_size = 2000, directions = "queen") {
   out <- list(
     adjacencyList = adjacencyList,
     grid_lookup = grid_raster_lookup,
-    grid_raster_comb = grid_raster_comb
+    grid_raster_comb = grid_raster_comb,
+    grid_raster_sp = grid_raster_sp
   )
   return(out)
 }

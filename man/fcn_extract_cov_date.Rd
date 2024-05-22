@@ -4,7 +4,7 @@
 \alias{fcn_extract_cov_date}
 \title{Extract covariates for a particular date object}
 \usage{
-fcn_extract_cov_date(d, time_lag = NULL, fishnet = NULL)
+fcn_extract_cov_date(d, time_lag = NULLL)
 }
 \arguments{
 \item{d}{date object}

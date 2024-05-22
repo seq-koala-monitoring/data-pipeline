@@ -262,17 +262,17 @@ fcn_impute_temporal_cov <- function(cov) {
 	for (j in 1:ncol(cov)) {
 	  complete_cases_cov <- complete.cases(cov[,j,])
 	  for (i in which(!complete_cases_cov)) {
-		for (k in which(is.na(cov[i,j,]))) {
-		  if (all(is.na(cov[i,j,]))) next
-		  non_na_id <- (k - 1:dim(cov)[3])[!is.na(cov[i,j,])]
-		  idx <- (1:dim(cov)[3])[!is.na(cov[i,j,])]
-		  if (any(non_na_id > 0)) {
-			kk <- idx[abs(non_na_id) == min(abs(non_na_id[non_na_id > 0]))][1]
-		  } else {
-			kk <- idx[abs(non_na_id) == min(abs(non_na_id))][1]
-		  }
-		  cov[i,j,k] = cov[i,j,kk]
-		}
+  		for (k in which(is.na(cov[i,j,]))) {
+  		  if (all(is.na(cov[i,j,]))) next
+  		  non_na_id <- (k - 1:dim(cov)[3])[!is.na(cov[i,j,])]
+  		  idx <- (1:dim(cov)[3])[!is.na(cov[i,j,])]
+  		  if (any(non_na_id > 0)) {
+  			kk <- idx[abs(non_na_id) == min(abs(non_na_id[non_na_id > 0]))][1]
+  		  } else {
+  			kk <- idx[abs(non_na_id) == min(abs(non_na_id))][1]
+  		  }
+  		  cov[i,j,k] = cov[i,j,kk]
+  		}
 	  }
 	}
   return(cov)

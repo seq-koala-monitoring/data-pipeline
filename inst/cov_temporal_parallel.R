@@ -23,6 +23,7 @@ for (i in 1:length(dates)) {
     importEnv = TRUE,
     workingDir = getwd()
   )
-  if (i %% 8 == 0) Sys.sleep(240)
+  if (i %% 8 == 0) Sys.sleep(180)
+  Sys.sleep(10)
 }
-Sys.sleep(300)
+Sys.sleep(200)

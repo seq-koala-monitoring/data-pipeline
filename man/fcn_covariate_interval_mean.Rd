@@ -4,7 +4,7 @@
 \alias{fcn_covariate_interval_mean}
 \title{Get mean values of each Grid cell given the name of covariate and a single date}
 \usage{
-fcn_covariate_interval_mean(date, cov_name, get_df = TRUE, fishnet = NULL)
+fcn_covariate_interval_mean(date, cov_name, get_df = TRUE)
 }
 \arguments{
 \item{date:}{a list object from \code{fcn_date_intervals} containing: interval, start_date, end_date, middle_date}

@@ -44,6 +44,9 @@ if (use_imputation) {
   fcn_set_raster_path(list(covariates = 'covariates/output'))
 }
 
+# Run in parallel (requires RStudio API if true)
+use_parallel <- TRUE
+
 # Output path
 state <- fcn_get_state()
 target_dir <- r"(H:\seq-koala-monitor\output)"

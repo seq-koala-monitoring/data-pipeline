@@ -17,12 +17,16 @@ for (i in 1:length(dates)) {
   id <- d$id
   d <- list(d)
   #source('inst/run_cov_date.R')
-  rstudioapi::jobRunScript(
-  'inst/run_cov_date.R',
-    name = id,
-    importEnv = TRUE,
-    workingDir = getwd()
-  )
+  if (exists("use_parallel") & use_parallel){
+    rstudioapi::jobRunScript(
+    'inst/run_cov_date.R',
+      name = id,
+      importEnv = TRUE,
+      workingDir = getwd()
+    )
+  } else {
+    source('inst/run_cov_date.R')
+  }
   if (i %% 8 == 0) Sys.sleep(180)
   Sys.sleep(10)
 }

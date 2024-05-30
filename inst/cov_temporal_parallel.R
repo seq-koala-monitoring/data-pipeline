@@ -24,10 +24,11 @@ for (i in 1:length(dates)) {
       importEnv = TRUE,
       workingDir = getwd()
     )
+    if (i %% 8 == 0) Sys.sleep(180)
+    Sys.sleep(10)
   } else {
     source('inst/run_cov_date.R')
   }
-  if (i %% 8 == 0) Sys.sleep(180)
-  Sys.sleep(10)
+
 }
-Sys.sleep(200)
+if (exists("use_parallel") & use_parallel) Sys.sleep(200)

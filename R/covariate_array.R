@@ -118,7 +118,19 @@ fcn_covariate_interval_mean <- function(date, cov_name, get_df = TRUE) {
     cov_layer_list <- cov_layer_df_name[within_interval,'filename']
   } else {
     # If no covariates fall in the interval, grab the one closest to the midpoint of the interval
-    nearest_date <- which.min(abs(cov_dates_num - date$middle_date))
+    date_diff <- abs(cov_dates_num - date$middle_date)
+    if (cov_name %in% c('hctmn', 'hctma', 'hcpre')) {
+      # Enforce seasonality for climate variables
+      # If there is no layer in time interval and the variable is a climate variable, then exclude those that are not in the same month
+      months_in_interval <- function(start_date, end_date) {
+        lubridate::month(seq.Date(from = as.Date(start_date, tz=Sys.timezone()),
+                       to = as.Date(end_date, tz=Sys.timezone()), by = "day")) %>%
+          unique()
+      }
+      date_interval_months <- months_in_interval(date$start_date, date$end_date)
+      date_diff[!(lubridate::month(cov_dates_num) %in% date_interval_months)] <- NA
+    }
+    nearest_date <- which.min(date_diff)
     cov_layer_list <- cov_layer_df_name[nearest_date,'filename']
   }
 

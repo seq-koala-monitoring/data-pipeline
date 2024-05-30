@@ -1,9 +1,9 @@
 # SETUP VARIABLES
 
 working_data_dir <- r"(H:\seq-koala-monitor\working_data)"
+target_dir <- r"(H:\seq-koala-monitor\output)"
 
-# Home directory
-fcn_set_home_dir(working_data_dir)
+fcn_set_home_dir(working_data_dir) # Home directory
 
 ## Set db path
 fcn_set_db_path(list(
@@ -20,8 +20,8 @@ fcn_set_gdb_path(list(
   koala_survey_sites="KoalaSurveySites_231108/KoalaSurveySites_231108.shp"
 ))
 
-# Grid size (in meters) - default 100m
-primary_grid_size <- 500
+# Grid size (in meters) - default 500m
+primary_grid_size <- 200
 secondary_grid_size <- primary_grid_size*10
 
 fcn_set_grid_size(primary_grid_size)
@@ -49,7 +49,7 @@ use_parallel <- TRUE
 
 # Output path
 state <- fcn_get_state()
-target_dir <- r"(H:\seq-koala-monitor\output)"
+
 current_date <- format(Sys.Date(), format="%Y%m%d")
 
 out_dir <- paste0(target_dir, '\\', paste0(current_date, "_", state$grid_size, ifelse(use_imputation, '_1500', '')))

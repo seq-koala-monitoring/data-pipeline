@@ -30,11 +30,6 @@ lapply(seq_along(master_sf), \(i) sf::st_write(master_sf[[i]], paste0(out_dir, '
 if (run_cov_extraction) {
   source('inst/cov_temporal_parallel.R')
   source('inst/cov_temporal_array.R')
-  #cov_all <- fcn_cov_array(write_path = paste0(out_dir, "")) # Writes the outputs to the output folder
-  #cov_constant_array <- cov_all$cov_constant
-  #cov_temporal_array <- cov_all$cov_temporal
-  #readr::write_rds(cov_constant_array, paste0(out_dir, "\\cov_constant_array.rds"))
-  #readr::write_rds(cov_temporal_array, paste0(out_dir, "\\cov_temporal_array.rds"))
 }
 
 # Extract and save only those in surveylocations as a separate file
@@ -100,7 +95,7 @@ saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
 terra::writeRaster(adj_data$grid_raster_sp, paste0(out_dir, "\\grid_raster_secondary.tif"), overwrite = T)
 
 grid_vec_sp <- terra::as.polygons(adj_data$grid_raster_sp)
-terra::writeVector(grid_vec_sp, paste0(out_dir, "\\grid_vec_sp.shp"))
+terra::writeVector(grid_vec_sp, paste0(out_dir, "\\grid_vec_sp.shp"), overwrite=T)
 
 adj_data <- fcn_adj_matrix(directions = 'rook')
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
@@ -109,3 +104,5 @@ saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
 gen_pop_file <- sf::st_read(paste0(working_data_dir, '/', gen_pop_file_path))
 gen_pop_lookup <- fcn_grid_intersect_feature(gen_pop_file, field = 'GENPOP_ID')
 saveRDS(gen_pop_lookup, paste0(out_dir, "\\gen_pop_lookup.rds"))
+
+print("Data pipeline run complete.")

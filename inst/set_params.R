@@ -21,7 +21,7 @@ fcn_set_gdb_path(list(
 ))
 
 # Grid size (in meters) - default 500m
-primary_grid_size <- 200
+primary_grid_size <- 500
 secondary_grid_size <- primary_grid_size*10
 
 fcn_set_grid_size(primary_grid_size)

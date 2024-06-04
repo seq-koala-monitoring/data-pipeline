@@ -94,15 +94,15 @@ adj_data <- fcn_adj_matrix(secondary_grid_size = secondary_grid_size)
 saveRDS(adj_data, paste0(out_dir, "\\adj_data_queen.rds"))
 terra::writeRaster(adj_data$grid_raster_sp, paste0(out_dir, "\\grid_raster_secondary.tif"), overwrite = T)
 
-grid_vec_sp <- terra::as.polygons(adj_data$grid_raster_sp)
-terra::writeVector(grid_vec_sp, paste0(out_dir, "\\grid_vec_sp.shp"), overwrite=T)
-
-adj_data <- fcn_adj_matrix(directions = 'rook')
-saveRDS(adj_data, paste0(out_dir, "\\adj_data_rook.rds"))
+terra::writeVector(adj_data$grid_vec_sp, paste0(out_dir, "\\grid_vec_sp.shp"), overwrite=T)
 
 ## 11. Write lookup table of GridID to genetic populations
 gen_pop_file <- sf::st_read(paste0(working_data_dir, '/', gen_pop_file_path))
 gen_pop_lookup <- fcn_grid_intersect_feature(gen_pop_file, field = 'GENPOP_ID')
 saveRDS(gen_pop_lookup, paste0(out_dir, "\\gen_pop_lookup.rds"))
+sf::st_as_sf(grid_vector) %>%
+  dplyr::left_join(as.data.frame(gen_pop_lookup), by = 'GridID') %>%
+  sf::st_write(paste0(out_dir, '\\grid_vec_gen_pop.shp'))
+sf::st_write(gen_pop_file, paste0(out_dir, '\\gen_pop.shp'))
 
 print("Data pipeline run complete.")

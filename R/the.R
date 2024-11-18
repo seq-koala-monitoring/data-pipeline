@@ -218,7 +218,7 @@ fcn_set_gdb_path <- function(db_path, obj = NULL) {
 fcn_get_raster_path <- function() {
   state <- fcn_get_state()
   home_dir <- state$home_dir
-  full_path <- purrr::imap(the$raster_path, function(x, idx) {
+  full_path <- purrr::imap(state$raster_path, function(x, idx) {
     if (is.null(x) || identical(x, "")) return(NULL)
     path <- file.path(home_dir, x)
     fcn_check_paths(path, paste("Database", idx))

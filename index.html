@@ -8,8 +8,8 @@
 <title>South East Queensland Koala Monitoring Data Pipeline • SEQKoalaDataPipeline</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="South East Queensland Koala Monitoring Data Pipeline">
 <meta name="description" content="Data processing pipeline for koala monitoring data analysis project at South East Queensland.">
 <meta property="og:description" content="Data processing pipeline for koala monitoring data analysis project at South East Queensland.">
@@ -86,18 +86,18 @@
 <div class="section level2">
 <h2 id="line-transects-2-tables">Line Transects (2 tables)<a class="anchor" aria-label="anchor" href="#line-transects-2-tables"></a>
 </h2>
-<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect length * Number of koalas observed * Number of observers * Time and location specific covariates</p>
-<p>Table of the perpendicular distances of observations (each line relates to a specific koala observation): * Record unique ID (primary key) * Unique ID from line transect table (this relates to the survey that the koala observation occurred on from the surveys table) * Perpendicular distance (noting sometimes this has to be calculated from the sighting distance and angle and sometimes the perpendicular distance is measured directly)</p>
+<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect length * Number of koalas observed * Number of observers (although this should always be 1 for line transects) * Time and location specific covariates (still to be discussed what these will be)</p>
+<p>Table of the perpendicular distances of observations (each line relates to a specific koala observation): * Record unique ID (primary key) * Unique ID from line transect table (this relates to the survey that the koala observation occurred on from the surveys table) * Perpendicular distance (noting sometimes this has to be calculated from the sighting distance and angle and sometimes the perpendicular distance is measured directly – to discuss)</p>
 </div>
 <div class="section level2">
 <h2 id="strip-transects-1-table">Strip Transects (1 table)<a class="anchor" aria-label="anchor" href="#strip-transects-1-table"></a>
 </h2>
-<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect area * Number of koalas observed * Number of observers * Time and location specific covariates</p>
+<p>Table of the surveys (each line is a separate transect surveyed) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Transect number (with this being a unique ID relating to a spatial representation of the transect surveyed – for post 2015 data) * Date of survey * Transect area * Number of koalas observed * Number of observers * Time and location specific covariates (still to be discussed what these will be)</p>
 </div>
 <div class="section level2">
 <h2 id="all-of-area-searches-1-table">All of Area Searches (1 table)<a class="anchor" aria-label="anchor" href="#all-of-area-searches-1-table"></a>
 </h2>
-<p>Table of the surveys (each line is a separate area search) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Area number (with this being a unique ID relating to a spatial representation of the area surveyed – for post 2015 data) * Date of survey * Area searches * Number of koalas observed * Number of observers * Time and location specific covariates</p>
+<p>Table of the surveys (each line is a separate area search) with the following fields: * Record unique ID (primary key) * Site number (with this being a unique ID relating to a spatial representation of the site surveyed– for pre 2015 data) * Area number (with this being a unique ID relating to a spatial representation of the area surveyed – for post 2015 data) * Date of survey * Area searches * Number of koalas observed * Number of observers * Time and location specific covariates (still to be discussed what these will be)</p>
 </div>
 </div>
 
